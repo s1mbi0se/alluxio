@@ -121,11 +121,15 @@ public class GrpcConnectionPool {
   }
 
   /**
+   * Decreases ref-count of the managed channel and shuts it down if the counter reaches zero.
+   * <p>
    * Decreases the ref-count of the {@link ManagedChannel} for the given address. It shuts down the
    * underlying channel if reference count reaches zero.
    *
    * @param connectionKey the connection key
-   * @param conf the Alluxio configuration
+   * @param conf          the Alluxio configuration
+   *
+   * @throws Exception    If connection does not exist.
    */
   public void releaseConnection(GrpcConnectionKey connectionKey, AlluxioConfiguration conf) {
     mChannels.compute(connectionKey, (key, ref) -> {

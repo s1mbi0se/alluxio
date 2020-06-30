@@ -33,9 +33,10 @@ public class GrpcConnection implements AutoCloseable {
   /**
    * Creates a new connection object.
    *
-   * @param key gRPC channel key
-   * @param managedChannel the underlying gRPC {@link ManagedChannel}
-   * @param conf the Alluxio configuration
+   * @param   key             gRPC channel key
+   * @param   managedChannel  the underlying gRPC {@link ManagedChannel}
+   * @param   conf            the Alluxio configuration
+   * @throws  Exception       If unable to connect.
    */
   public GrpcConnection(GrpcConnectionKey key, ManagedChannel managedChannel,
       AlluxioConfiguration conf) {

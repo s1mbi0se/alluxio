@@ -29,6 +29,10 @@ public class DefaultSupplier implements Supplier<Object> {
     mDescription = description;
   }
 
+  /**
+   * Returns the supplier for a configuration property default.
+   * @return  the supplier {@link Supplier<Object>}
+   */
   @Override
   public Object get() {
     return mSupplier.get();

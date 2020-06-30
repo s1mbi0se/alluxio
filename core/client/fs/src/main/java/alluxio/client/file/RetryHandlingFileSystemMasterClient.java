@@ -107,7 +107,7 @@ public final class RetryHandlingFileSystemMasterClient extends AbstractMasterCli
 
 
   /**
-   * Creates a new stub that runs synchronously
+   * Creates a new stub that runs synchronously.
    */
   @Override
   protected void afterConnect() {

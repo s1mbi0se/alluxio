@@ -92,8 +92,7 @@ public final class MountCommand extends AbstractFileSystemCommand {
    * <p>
    * It also parses all options provided as flags in this
    * command and uses this information to determine which
-   * options to enable for this bucket, and then mounts it,
-   * printing a confirmation message to the console.
+   * options to enable for this bucket, and then mounts it.
    *
    * @param   cl the parsed command line for the arguments
    * @return  an integer representing the exit code.  If

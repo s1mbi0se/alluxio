@@ -90,6 +90,16 @@ public class AuthenticatedChannelClientDriver implements StreamObserver<SaslMess
     mRequestObserver = requestObserver;
   }
 
+  /**
+   * Attempts to establish a connection to a channel.
+   * <p>
+   * Establishes a connection to the {@link alluxio.grpc.GrpcChannel}
+   * with the corresponding {@link GrpcChannelKey} using a handshake handler
+   * for the client, that is, {@link SaslClientHandler#handleMessage(SaslMessage)}.
+   *
+   * @param saslMessage Simple Authentication and Security Layer message
+   * @throws Exception  Any exception.
+   */
   @Override
   public void onNext(SaslMessage saslMessage) {
     try {

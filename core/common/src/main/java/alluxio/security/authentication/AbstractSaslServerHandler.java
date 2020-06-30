@@ -30,6 +30,17 @@ public abstract class AbstractSaslServerHandler implements SaslServerHandler {
   /** Underlying {@code SaslServer}. */
   protected SaslServer mSaslServer;
 
+  /**
+   * Handles a SASL message.
+   * <p>
+   * Evaluates the resonse of the SASL server if the SASL message type
+   * is supported. Builds a new {@link SaslMessage} with {@link SaslMessage.Builder#build()}
+   * and returns a new instance of SaslMessage with an updated status: SUCESS or CHALLENGE.
+   *
+   * @param   message       client Sasl message
+   * @return                the SASL message
+   * @throws  SaslException If the message type is unsupported.
+   */
   @Override
   public SaslMessage handleMessage(SaslMessage message) throws SaslException {
     switch (message.getMessageType()) {
