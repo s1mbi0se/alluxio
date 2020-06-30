@@ -30,7 +30,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 
 /**
  * An authenticated gRPC channel. This channel can communicate with servers of type
- * {@link GrpcServer}.
+ * {@link GrpcServer} and has a unique identification key {@link alluxio.grpc.GrpcChannelKey}.
  */
 @NotThreadSafe
 public final class GrpcChannel extends Channel {

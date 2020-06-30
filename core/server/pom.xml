@@ -34,5 +34,4 @@
          properly from sub-project directories -->
     <build.path>${project.parent.parent.basedir}/build</build.path>
   </properties>
-
 </project>

@@ -105,6 +105,10 @@ public final class RetryHandlingFileSystemMasterClient extends AbstractMasterCli
     return Constants.FILE_SYSTEM_MASTER_CLIENT_SERVICE_VERSION;
   }
 
+
+  /**
+   * Creates a new stub that runs synchronously
+   */
   @Override
   protected void afterConnect() {
     mClient = FileSystemMasterClientServiceGrpc.newBlockingStub(mChannel);

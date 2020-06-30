@@ -43,6 +43,14 @@ public class GrpcChannelKey {
   /** Client that requires a channel. */
   private String mClientType;
 
+  /**
+   * Creates an object of type {@link alluxio.grpc.GrpcChannelKey},
+   * used as a unique identifier for a {@link alluxio.grpc.GrpcChannel},
+   * an authenticated, specialized channel for connecting with servers of
+   * type {@link alluxio.grpc.GrpcServer}.
+   *
+   * @param conf  the Alluxio configuration.
+   */
   private GrpcChannelKey(AlluxioConfiguration conf) {
     // Try to get local host name.
     String localHostName;
@@ -57,9 +65,13 @@ public class GrpcChannelKey {
 
   /**
    * Creates a {@link GrpcChannelKey}.
+   * <p>
+   * This key is used to identify a {@link alluxio.grpc.GrpcChannel}
+   * in a unique and unambiguous way.
    *
-   * @param conf the Alluxio configuration
-   * @return the created instance
+   * @param conf  the Alluxio configuration
+   * @return      an instance of type GrpcChannelKey
+   *              with the specified configurations
    */
   public static GrpcChannelKey create(AlluxioConfiguration conf) {
     return new GrpcChannelKey(conf);

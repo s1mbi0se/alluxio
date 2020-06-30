@@ -56,11 +56,14 @@ public final class GrpcChannelBuilder {
   }
 
   /**
-   * Create a channel builder for given address using the given configuration.
+   * Creates a {@link GrpcChannelBuilder} for given address using the given {@link AlluxioConfiguration}.
    *
-   * @param address the host address
-   * @param conf Alluxio configuration
-   * @return a new instance of {@link GrpcChannelBuilder}
+   * <p>
+   * It instantiates a new GrpcChannelBuilder with the same parameters this method was provided with.
+   *
+   * @param address the host gRPC server address
+   * @param conf    Alluxio configuration
+   * @return        a new instance of {@link GrpcChannelBuilder}
    */
   public static GrpcChannelBuilder newBuilder(GrpcServerAddress address,
       AlluxioConfiguration conf) {

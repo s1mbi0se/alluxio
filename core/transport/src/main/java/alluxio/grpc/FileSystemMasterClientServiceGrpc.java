@@ -759,7 +759,12 @@ public final class FileSystemMasterClientServiceGrpc {
   }
 
   /**
-   * Creates a new blocking-style stub that supports unary and streaming output calls on the service
+   * Creates a new blocking-style stub that supports unary and streaming output calls on the service.
+   * <p>
+   * This stub halts all other operations on this channel's thread until it finishes executing.
+   *
+   * @param channel the channel where the stub will be placed
+   * @return        a synchronous stub for the File System Master Client Service
    */
   public static FileSystemMasterClientServiceBlockingStub newBlockingStub(
       io.grpc.Channel channel) {

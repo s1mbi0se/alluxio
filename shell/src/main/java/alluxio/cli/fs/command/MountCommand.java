@@ -81,6 +81,30 @@ public final class MountCommand extends AbstractFileSystemCommand {
         .addOption(OPTION_OPTION);
   }
 
+  /**
+   * Runs the "mount" command for creating a new bucket.
+   * <p>
+   * It parses all arguments provided in this command. If
+   * no argument is found, it prints information about
+   * the usage of this command. Otherwise, the arguments
+   * are used to determine: 1) the Alluxio path;
+   *                        2) the UFS path.
+   * <p>
+   * It also parses all options provided as flags in this
+   * command and uses this information to determine which
+   * options to enable for this bucket, and then mounts it,
+   * printing a confirmation message to the console.
+   *
+   * @param   cl the parsed command line for the arguments
+   * @return  an integer representing the exit code.  If
+   *          the return value is 0, the command was finished
+   *          successfully; otherwise, an exception will be
+   *          thrown.
+   * @throws AlluxioException If an unpredictable exception
+   *                          happens during the execution.
+   * @throws IOException      If the command is out of bounds
+   *                          or receives invalid arguments.
+   */
   @Override
   public int run(CommandLine cl) throws AlluxioException, IOException {
     String[] args = cl.getArgs();
