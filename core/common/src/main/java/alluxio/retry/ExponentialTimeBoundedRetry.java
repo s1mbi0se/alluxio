@@ -63,7 +63,15 @@ public final class ExponentialTimeBoundedRetry extends TimeBoundedRetry {
   }
 
   /**
-   * @return a builder
+   * Creates an object of type Builder used to build
+   * a new instance of ExponentialTimeBoundedRetry.
+   * <p>
+   * This makes sure an object of type
+   * ExponentialTimeBoundedRetry can be safely
+   * instantiated and avoid future problems.
+   *
+   * @return  an object of type Builder used to build an
+   *          object of type ExponentialTimeBoundedRetry
    */
   public static Builder builder() {
     return new Builder();
@@ -71,6 +79,9 @@ public final class ExponentialTimeBoundedRetry extends TimeBoundedRetry {
 
   /**
    * Builder for time bounded exponential retry mechanisms.
+   * <p>
+   * It is used especially for setting time limits for
+   * I/O-bound operations.
    */
   public static class Builder {
     private TimeContext mTimeCtx = TimeContext.SYSTEM;
@@ -98,6 +109,8 @@ public final class ExponentialTimeBoundedRetry extends TimeBoundedRetry {
     }
 
     /**
+     * Defines the initial sleep time for this
+     * new instance of ExponentialTimeBoundedRetry.
      * @param initialSleep initial sleep interval between retries
      * @return the builder
      */
@@ -107,6 +120,9 @@ public final class ExponentialTimeBoundedRetry extends TimeBoundedRetry {
     }
 
     /**
+     * Defines the maximum sleep time for this
+     * new instance of ExponentialTimeBoundedRetry.
+     *
      * @param maxSleep maximum sleep interval between retries
      * @return the builder
      */
@@ -116,7 +132,8 @@ public final class ExponentialTimeBoundedRetry extends TimeBoundedRetry {
     }
 
     /**
-     * first sleep will be skipped.
+     * Skips first sleep for this new
+     * instance of ExponentialTimeBoundedRetry.
      *
      * @return the builder
      */
@@ -126,7 +143,14 @@ public final class ExponentialTimeBoundedRetry extends TimeBoundedRetry {
     }
 
     /**
-     * @return the built retry mechanism
+     * Instantiates a new ExponentialTimeBoundedRetry,
+     * used to set the rules for operations that are
+     * I/O-bound.
+     * <p>
+     * The arguments passed on to the constructor are
+     * defined by {@link alluxio.retry.ExponentialTimeBoundedRetry.Builder}.
+     *
+     * @return  the built retry mechanism
      */
     public ExponentialTimeBoundedRetry build() {
       return new ExponentialTimeBoundedRetry(

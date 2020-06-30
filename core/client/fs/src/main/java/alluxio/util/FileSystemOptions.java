@@ -187,8 +187,15 @@ public class FileSystemOptions {
   }
 
   /**
-   * @param conf Alluxio configuration
-   * @return options based on the configuration
+   * Utilizes {@link MountPOptions.Builder} in order
+   * to build and return a new set of options for this
+   * mount.
+   * <p>
+   * These options are used to set default properties and
+   * permissions for this mount.
+   *
+   * @param conf  Alluxio configuration
+   * @return      options based on the configuration
    */
   public static MountPOptions mountDefaults(AlluxioConfiguration conf) {
     return MountPOptions.newBuilder()

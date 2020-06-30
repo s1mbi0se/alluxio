@@ -83,6 +83,18 @@ public final class MountCommand extends AbstractFileSystemCommand {
 
   /**
    * Runs the "mount" command for creating a new bucket.
+   * <p>
+   * It parses all arguments provided in this command. If
+   * no argument is found, it prints information about
+   * the usage of this command. Otherwise, the arguments
+   * are used to determine: 1) the Alluxio path;
+   *                        2) the UFS path.
+   * <p>
+   * It also parses all options provided as flags in this
+   * command and uses this information to determine which
+   * options to enable for this bucket, and then mounts it,
+   * printing a confirmation message to the console.
+   *
    * @param   cl the parsed command line for the arguments
    * @return  an integer representing the exit code.  If
    *          the return value is 0, the command was finished
