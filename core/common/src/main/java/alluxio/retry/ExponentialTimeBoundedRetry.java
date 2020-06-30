@@ -63,8 +63,7 @@ public final class ExponentialTimeBoundedRetry extends TimeBoundedRetry {
   }
 
   /**
-   * Creates an object of type Builder used to build
-   * a new instance of ExponentialTimeBoundedRetry.
+   * Creates an object of type Builder used to build a new instance of ExponentialTimeBoundedRetry.
    * <p>
    * This makes sure an object of type
    * ExponentialTimeBoundedRetry can be safely
