@@ -185,6 +185,25 @@ public class AuthenticatedChannelClientDriver implements StreamObserver<SaslMess
     return initialMsg.build();
   }
 
+  /**
+   * Sets a time limit for the duration of the channel authentication and waits until completion or timeout.
+   * <p>
+   * Uses {@link AuthenticatedChannelClientDriver#mChannelAuthenticatedFuture} to implement a time limit to
+   * how long the authentication for this channel is allowed to take. For this purpose, sets
+   * {@link AuthenticatedChannelClientDriver#mChannelAuthenticated} to true.
+   *
+   * @param timeoutMs the max duration of the wait time for the channel
+   *                  authentication in milliseconds. Throws an exception
+   *                  if the authentication fails to complete until this point.
+   * @throws AlluxioStatusException   If this thread is interrupted.
+   * @throws UnauthenticatedException If the server does not provide
+   *                                  an authentication service.
+   * @throws UnavailableException     If a {@link TimeoutException}
+   *                                  is thrown, indicating that
+   *                                  the authentication service
+   *                                  took longer than the max
+   *                                  duration established.
+   */
   private void waitUntilChannelAuthenticated(long timeoutMs) throws AlluxioStatusException {
     try {
       // Wait until authentication status changes.
