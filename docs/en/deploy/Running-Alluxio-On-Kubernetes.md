@@ -3,7 +3,7 @@ layout: global
 title: Deploy Alluxio on Kubernetes
 nickname: Kubernetes
 group: Install Alluxio
-priority: 5
+priority: 0
 ---
 
 Alluxio can be run on Kubernetes. This guide demonstrates how to run Alluxio
@@ -144,8 +144,7 @@ properties:
 
   {% collapsible Example: Single Master and Journal in a Persistent Volume %}
 The following configures [UFS Journal]({{ '/en/operation/Journal.html' | relativize_url }}#ufs-journal-configuration)
-with a persistent volume claim `alluxio-pv-claim` mounted locally to the master Pod at location
-`/journal`.
+with a persistent volume claim mounted locally to the master Pod at location `/journal`.
 
 ```properties
 master:
@@ -155,10 +154,43 @@ journal:
   type: "UFS"
   ufsType: "local"
   folder: "/journal"
-  pvcName: alluxio-pv-claim
-  storageClass: "standard"
   size: 1Gi
+  # volumeType controls the type of journal volume.
+  # It can be "persistentVolumeClaim" or "emptyDir"
+  volumeType: persistentVolumeClaim
+  # Attributes to use when the journal is persistentVolumeClaim
+  storageClass: "standard"
+  accessModes:
+    - ReadWriteOnce
 ```
+  {% endcollapsible %}
+  
+  {% collapsible Example: Single Master and Journal in an `emptyDir` Volume %}
+The following configures [UFS Journal]({{ '/en/operation/Journal.html' | relativize_url }}#ufs-journal-configuration)
+with an `emptyDir` volume mounted locally to the master Pod at location `/journal`.
+
+```properties
+master:
+  count: 1 # For multiMaster mode increase this to >1
+
+journal:
+  type: "UFS"
+  ufsType: "local"
+  folder: "/journal"
+  size: 1Gi
+  # volumeType controls the type of journal volume.
+  # It can be "persistentVolumeClaim" or "emptyDir"
+  volumeType: emptyDir
+  # Attributes to use when the journal is emptyDir
+  medium: ""
+```
+
+>Note: An `emptyDir` volume has the same lifetime as the Pod. 
+It is NOT a persistent storage.
+The Alluxio journal will be LOST when the Pod is restarted or rescheduled.
+Please only use this for experimental use cases.
+Check [emptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) for more details.
+
   {% endcollapsible %}
 
   {% collapsible Example: HDFS as Journal %}
@@ -186,7 +218,7 @@ secrets:
 ```
   {% endcollapsible %}
 
-  {% collapsible Example: Multi-master with Embedded Journal %}
+  {% collapsible Example: Multi-master with Embedded Journal in Persistent Volumes %}
 ```properties
 master:
   count: 3
@@ -194,7 +226,40 @@ master:
 journal:
   type: "EMBEDDED"
   folder: "/journal"
+  # volumeType controls the type of journal volume.
+  # It can be "persistentVolumeClaim" or "emptyDir"
+  volumeType: persistentVolumeClaim
+  size: 1Gi
+  # Attributes to use when the journal is persistentVolumeClaim
+  storageClass: "standard"
+  accessModes:
+    - ReadWriteOnce
 ```
+  {% endcollapsible %}
+  
+  {% collapsible Example: Multi-master with Embedded Journal in `emptyDir` Volumes %}
+```properties
+master:
+  count: 3
+  
+journal:
+  type: "UFS"
+  ufsType: "local"
+  folder: "/journal"
+  size: 1Gi
+  # volumeType controls the type of journal volume.
+  # It can be "persistentVolumeClaim" or "emptyDir"
+  volumeType: emptyDir
+  # Attributes to use when the journal is emptyDir
+  medium: ""
+```
+
+>Note: An `emptyDir` volume has the same lifetime as the Pod. 
+It is NOT a persistent storage.
+The Alluxio journal will be LOST when the Pod is restarted or rescheduled.
+Please only use this for experimental use cases.
+Check [emptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) for more details.
+
   {% endcollapsible %}
 
   {% collapsible Example: HDFS as the under store %}
@@ -216,7 +281,7 @@ secrets:
 ```
   {% endcollapsible %}
 
-  {% collapsible Example: Off-heap Metastore Management %}
+  {% collapsible Example: Off-heap Metastore Management in Persistent Volumes %}
 The following configuration creates a `PersistentVolumeClaim` for each Alluxio master Pod with the
 specified configuration and configures the Pod to use the volume for an on-disk RocksDB-based
 metastore.
@@ -225,14 +290,41 @@ properties:
   alluxio.master.metastore: ROCKS
   alluxio.master.metastore.dir: /metastore
 
-master:
-  metastore:
-    size: 1Gi
-    mountPath: /metastore
-    storageClass: "standard"
-    accessModes:
-      - ReadWriteOnce
+metastore:
+  volumeType: persistentVolumeClaim # Options: "persistentVolumeClaim" or "emptyDir"
+  size: 1Gi
+  mountPath: /metastore
+  # Attributes to use when the metastore is persistentVolumeClaim
+  storageClass: "standard"
+  accessModes:
+   - ReadWriteOnce
 ```
+  {% endcollapsible %}
+  
+  {% collapsible Example: Off-heap Metastore Management in `emptyDir` Volumes %}
+The following configuration creates an `emptyDir` Volume for each Alluxio master Pod with the
+specified configuration and configures the Pod to use the volume for an on-disk RocksDB-based
+metastore.
+
+```properties
+properties:
+  alluxio.master.metastore: ROCKS
+  alluxio.master.metastore.dir: /metastore
+
+metastore:
+  volumeType: emptyDir # Options: "persistentVolumeClaim" or "emptyDir"
+  size: 1Gi
+  mountPath: /metastore
+  # Attributes to use when the metastore is emptyDir
+  medium: ""
+```
+
+>Note: An `emptyDir` volume has the same lifetime as the Pod. 
+It is NOT a persistent storage.
+The Alluxio metadata will be LOST when the Pod is restarted or rescheduled.
+Please only use this for experimental use cases.
+Check [emptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) for more details.
+
   {% endcollapsible %}
 
   {%collapsible Example: Multiple Secrets %}
@@ -691,6 +783,15 @@ fuse:
   clientEnabled: true
 ```
 
+By default, the mountPath is `/mnt/alluxio-fuse`. If you'd like to configure the mountPath of the fuse, please update the following properties:
+
+```properties
+fuse:
+  enabled: true
+  clientEnabled: true
+  mountPath: /mnt/alluxio-fuse
+```
+
 Then follow the steps to install Alluxio with helm [here]({{ '/en/deploy/Running-Alluxio-On-Kubernetes.html#deploy-using-helm' | relativize_url }}).
 
 If Alluxio has already been deployed with helm and now you want to enable FUSE, you use
@@ -822,11 +923,14 @@ The domain socket is a volume which should be mounted on:
 - All Alluxio workers
 - All application containers which intend to read/write through Alluxio
 
-This domain socket volume is a `PersistentVolumeClaim`.
+This domain socket volume can be either a `PersistentVolumeClaim` or a `hostPath Volume`.
+
+***Use PersistentVolumeClaim.***
+By default, this domain socket volume is a `PersistentVolumeClaim`.
 You need to provision a `PersistentVolume` to this `PersistentVolumeClaim`.
 And this `PersistentVolume` should be either `local` or `hostPath`.
 
-{% navtabs domainSocket %}
+{% navtabs domainSocketPVC %}
 {% navtab helm %}
 
 You can use `uuid` policy by setting the properties as below:
@@ -836,10 +940,14 @@ You can use `uuid` policy by setting the properties as below:
 shortCircuit:
   enabled: true
   policy: uuid
+  size: 1Mi
+  # volumeType controls the type of shortCircuit volume.
+  # It can be "persistentVolumeClaim" or "hostPath"
+  volumeType: persistentVolumeClaim
+  # Attributes to use if the domain socket volume is PVC
   pvcName: alluxio-worker-domain-socket
   accessModes:
     - ReadWriteOnce
-  size: 1Gi
   storageClass: standard
 ```
 
@@ -873,6 +981,49 @@ The `PersistenceVolumeClaim` is defined in `worker/alluxio-worker-pvc.yaml.templ
 {% endnavtab %}
 {% endnavtabs %}
 
+***Use hostPath Volume.***
+You can also directly define the workers to use a `hostPath Volume` for domain socket.
+
+{% navtabs domainSocketHostPath %}
+{% navtab helm %}
+
+You can switch to directly use a `hostPath` volume for the domain socket.
+This is done by changing the `shortCircuit.volumeType` field to `hostPath`.
+Note that you also need to define the path to use for the `hostPath` volume.
+
+```properties
+shortCircuit:
+  enabled: true
+  policy: uuid
+  size: 1Mi
+  # volumeType controls the type of shortCircuit volume.
+  # It can be "persistentVolumeClaim" or "hostPath"
+  volumeType: hostPath
+  # Attributes to use if the domain socket volume is hostPath
+  hostPath: "/tmp/alluxio-domain" # The hostPath directory to use
+```
+{% endnavtab %}
+{% navtab kubectl %}
+
+You should verify the properties in `ALLUXIO_WORKER_JAVA_OPTS` in the same way as using `PersistentVolumeClaim`.
+
+Also you should make sure the worker Pods have domain socket defined in the `volumes`,
+and all relevant containers have the domain socket volume mounted.
+The domain socket volume is defined as below by default:
+```properties
+volumes:
+  - name: alluxio-domain
+    hostPath:
+      path: /tmp/alluxio-domain
+      type: DirectoryOrCreate
+```
+
+> Note: Compute application containers **MUST** mount the domain socket volume to the same path
+(`/opt/domain`) as configured for the Alluxio workers.
+
+{% endnavtab %}
+{% endnavtabs %}
+
 ***Verify.***
 To verify short-circuit reads and writes monitor the metrics displayed under:
 1. the metrics tab of the web UI as `Domain Socket Alluxio Read` and `Domain Socket Alluxio Write`
@@ -883,8 +1034,8 @@ To verify short-circuit reads and writes monitor the metrics displayed under:
 
 ## Troubleshooting
 
-### Worker Host Unreachable
-
+{% accordion worker_host %}
+  {% collapsible Worker Host Unreachable %}
 Alluxio workers use host networking with the physical host IP as the hostname. Check the cluster
 firewall if an error such as the following is encountered:
 ```
@@ -902,16 +1053,16 @@ Check access to the given port from a remote client using a network utility such
 ```console
 $ nc -zv <IP> 29999
 ```
+  {% endcollapsible %}
 
-### Permission Denied
-
+  {% collapsible Permission Denied %}
 From Alluxio v2.1 on, Alluxio Docker containers except Fuse will run as non-root user `alluxio` with
 UID 1000 and GID 1000 by default.
 Kubernetes [`hostPath`](https://kubernetes.io/docs/concepts/storage/volumes/#hostpath) volumes
 are only writable by root so you need to update the permission accordingly. 
+  {% endcollapsible %}
 
-### Enable Debug Logging
-
+  {% collapsible Enable Debug Logging %}
 To change the log level for Alluxio servers (master and workers), use the CLI command `logLevel` as
 follows:
 
@@ -924,9 +1075,9 @@ From the master Pod, execute the following:
 ```console
 $ alluxio logLevel --level DEBUG --logName alluxio
 ```
+  {% endcollapsible %}
 
-### Accessing Logs
-
+  {% collapsible Accessing Logs %}
 The Alluxio master and job master run as separate containers of the master Pod. Similarly, the
 Alluxio worker and job worker run as separate containers of a worker Pod. Logs can be accessed for
 the individual containers as follows.
@@ -950,9 +1101,9 @@ Job Worker:
 ```console
 $ kubectl logs -f alluxio-worker-<id> -c alluxio-job-worker
 ```
+  {% endcollapsible %}
 
-### POSIX API
-
+  {% collapsible POSIX API %}
 In order for an application container to mount the `hostPath` volume, the node running the container
 must have the Alluxio FUSE daemon running. The default spec `alluxio-fuse.yaml` runs as a DaemonSet,
 launching an Alluxio FUSE daemon on each node of the cluster.
@@ -964,3 +1115,5 @@ If there are issues accessing Alluxio using the POSIX API:
 that node.
 1. Tail logs for the identified Pod to view any errors encountered:
 `kubectl logs -f alluxio-fuse-<id>`.
+  {% endcollapsible %}
+{% endaccordion %}

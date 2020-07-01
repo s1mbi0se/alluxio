@@ -28,6 +28,7 @@ const (
 	// The version of the hadoop client that the Alluxio client will be built for
 	defaultHadoopClient = "hadoop-2.7"
 )
+
 var (
 	hadoopDistributionFlag = defaultHadoopClient
 	targetFlag             string
@@ -209,8 +210,11 @@ func addAdditionalFiles(srcPath, dstPath string, hadoopVersion version, version 
 		fmt.Sprintf("lib/alluxio-underfs-s3a-%v.jar", version),
 		fmt.Sprintf("lib/alluxio-underfs-swift-%v.jar", version),
 		fmt.Sprintf("lib/alluxio-underfs-wasb-%v.jar", version),
+		fmt.Sprintf("lib/alluxio-underfs-web-%v.jar", version),
 		fmt.Sprintf("lib/alluxio-table-server-underdb-glue-%v.jar", version),
 		fmt.Sprintf("lib/alluxio-table-server-underdb-hive-%v.jar", version),
+		fmt.Sprintf("lib/alluxio-integration-tools-hms-%v.jar", version),
+		fmt.Sprintf("lib/alluxio-integration-tools-validation-%v.jar", version),
 		"libexec/alluxio-config.sh",
 		"LICENSE",
 	}
@@ -350,7 +354,7 @@ func generateTarball(hadoopClients []string, skipUI bool, skipHelm bool) error {
 	addAdditionalFiles(srcPath, dstPath, hadoopVersion, version)
 
 	chdir(cwd)
-	os.Setenv("COPYFILE_DISABLE","1")
+	os.Setenv("COPYFILE_DISABLE", "1")
 	run("creating the new distribution tarball", "tar", "-czvf", tarball, dstDir)
 	run("removing the temporary repositories", "rm", "-rf", srcPath, dstPath)
 
