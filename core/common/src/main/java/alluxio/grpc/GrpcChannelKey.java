@@ -56,24 +56,31 @@ public class GrpcChannelKey {
   }
 
   /**
-   * Creates a {@link GrpcChannelKey}.
+   * Creates a unique identifier for a gRPC channel.
+   * <p>
+   * Identifies the {@link alluxio.grpc.GrpcChannel} using a
+   * {@link GrpcChannelKey} in an unique and unambiguous way.
    *
-   * @param conf the Alluxio configuration
-   * @return the created instance
+   * @param conf  the Alluxio configuration
+   * @return      an instance of type GrpcChannelKey
+   *              with the specified configurations
    */
   public static GrpcChannelKey create(AlluxioConfiguration conf) {
     return new GrpcChannelKey(conf);
   }
 
   /**
-   * @return unique identifier for the channel
+   * Returns the unique identifier of the channel
+   * <p>
+   * Gets randomly generated UUID for this channel.
+   *
+   * @return the UUID for the channel
    */
   public UUID getChannelId() {
     return mChannelId;
   }
 
   /**
-   * Returns the destination address of the gRPC channel.
    * @return destination address of the channel
    */
   public GrpcServerAddress getServerAddress() {
@@ -81,14 +88,8 @@ public class GrpcChannelKey {
   }
 
   /**
-   * Sets the address for the gRPC server and returns this instance of GrpcChannelKey.
-   * <p>
-   * Sets {@link #mServerAddress} to the provided {@link GrpcServerAddress}.
-   * <p>
-   * Returns this {@link GrpcChannelKey}.
-   *
    * @param address destination address of the channel
-   * @return        the modified {@link GrpcChannelKey}
+   * @return the modified {@link GrpcChannelKey}
    */
   public GrpcChannelKey setServerAddress(GrpcServerAddress address) {
     mServerAddress = address;
@@ -105,12 +106,6 @@ public class GrpcChannelKey {
   }
 
   /**
-   * Gets the network group for this gRPC channel key.
-   * <p>
-   * Returns the {@link #mNetworkGroup} of this {@link GrpcChannelKey},
-   * set by default to {@link GrpcNetworkGroup#RPC}, a networking group
-   * for RPC traffic.
-   *
    * @return the network group
    */
   public GrpcNetworkGroup getNetworkGroup() {
@@ -118,12 +113,8 @@ public class GrpcChannelKey {
   }
 
   /**
-   * Sets the client type for this gRPC channel key, updates this object, and returns it.
-   * <p>
-   * Updates the existing {@link #mClientType} to the provided {@code clientType}.
-   *
-   * @param   clientType  the new client type
-   * @return  the modified {@link GrpcChannelKey}, updated with a new client type
+   * @param clientType the client type
+   * @return the modified {@link GrpcChannelKey}
    */
   public GrpcChannelKey setClientType(String clientType) {
     mClientType = clientType;
@@ -178,15 +169,7 @@ public class GrpcChannelKey {
   }
 
   /**
-   * Returns a short String representation of this gRPC channel key.
-   * <p>
-   * Returns a short representation of this channel key, following
-   * this template:
-   * {@code GrpcChannelKey{ClientType=mClientType, ClientHostname=mLocalHostName, ChannelId=mChannelId}}
-   * <p>
-   * Null values are omitted.
-   *
-   * @return short representation of this gRPC channel key
+   * @return short representation of this channel key
    */
   public String toStringShort() {
     return MoreObjects.toStringHelper(this)
