@@ -33,7 +33,25 @@ public final class LoginModuleConfigurationUtils {
   }
 
   /**
-   * @return the OS login module class name
+   * Identifies and returns the login module and class according to the operating system.
+   * <p>
+   * Checks the operating system informed by {@link OSUtils#IBM_JAVA}, {@link OSUtils#isWindows()},
+   * {@link OSUtils#isAIX()}, and {@link OSUtils#is64Bit()}. Uses this information to return
+   * a string with the module and class name needed in order to login.
+   * <p>
+   * The return value changes according to the answer to these questions:
+   *                    1)  Is the current Java vendor IBM Java?
+   *                        If YES:
+   *                             a) Is the current operating system Windows?
+   *                                i. Is it 64-bit or 32-bit?
+   *                             b) Is the current operating system AIX?
+   *                                ii. Is it 64-bit or 32-bit?
+   *                             c) Is the current operating system Linux?
+   *                        If NO:
+   *                            a) Is the current operating system Windows
+   *                               or is it UNIX-based?
+   *
+   * @return  the OS login module class name according to the machine
    */
   private static String getOSLoginModuleName() {
     if (OSUtils.IBM_JAVA) {
