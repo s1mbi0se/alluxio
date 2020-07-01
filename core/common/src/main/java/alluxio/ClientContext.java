@@ -182,6 +182,11 @@ public class ClientContext {
   }
 
   /**
+   * Returns the path level configuration for this context.
+   * <p>
+   * Gets {@link ClientContext#mPathConf}, which corresponds to
+   * the {@link PathConfiguration} for this client context.
+   *
    * @return the path level configuration backing this context
    */
   public PathConfiguration getPathConf() {
