@@ -68,8 +68,8 @@ public final class LoginModuleConfiguration extends Configuration {
    * Gets and returns configuration entries for the specified application.
    * <p>
    * Verifies whether the lowercase name of the application corresponds
-   * to either {@link AuthType#SIMPLE} or {@link AuthType#CUSTOM}. In
-   * which case returns {@link LoginModuleConfiguration#SIMPLE}.
+   * to either {@link AuthType#SIMPLE} or {@link AuthType#CUSTOM}. If
+   * it does, returns {@link LoginModuleConfiguration#SIMPLE}.
    * If the lowercase name of the application corresponds to
    * {@link AuthType#KERBEROS}, an exception is thrown.
    *
