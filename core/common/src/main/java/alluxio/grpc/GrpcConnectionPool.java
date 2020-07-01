@@ -354,6 +354,11 @@ public class GrpcConnectionPool {
     }
 
     /**
+     * Returns current ref-count
+     * <p>
+     * Gets current value for {@link GrpcConnectionPool.CountingReference#mRefCount},
+     * used by {@link GrpcConnectionPool#releaseConnection(GrpcConnectionKey, AlluxioConfiguration)}.
+     *
      * @return current ref-count
      */
     private int getRefCount() {
