@@ -159,7 +159,19 @@ public class GrpcConnectionPool {
   }
 
   /**
-   * Creates a {@link ManagedChannel} by given pool key.
+   * Creates and returns a managed Netty channel by given pool key.
+   * <p>
+   * Creates a {@link NettyChannelBuilder} with the {@link SocketAddress} from
+   * {@link GrpcChannelKey#getServerAddress()}. If the address is a
+   * {@link InetSocketAddress}, delays domain name system lookup in
+   * order to detect changes when instantiating the builder.
+   *<p>
+   * Builds a new {@link ManagedChannel} and returns it.
+   *
+   * @param channelKey  the unique identifier for the {@link GrpcChannel}
+   * @param conf        the Alluxio configuration
+   * @return            the new instance of ManagedChannel created using
+   *                    {@link NettyChannelBuilder#build()}
    */
   private ManagedChannel createManagedChannel(GrpcChannelKey channelKey,
       AlluxioConfiguration conf) {
