@@ -164,7 +164,7 @@ public class GrpcConnectionPool {
    * {@link GrpcChannelKey#getServerAddress()}. If the address is a
    * {@link InetSocketAddress}, delays domain name system lookup in
    * order to detect changes when instantiating the builder.
-   *<p>
+   * <p>
    * Builds a new {@link ManagedChannel} and returns it.
    *
    * @param channelKey  the unique identifier for the {@link GrpcChannel}
