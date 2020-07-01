@@ -130,12 +130,19 @@ public class ChannelAuthenticator {
   }
 
   /**
-   * Determines transport level authentication scheme for given subject.
+   * Determines and returns transport level authentication scheme for given subject.
+   * <p>
+   * Returns the authentication scheme for this channel based on an analysis of
+   * the provided {@link AuthType} and checks if it is supported by verifying
+   * whether its value equals     {@link ChannelAuthenticationScheme#NOSASL},
+   *                              {@link ChannelAuthenticationScheme#SIMPLE},
+   *                          or  {@link ChannelAuthenticationScheme#CUSTOM}.
    *
-   * @param subject the subject
+   * @param authType      the authentication type
+   * @param subject       the subject
    * @param serverAddress the target server address
-   * @return the channel authentication scheme to use
-   * @throws UnauthenticatedException if configured authentication type is not supported
+   * @return              the channel authentication scheme to use
+   * @throws UnauthenticatedException If configured authentication type is not supported.
    */
   private ChannelAuthenticationScheme getChannelAuthScheme(AuthType authType, Subject subject,
       SocketAddress serverAddress) throws UnauthenticatedException {
