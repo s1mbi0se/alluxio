@@ -258,8 +258,17 @@ public final class MetricsSystem {
   /**
    * Converts a simple string to a qualified metric name based on the process type.
    *
-   * @param name the name of the metric
-   * @return the metric with instance and id tags
+   * @param name  the name of the metric
+   * @return      the metric with instance and ID tags
+   * @throws IllegalStateException  If {@link CommonUtils#PROCESS_TYPE}
+   *                                does not correspond to an actual
+   *                                existing Alluxio process such as
+   *                                {@link CommonUtils.ProcessType#CLIENT},
+   *                                {@link CommonUtils.ProcessType#MASTER},
+   *                                {@link CommonUtils.ProcessType#JOB_MASTER},
+   *                                {@link CommonUtils.ProcessType#WORKER},
+   *                                {@link CommonUtils.ProcessType#JOB_WORKER},
+   *                                or {@link CommonUtils.ProcessType#PROXY}
    */
   public static String getMetricName(String name) {
     if (name.startsWith(CLUSTER)) {
