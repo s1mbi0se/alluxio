@@ -187,7 +187,27 @@ public abstract class AbstractClient implements Client {
   }
 
   /**
-   * Connects with the remote.
+   * Attempts to connect with the remote client.
+   * <p>
+   * Verifies whether or not a connection has already been
+   * established, in which case it halts its execution. Otherwise,
+   * checks whether or not this client is closed. If it happens
+   * to be closed, no further attempts at a connection will be made.
+   * <p>
+   * Attempts to connect to this client multiple times while also
+   * counting the number of attempts to a connection. If all attempts
+   * fail continuously, the exception caused by the last attempt is
+   * thrown again and no more attempts at a connection are made.
+   *
+   * @throws FailedPreconditionException  If the client is already closed, in which case
+   *                                      the connection cannot be established.
+   * @throws UnavailableException         If it fails to determine the RPC address, in
+   *                                      which case a new attempt is called for. Also if
+   *                                      it continuously fails to establish a connection.
+   * @throws UnauthenticatedException     If the credentials have expired, in which case
+   *                                      a new login is called for.
+   * @throws NotFoundException            If the service is not found in the server.
+   *
    */
   @Override
   public synchronized void connect() throws AlluxioStatusException {
