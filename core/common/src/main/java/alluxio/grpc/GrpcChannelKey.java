@@ -70,7 +70,11 @@ public class GrpcChannelKey {
   }
 
   /**
-   * @return unique identifier for the channel
+   * Returns the unique identifier of the channel
+   * <p>
+   * Gets randomly generated UUID for this channel.
+   *
+   * @return the UUID for the channel
    */
   public UUID getChannelId() {
     return mChannelId;
