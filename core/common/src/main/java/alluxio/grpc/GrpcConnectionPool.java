@@ -128,7 +128,6 @@ public class GrpcConnectionPool {
    *
    * @param connectionKey the connection key
    * @param conf          the Alluxio configuration
-   *
    * @throws Exception    If connection does not exist.
    */
   public void releaseConnection(GrpcConnectionKey connectionKey, AlluxioConfiguration conf) {
