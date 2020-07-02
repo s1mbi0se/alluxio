@@ -192,7 +192,25 @@ public class GrpcConnectionPool {
   }
 
   /**
-   * It updates and returns the given {@link NettyChannelBuilder} based on network group settings.
+   * Creates and returns a new builder for a Netty channel.
+   * <p>
+   * Instantiates a new object of type {@link NettyChannelBuilder} and
+   * sets its properties based on the provided configurations.
+   * <p>
+   * Returns the created builder.
+   *
+   * @param key             the gRPC channel key
+   * @param channelBuilder  the Netty channel builder
+   * @param conf            the Alluxio configuration used to determine:
+   *                            1) how long the channel builder should be kept alive for;
+   *                            2) the maximum message size allowed for a single gRPC frame;
+   *                            3) the flow control window in bytes;
+   *                            4) the channel type, such as {@link io.netty.channel.epoll.EpollSocketChannel}
+   *                            or {@link io.netty.channel.socket.nio.NioSocketChannel}
+   *                            5) the {@link EventLoopGroup} to be used by the Netty transport;
+   * @return  a new Netty channel builder with the provided configurations,
+   *          which will be used to help simplify construction of channels
+   *          using the Netty transport
    */
   private NettyChannelBuilder applyGroupDefaults(GrpcChannelKey key,
       NettyChannelBuilder channelBuilder, AlluxioConfiguration conf) {
