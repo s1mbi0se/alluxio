@@ -525,13 +525,20 @@ public final class ConfigurationUtils {
   }
 
   /**
-   * Filters and loads properties with a certain scope from the property list returned by grpc.
+   * Filters and loads properties with a certain scope from the property list returned by gRPC.
+   * <p>
+   * Iterates through each {@link ConfigProperty} from within the provided list. Validates whether
+   * the config property has a valid name and value. If a config property is valid and within the
+   * provided {@link Scope}, it is referenced by a HashTable of type {@link Properties}, where:
+   *        - the key is the {@link PropertyKey};
+   *        - the value is the return value of {@link ConfigProperty#getValue}.
+   * <p>
    * The given scope should only be {@link Scope#WORKER} or {@link Scope#CLIENT}.
    *
-   * @param properties the property list returned by grpc
-   * @param scope the scope to filter the received property list
-   * @param logMessage a function with key and value as parameter and returns debug log message
-   * @return the loaded properties
+   * @param properties  the property list returned by gRPC
+   * @param scope       the scope to filter the received property list
+   * @param logMessage  a function with key and value as parameter and returns debug log message
+   * @return            the loaded properties from the list of configuration properties
    */
   private static Properties filterAndLoadProperties(List<ConfigProperty> properties,
       Scope scope, BiFunction<PropertyKey, String, String> logMessage) {
