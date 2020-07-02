@@ -49,10 +49,6 @@ public final class ClientMasterSync {
   private final MasterInquireClient mInquireClient;
   private final ClientContext mContext;
 
-  private final String mApplicationId;
-  private final MasterInquireClient mInquireClient;
-  private final ClientContext mContext;
-
   /**
    * Client for communicating to metrics master.
    */
