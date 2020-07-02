@@ -63,6 +63,15 @@ public final class FileSystemMasterClientPool extends DynamicResourcePool<FileSy
     }
   }
 
+  /**
+   * Returns a new client to use for interacting with a file system master.
+   * <p>
+   * Creates and returns a new {@link FileSystemMasterClient} through
+   * {@link FileSystemMasterClient.Factory#create} and using the existing
+   * {@link FileSystemMasterClientPool#mMasterContext}.
+   *
+   * @return  a new resource for interacting with a file system master
+   */
   @Override
   protected FileSystemMasterClient createNewResource() {
     return FileSystemMasterClient.Factory.create(mMasterContext);

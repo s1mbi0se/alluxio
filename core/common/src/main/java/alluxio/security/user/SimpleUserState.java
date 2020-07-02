@@ -39,6 +39,22 @@ public class SimpleUserState extends BaseUserState {
    * Factory class to create the user state.
    */
   public static class Factory implements UserStateFactory {
+    /**
+     * Returns a new user state implementation for simple authentication schemes.
+     * <p>
+     * Creates a new object of type {@link AuthType} based on the provided
+     * {@link AlluxioConfiguration} and checks whether the authentication
+     * type is {@link AuthType#SIMPLE} or {@link AuthType#CUSTOM}, in which
+     * case a new object of type {@link SimpleUserState} is created with the
+     * provided {@link Subject} and configuration, and returned.
+     * <p>
+     * Returns null if the authentication type is unsupported.
+     *
+     * @param subject   the subject
+     * @param conf      the Alluxio configuration
+     * @param isServer  a boolean value indicating whether this is from a server process
+     * @return          the new simple user state if the authentication type is supported; otherwise, null
+     */
     @Override
     public UserState create(Subject subject, AlluxioConfiguration conf, boolean isServer) {
       AuthType authType = conf.getEnum(PropertyKey.SECURITY_AUTHENTICATION_TYPE, AuthType.class);
