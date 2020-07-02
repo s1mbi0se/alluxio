@@ -1184,6 +1184,20 @@ public final class PropertyKey implements Comparable<PropertyKey> {
           .setConsistencyCheckLevel(ConsistencyCheckLevel.ENFORCE)
           .setScope(Scope.SERVER)
           .build();
+  public static final PropertyKey B2_ACCESS_KEY =
+      new Builder(Name.B2_ACCESS_KEY)
+          .setDescription("The access key of B2 bucket.")
+          .setConsistencyCheckLevel(ConsistencyCheckLevel.ENFORCE)
+          .setScope(Scope.SERVER)
+          .setDisplayType(DisplayType.CREDENTIALS)
+          .build();
+  public static final PropertyKey B2_SECRET_KEY =
+      new Builder(Name.B2_SECRET_KEY)
+          .setDescription("The secret key of B2 bucket.")
+          .setConsistencyCheckLevel(ConsistencyCheckLevel.ENFORCE)
+          .setScope(Scope.SERVER)
+          .setDisplayType(DisplayType.CREDENTIALS)
+          .build();
 
   //
   // Mount table related properties
@@ -4854,6 +4868,8 @@ public final class PropertyKey implements Comparable<PropertyKey> {
     public static final String UNDERFS_KODO_CONNECT_TIMEOUT =
         "alluxio.underfs.kodo.connect.timeout";
     public static final String UNDERFS_KODO_REQUESTS_MAX = "alluxio.underfs.kodo.requests.max";
+    public static final String B2_ACCESS_KEY = "b2AccessKeyId";
+    public static final String B2_SECRET_KEY = "b2SecretKey";
 
     //
     // UFS access control related properties
