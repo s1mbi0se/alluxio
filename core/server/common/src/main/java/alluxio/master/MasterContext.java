@@ -63,7 +63,14 @@ public class MasterContext {
   }
 
   /**
-   * @return the UserState of the server
+   * Gets the user state of the server.
+   * <p>
+   * Returns the existing  {@link MasterContext#mUserState},
+   * which handles logging in any client, maintains the state,
+   * and provides access to the {@link javax.security.auth.Subject}
+   * and the {@link alluxio.security.User} for the client.
+   *
+   * @return  the {@link UserState} of the server
    */
   public UserState getUserState() {
     return mUserState;
