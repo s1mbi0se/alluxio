@@ -325,7 +325,24 @@ public final class MetricsSystem {
   }
 
   /**
-   * Builds metric registry name for client instance. The pattern is instance.uniqueId.metricName.
+   * Builds and returns metric registry name for client instance.
+   * <p>
+   * Creates and returns the client metric name. The pattern is
+   * {@code instance.uniqueId.metricName}.
+   * <p>
+   * Checks whether the name is already in the {@link #CACHED_METRICS}.
+   * Returns the name from the cache if it is there.
+   * <p>
+   * Checks whether the name start with {@link InstanceType#MASTER} or
+   * {@link InstanceType#CLUSTER}. Returns the name and saves it
+   * in cache if true.
+   * <p>
+   * Checks whether the name starts with {@link InstanceType#WORKER}.
+   * Returns {@link #getWorkerMetricName} if true, and saves the result
+   * in the cached metrics.
+   * <p>
+   * Returns a new metric name with an unique ID if none of the verifications
+   * above result to true and saves it in cache.
    *
    * @param name the metric name
    * @return the metric registry name
