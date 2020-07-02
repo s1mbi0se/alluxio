@@ -62,7 +62,17 @@ public final class ConfigHashSync implements HeartbeatExecutor {
   }
 
   /**
-   * @return empty if there is no exception during reinitialization, otherwise, return the exception
+   * Returns an exception if there is one during reinitialization.
+   * <p>
+   * Checks whether {@link #mException} is true or false. A true
+   * value indicates an exception occurred during reinitialization,
+   * in which case the exception is returned.
+   * <p>
+   * A false value indicates no exception took place, in which case
+   * the return is empty.
+   *
+   * @return  empty if there is no exception during reinitialization;
+   *          otherwise, occurred the exception
    */
   public Optional<IOException> getException() {
     if (mException == null) {
