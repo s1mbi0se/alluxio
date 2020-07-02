@@ -386,9 +386,8 @@ public class FileSystemContext implements Closeable {
    * Returns the client context for this file system context.
    * <p>
    * Returns an object of type {@link alluxio.ClientContext}
-   * containing only the information required and pertaining to
-   * making network connections and performing operations with remote
-   * Alluxio processes.
+   * containing only the information required to create network
+   * connections and perform remote operations on Alluxio processes.
    *
    * @return the client context backing this {@link FileSystemContext}
    */

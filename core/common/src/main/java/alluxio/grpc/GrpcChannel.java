@@ -84,7 +84,7 @@ public final class GrpcChannel extends Channel {
   }
 
   /**
-   * Shuts down the channel.
+   * Shuts down the gRPC channel.
    * <p>
    * Shutdown should be synchronized as it could be called concurrently due to:
    *          1) Authentication long polling
