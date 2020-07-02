@@ -390,6 +390,15 @@ public final class ConfigurationUtils {
   }
 
   /**
+   * Returns the Alluxio configuration based on the provided defaults/values from "conf/alluxio-site.properties".
+   * <p>
+   * Checks whether {@link ConfigurationUtils#sDefaultProperties} is already set, in which case only a copy of
+   * it is returned through {@link AlluxioProperties#copy}.
+   * <p>
+   * If the default properties are not yet set, another verification is made, this time within a synchronized block,
+   * to make sure that the properties are only reloaded when necessary and avoid multiple threads to reload these
+   * properties at the same time.
+   * <p>
    * Returns an instance of {@link AlluxioConfiguration} with the defaults and values from
    * alluxio-site properties.
    *
