@@ -38,6 +38,18 @@ public final class PlainSaslClientCallbackHandler implements CallbackHandler {
     mPassword = password;
   }
 
+  /**
+   * Handles username/password callbacks for a given user in order to be put into SASL transport.
+   * <p>
+   * Handles serializable callbacks for username/password using {@link NameCallback#setName} or
+   * {@link PasswordCallback#setPassword} with the existing {@link PlainSaslClientCallbackHandler#mUserName}
+   * and {@link PlainSaslClientCallbackHandler#mPassword}.
+   *
+   * @param   callbacks   the callbacks to be handled by {@link PlainSaslClientCallbackHandler}
+   * @throws  IOException                  If an unexpected I/O-bound operation fails.
+   * @throws  UnsupportedCallbackException If a provided callback is not supported as it is not
+   *                                       of type {@link NameCallback} or {@link PasswordCallback}.
+   */
   @Override
   public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
     for (Callback callback : callbacks) {
