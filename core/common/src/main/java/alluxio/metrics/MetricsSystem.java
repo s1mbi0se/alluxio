@@ -325,7 +325,24 @@ public final class MetricsSystem {
   }
 
   /**
-   * Builds metric registry name for client instance. The pattern is instance.uniqueId.metricName.
+   * Builds and returns metric registry name for client instance.
+   * <p>
+   * Creates and returns the client metric name. The pattern is
+   * {@code instance.uniqueId.metricName}.
+   * <p>
+   * Checks whether the name is already in the {@link #CACHED_METRICS}.
+   * Returns the name from the cache if it is there.
+   * <p>
+   * Checks whether the name start with {@link InstanceType#MASTER} or
+   * {@link InstanceType#CLUSTER}. Returns the name and saves it
+   * in cache if true.
+   * <p>
+   * Checks whether the name starts with {@link InstanceType#WORKER}.
+   * Returns {@link #getWorkerMetricName} if true, and saves the result
+   * in the cached metrics.
+   * <p>
+   * Returns a new metric name with an unique ID if none of the verifications
+   * above result to true and saves it in cache.
    *
    * @param name the metric name
    * @return the metric registry name
@@ -384,12 +401,25 @@ public final class MetricsSystem {
   }
 
   /**
-   * Builds unique metric registry names with unique ID (set to host name). The pattern is
-   * instance.metricName.hostname
+   * Builds unique metric registry names with unique ID, which is set to host name.
+   * <p>
+   * Builds a unique metric registry name. The pattern is {@code instance.metricName.hostname}.
+   * <p>
+   * Checks whether the provided name starts with the string representation of the provided
+   * {@link InstanceType}. If true, concatenates:
+   *          1) the provided {@code name}, followed by a '.'
+   *          2) the string value of {@link #sSourceNameSupplier},
+   *          returned from {@link Supplier#get}.
+   * <p>
+   * Returns a concatenation following this order, if the aforementioned verification results to false:
+   *          1) the provided {@code instance}, followed by a '.';
+   *          2) the provided {@code name}, followed by a '.';
+   *          3) the string value of {@link #sSourceNameSupplier},
+   *          returned from {@link Supplier#get}.
    *
-   * @param instance the instance name
-   * @param name the metric name
-   * @return the metric registry name
+   * @param   instance  the instance name
+   * @param   name      the metric name
+   * @return  the metric registry name
    */
   private static String getMetricNameWithUniqueId(InstanceType instance, String name) {
     if (name.startsWith(instance.toString())) {

@@ -105,6 +105,14 @@ public final class RetryHandlingFileSystemMasterClient extends AbstractMasterCli
     return Constants.FILE_SYSTEM_MASTER_CLIENT_SERVICE_NAME;
   }
 
+  /**
+   * Gets the service version for the file system master client.
+   * <p>
+   * Gets the service version of the file system master client from
+   * {@link Constants#FILE_SYSTEM_MASTER_CLIENT_SERVICE_VERSION}.
+   *
+   * @return  the service version for the file system master client
+   */
   @Override
   protected long getServiceVersion() {
     return Constants.FILE_SYSTEM_MASTER_CLIENT_SERVICE_VERSION;
