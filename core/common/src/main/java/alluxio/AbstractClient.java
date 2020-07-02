@@ -360,20 +360,22 @@ public abstract class AbstractClient implements Client {
   }
 
   /**
-   * Tries to execute an RPC defined as a {@link RpcCallable}. Metrics will be recorded based on
+   * Attempts to execute an RPC and record metrics based the provided name for the RPC.
+   * <p>
+   * Tries to execute an RPC defined as an {@link RpcCallable}. Metrics will be recorded based on
    * the provided rpc name.
-   *
-   * If a {@link UnavailableException} occurs, a reconnection will be tried through
+   * <p>
+   * If an {@link UnavailableException} occurs, a reconnection will be tried through
    * {@link #connect()} and the action will be re-executed.
    *
-   * @param <V> type of return value of the RPC call
-   * @param rpc the RPC call to be executed
-   * @param logger the logger to use for this call
-   * @param rpcName the human readable name of the RPC call
+   * @param <V>         type of return value of the RPC call
+   * @param rpc         the RPC call to be executed
+   * @param logger      the logger to use for this call
+   * @param rpcName     the human readable name of the RPC call
    * @param description the format string of the description, used for logging
-   * @param args the arguments for the description
-   * @return the return value of the RPC call
-   * @throws AlluxioStatusException
+   * @param args        the arguments for the description
+   * @return            the return value of the RPC call
+   * @throws AlluxioStatusException If an unforeseen exception is thrown.
    */
   protected synchronized <V> V retryRPC(RpcCallable<V> rpc, Logger logger, String rpcName,
       String description, Object... args) throws AlluxioStatusException {
