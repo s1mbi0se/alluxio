@@ -347,6 +347,16 @@ public abstract class AbstractClient implements Client {
     mClosed = true;
   }
 
+  /**
+   * Attempts to get the INET socket address for this client.
+   * <p>
+   * Returns the existing {@link #mAddress} for this client.
+   *
+   * @return the INET socket address for this client
+   * @throws UnavailableException If an unforeseen exception occurs
+   *                              while attempting to get the
+   *                              {@link InetSocketAddress}.
+   */
   @Override
   public synchronized InetSocketAddress getAddress() throws UnavailableException {
     return mAddress;
