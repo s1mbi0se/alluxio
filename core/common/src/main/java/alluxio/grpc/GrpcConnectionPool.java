@@ -338,6 +338,21 @@ public class GrpcConnectionPool {
     }).get();
   }
 
+  /**
+   * Attempts to release network event loop for a provided gRPC channel key.
+   * <p>
+   * Searches for the value {@link CountingReference<EventLoopGroup>} assigned to
+   * the key {@link GrpcChannelKey#getNetworkGroup()} in the ConcurrentMap
+   * {@link #mEventLoops}. Throws an exception if the value is null.
+   * <p>
+   * Checks whether the event loop group should be shutdown by comparing the return value
+   * of {@link CountingReference#dereference()} and comparing it to zero. Shuts down the server
+   * and sets its reference to null if true; otherwise keeps everything as is.
+   *
+   * @param channelKey             the gRPC channel key from which the network group
+   *                               will be provided
+   * @throws NullPointerException  If the provided gRPC channel key points to null.
+   */
   private void releaseNetworkEventLoop(GrpcChannelKey channelKey) {
     mEventLoops.compute(channelKey.getNetworkGroup(), (key, ref) -> {
       Preconditions.checkNotNull(ref, "Cannot release nonexistent event-loop");
