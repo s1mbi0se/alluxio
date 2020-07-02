@@ -366,7 +366,16 @@ public class GrpcConnectionPool {
     }
 
     /**
-     * @return the underlying object after increasing ref-count
+     *
+     * <p>
+     * Invokes {@link AtomicInteger#incrementAndGet} on
+     * {@link GrpcConnectionPool.CountingReference#mRefCount}.
+     * <p>
+     * Returns this instance of {@link CountingReference}, used
+     * as a reference counting wrapper over an instance of a
+     * given type.
+     *
+     * @return  the underlying object after increasing ref-count
      */
     private CountingReference reference() {
       mRefCount.incrementAndGet();
