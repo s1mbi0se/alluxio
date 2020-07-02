@@ -128,7 +128,23 @@ public final class ExponentialTimeBoundedRetry extends TimeBoundedRetry {
     }
 
     /**
-     * @return the built retry mechanism
+     * Builds and returns a new exponential time-bounded retry mechanism.
+     * <p>
+     * Creates a new object of type {@link ExponentialTimeBoundedRetry} and
+     * returns it using these members variables:
+     *          - {@link ExponentialTimeBoundedRetry.Builder#mTimeCtx}, which
+     *          allows for time management;
+     *          - {@link ExponentialTimeBoundedRetry.Builder#mMaxDuration}, which
+     *          determines the maximum total duration to retry for;
+     *          - {@link ExponentialTimeBoundedRetry.Builder#mInitialSleep}, which
+     *          determines the initial sleep interval between retries;
+     *          - {@link ExponentialTimeBoundedRetry.Builder#mMaxSleep}, which
+     *          determines the maximum sleep interval between retries;
+     *          - {@link ExponentialTimeBoundedRetry.Builder#mSkipInitialSleep}, which
+     *          determines whether the first sleep should be skipped.
+     *
+     * @return  the built exponential time-bounded
+     *          retry mechanism
      */
     public ExponentialTimeBoundedRetry build() {
       return new ExponentialTimeBoundedRetry(
