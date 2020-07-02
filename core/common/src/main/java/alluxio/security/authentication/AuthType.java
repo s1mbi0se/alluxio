@@ -46,7 +46,7 @@ public enum AuthType {
   ;
 
   /**
-   * Gets the string value of the authentication type
+   * Gets the string value of the authentication type.
    * <p>
    * Returns a string representation of the authentication
    * type using {@link AuthType#valueOf}.
