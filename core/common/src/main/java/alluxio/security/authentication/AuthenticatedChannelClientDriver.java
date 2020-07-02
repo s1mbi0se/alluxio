@@ -178,6 +178,23 @@ public class AuthenticatedChannelClientDriver implements StreamObserver<SaslMess
     }
   }
 
+  /**
+   * Builds and returns a SASL message.
+   * <p>
+   * Uses {@link SaslMessage.Builder#build()} to instantiate a new
+   * object of type SaslMessage. The client ID is set to a string of
+   * the ID found in {@link AuthenticatedChannelClientDriver#mChannelKey}
+   * through {@link GrpcChannelKey#getChannelId()}.
+   * <p>
+   * The channel ref is set to a short representation of the channel key through
+   * {@link GrpcChannelKey#toStringShort()}.
+   * <p>
+   * Returns an object of type SaslMessage.
+   *
+   * @return a message for Simple Authentication and Security Layer
+   * @throws SaslException  If the message cannot be generated for
+   *                        unexpected reasons.
+   */
   private SaslMessage generateInitialMessage() throws SaslException {
     SaslMessage.Builder initialMsg = mSaslClientHandler.handleMessage(null).toBuilder();
     initialMsg.setClientId(mChannelKey.getChannelId().toString());
