@@ -131,7 +131,7 @@ public final class ExponentialTimeBoundedRetry extends TimeBoundedRetry {
      * Builds and returns a new exponential time-bounded retry mechanism.
      * <p>
      * Creates a new object of type {@link ExponentialTimeBoundedRetry} and
-     * returns it using these members variables:
+     * returns it using these member variables:
      *          - {@link ExponentialTimeBoundedRetry.Builder#mTimeCtx}, which
      *          allows for time management;
      *          - {@link ExponentialTimeBoundedRetry.Builder#mMaxDuration}, which
