@@ -9,8 +9,11 @@
 # See the NOTICE file distributed with this work for information regarding copyright ownership.
 #
 
-{{ $shortCircuitEnabled := .Values.shortCircuit.enabled -}}
-{{ $needDomainSocketVolume := and $shortCircuitEnabled (eq .Values.shortCircuit.policy "uuid") -}}
+{{- $shortCircuitEnabled := .Values.shortCircuit.enabled }}
+{{- $needDomainSocketVolume := and $shortCircuitEnabled (eq .Values.shortCircuit.policy "uuid") }}
+{{- $hostNetwork := .Values.worker.hostNetwork }}
+{{- $hostPID := .Values.worker.hostPID }}
+
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -36,8 +39,9 @@ spec:
         heritage: {{ .Release.Service }}
         role: alluxio-worker
     spec:
-      hostNetwork: {{ .Values.worker.hostNetwork }}
-      dnsPolicy: {{ .Values.worker.dnsPolicy }}
+      hostNetwork: {{ $hostNetwork }}
+      hostPID: {{ $hostPID }}
+      dnsPolicy: {{ .Values.worker.dnsPolicy | default ($hostNetwork | ternary "ClusterFirstWithHostNet" "ClusterFirst") }}
       securityContext:
         fsGroup: {{ .Values.fsGroup }}
       nodeSelector:
@@ -154,9 +158,7 @@ spec:
       restartPolicy: Always
       volumes:
         {{- if $needDomainSocketVolume }}
-        - name: alluxio-domain
-          persistentVolumeClaim:
-            claimName: "{{ .Values.shortCircuit.pvcName }}"
+{{- include "alluxio.worker.shortCircuit.volume" . }}
         {{- end }}
         {{- if .Values.secrets }}
           {{- if .Values.secrets.worker }}
