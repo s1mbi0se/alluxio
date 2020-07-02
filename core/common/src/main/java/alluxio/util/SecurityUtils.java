@@ -46,10 +46,16 @@ public final class SecurityUtils {
   }
 
   /**
-   * Checks if authentication is enabled.
+   * Checks if authentication is enabled or not in the given configuration.
+   * <p>
+   * Checks whether the authentication type provided in the {@link AlluxioConfiguration}
+   * is {@link AuthType#NOSASL}, in which case authentication is disabled. If the
+   * authentication type is not NOSASL, authentication is enabled.
+   * <p>
+   * Returns true if authentication is enable or false if it is disabled.
    *
-   * @param conf Alluxio configuration
-   * @return true if authentication is enabled, false otherwise
+   * @param conf  the Alluxio configuration
+   * @return      a boolean value representing whether authentication is enabled
    */
   public static boolean isAuthenticationEnabled(AlluxioConfiguration conf) {
     return !conf.getEnum(PropertyKey.SECURITY_AUTHENTICATION_TYPE, AuthType.class)
