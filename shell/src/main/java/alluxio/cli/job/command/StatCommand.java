@@ -74,7 +74,7 @@ public final class StatCommand extends AbstractFileSystemCommand {
     try (CloseableResource<JobMasterClient> client =
         JobContext.create(mFsContext.getClusterConf(), mFsContext.getClientContext().getUserState())
             .acquireMasterClientResource()) {
-      JobInfo info = client.get().getJobStatus(id);
+      JobInfo info = client.get().getJobStatusDetailed(id);
       System.out.print(formatOutput(cl, info));
     } catch (Exception e) {
       LOG.error("Failed to get status of the job", e);
@@ -106,6 +106,10 @@ public final class StatCommand extends AbstractFileSystemCommand {
           if (taskInfo.getWorkerHost() != null) {
             output.append("\t").append("Worker: ").append(taskInfo.getWorkerHost()).append("\n");
           }
+        }
+        if (!childInfo.getDescription().isEmpty()) {
+          output.append("\t").append("Description: ").append(
+              StringUtils.abbreviate(childInfo.getDescription(), 200)).append("\n");
         }
         output.append("\t").append("Status: ").append(childInfo.getStatus()).append("\n");
         if (childInfo.getErrorMessage() != null && !childInfo.getErrorMessage().isEmpty()) {

@@ -52,3 +52,69 @@
 0.5.5
 
 - Removed extra resources created by Helm install https://github.com/Alluxio/alluxio/issues/10321
+
+0.5.6
+
+- Added readiness and liveness probes for master and worker containers
+- Removed formatting script under format/
+
+0.5.7
+
+- Moved journal formatting from job/format-journal-job.yaml to initContainer in master/statefulset.yaml
+- Changed the master RocksDB metastore volume from emptyDir to PVC
+- Added support for using PVC for tiered storage
+
+0.5.8
+
+- Added option to disable worker short-circuit
+- Changed worker domain socket volume from hostPath to PVC
+- Changed hostNetwork to false
+- Added alluxio.worker.container.hostname property to use podIP
+- Added selector labels to worker domain socket PVC
+
+0.5.9
+
+- Refactored configmap to generate config properties in a list
+- Changed JVM options from one string to a list
+- Supported Helm version upgraded to 3.X
+
+0.6.0
+
+- Fix alluxio-fuse container fail to restart when it exited with error
+
+0.6.1
+
+- Infer hostNetwork, dnsPolicy and domain socket volume type based on the user
+
+0.6.2
+
+- Fix alluxio chart failed to deploy with helm when "fuse.enabled" is true in values.yaml(issue: #11542)
+
+0.6.3
+
+- Enabled worker domain socket to choose between hostPath and PVC
+- Refactored some worker domain socket PVC properties to be consistent with documentation
+- Enabled master metastore to choose between emptyDir and PVC
+- Enabled master journal to choose between emptyDir and PVC
+- Moved metastore configuration properties to the root level, to be the same as journal
+- Removed inferring hostNetwork, dnsPolicy and domain socket from whether user is root
+- Added inferring dnsPolicy from hostNetwork
+- Fixed one typo in ALLUXIO_CLIENT_JAVA_OPTS for FUSE
+
+0.6.4
+
+- Fixed Fuse crash issue
+- Changed master service to headless from NodePort
+- Made the single master access itself without service
+
+0.6.5
+
+- Removed alluxio.worker.hostname from ALLUXIO_JAVA_OPTS for Fuse
+- Increase the default memory limit to match the default xmx
+- Added hostPID for using Java profile
+
+0.6.6
+
+- Removed obsolete master journal formatting job configuration properties
+- Set hostPID default to false
+

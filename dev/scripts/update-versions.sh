@@ -36,6 +36,20 @@ EOF
 # Arguments:
 #  $1: old version
 #  $2: new version
+function update_dataproc() {
+    perl -pi -e "s/${1}/${2}/g" integration/dataproc/alluxio-dataproc.sh
+}
+
+# Arguments:
+#  $1: old version
+#  $2: new version
+function update_emr() {
+    perl -pi -e "s/${1}/${2}/g" integration/emr/alluxio-emr.sh
+}
+
+# Arguments:
+#  $1: old version
+#  $2: new version
 function update_poms() {
     find . -name pom.xml | xargs -t -n 1 perl -pi -e "s/${1}/${2}/g"
 }
@@ -75,9 +89,6 @@ function update_docs() {
 function update_k8s() {
     perl -pi -e "s/${1}/${2}/g" \
         integration/kubernetes/helm-chart/alluxio/values.yaml
-    pushd integration/kubernetes
-    ./helm-generate.sh all
-    popd
 }
 
 function update_dockerfiles() {
@@ -115,6 +126,8 @@ function main() {
         update_poms "$_old" "$_new"
     fi
 
+    update_dataproc "$_old" "$_new"
+    update_emr "$_old" "$_new"
     update_libexec "$_old" "$_new"
     update_docs "$_old" "$_new"
     update_k8s "$_old" "$_new"

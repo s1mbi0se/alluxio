@@ -46,7 +46,7 @@ To speed up the compilation, you can run the following instruction to skip diffe
 
 ```console
 $ mvn -T 2C clean install -DskipTests -Dmaven.javadoc.skip -Dfindbugs.skip \
-  -Dcheckstyle.skip -Dlicense.skip
+  -Dcheckstyle.skip -Dlicense.skip -Dskip.protoc
 ```
 
 > Note: The flag `-Dskip.protoc` skips generating source files related to gRPC proto.

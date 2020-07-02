@@ -34,6 +34,7 @@ public enum ExceptionMessage {
   PATH_MUST_BE_DIRECTORY("Path \"{0}\" must be a directory."),
   PATH_MUST_BE_MOUNT_POINT("Path \"{0}\" must be a mount point."),
   PATH_INVALID("Path \"{0}\" is invalid."),
+  STATE_LOCK_TIMED_OUT("Failed to acquire the lock after {0}ms"),
 
   // general block
   BLOCK_UNAVAILABLE("Block {0} is unavailable in both Alluxio and UFS."),
@@ -88,17 +89,17 @@ public enum ExceptionMessage {
   MOVE_UNCOMMITTED_BLOCK("Cannot move uncommitted blockId {0,number,#}"),
   NO_BLOCK_ID_FOUND("blockId {0,number,#} not found"),
   NO_EVICTION_PLAN_TO_FREE_SPACE(
-      "Failed to find an eviction plan to free {0,number,#} bytes space at location {1}"),
-  NO_SPACE_FOR_BLOCK_ALLOCATION_TIMEOUT(
-      "Failed to allocate {0,number,#} bytes on {1} after {2}ms to create blockId {3,number,#}"),
+      "Failed to free {0,number,#} bytes space at location {1}"),
+  NO_SPACE_FOR_BLOCK_ALLOCATION(
+      "Failed to allocate {0,number,#} bytes on {1} to create blockId {2,number,#}"),
   NO_SPACE_FOR_BLOCK_ALLOCATION_RETRIES_EXCEEDED(
       "Failed to allocate {0,number,#} bytes on {1} after {2} attempts for blockId {3,number,#}"),
   NO_SPACE_FOR_BLOCK_REQUEST_SPACE_TIMEOUT(
       "Failed to request {0,number,#} bytes after {1}ms to create blockId {2,number,#}"),
   NO_SPACE_FOR_BLOCK_REQUEST_SPACE_RETRIES_EXCEEDED(
       "Failed to request {0,number,#} bytes after {1} attempts for blockId {2,number,#}"),
-  NO_SPACE_FOR_BLOCK_MOVE_TIMEOUT(
-      "Failed to find space in {0} to move blockId {1,number,#} after {2}ms"),
+  NO_SPACE_FOR_BLOCK_MOVE(
+      "Failed to find space in {0} to move blockId {1,number,#}"),
   NO_SPACE_FOR_BLOCK_MOVE_RETRIES_EXCEEDED(
       "Failed to find space in {0} to move blockId {1,number,#} after {2} attempts"),
   REMOVE_UNCOMMITTED_BLOCK("Cannot remove uncommitted blockId {0,number,#}"),
@@ -174,8 +175,6 @@ public enum ExceptionMessage {
   // table master
   DATABASE_DOES_NOT_EXIST("Database {0} does not exist"),
   TABLE_DOES_NOT_EXIST("Table {0} does not exist in database {1}"),
-  TRANSFORM_ACTION_PARSE_FAILED("Failed to parse transform action at: {0}"),
-  TRANSFORM_WRITE_ACTION_INVALID_ARGS("Write action must have exactly one argument"),
   TRANSFORM_WRITE_ACTION_INVALID_NUM_FILES("Write action must have positive number of files"),
   TABLE_BEING_TRANSFORMED("Existing job {0} is transforming table {1} in database {2}"),
   TABLE_ALREADY_TRANSFORMED("Database {0} table {1} has been transformed by definition {2}"),

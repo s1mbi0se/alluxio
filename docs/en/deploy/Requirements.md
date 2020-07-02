@@ -6,6 +6,7 @@ group: Install Alluxio
 priority: 9
 ---
 
+* Table of Contents
 {:toc}
 
 ## General Requirements
@@ -53,6 +54,7 @@ There are Alluxio-specific requirements for cluster nodes running the worker pro
   * Inbound TCP 29999 - The Alluxio worker's default RPC port
   * Inbound TCP 30000 - The Alluxio worker's default web UI port: `http://<worker-hostname>:30000`
   * Inbound TCP 30001 - The Alluxio job worker's default RPC port
+  * Inbound TCP 30002 - The Alluxio job worker's default data port
   * Inbound TCP 30003 - The Alluxio job worker's default web UI 
     port: `http://<worker-hostname>:30003`
 
@@ -77,9 +79,22 @@ $ ./bin/alluxio-mount.sh SudoMount workers
 
 The proxy process provides a REST based client:
 
-* minimum 1 GB memory
+* Minimum 1 GB memory
 * Allow the following ports and protocols:
   * Inbound TCP 39999 - Used by clients to access the proxy.
+
+### Fuse Requirements
+
+There are Alluxio-specific requirements for nodes running the fuse process.
+
+Note that these are bare minimum requirements to run the software.
+Running Alluxio Fuse under high load will increase these requirements.
+
+* Minimum 1 CPU core
+* Minimum 1 GB memory
+* FUSE installed
+  * libfuse 2.9.3 or newer for Linux
+  * osxfuse 3.7.1 or newer for MacOS
 
 ## Additional Requirements
 
@@ -90,8 +105,8 @@ Below are the port and resource requirements for the Logging Server.
 
 There are Alluxio-specific requirements for running the remote logging server:
 
-* minimum 1 GB disk space
-* minimum 1 GB memory
-* minimum 2 CPU cores
+* Minimum 1 GB disk space
+* Minimum 1 GB memory
+* Minimum 2 CPU cores
 * Allow the following ports and protocols:
   * Inbound TCP 45600 - Used by loggers to write logs to the server.

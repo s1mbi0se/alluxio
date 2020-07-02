@@ -37,8 +37,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -66,15 +67,12 @@ public final class DistributedLoadCommand extends AbstractFileSystemCommand {
   private class JobAttempt {
     private final LoadConfig mJobConfig;
     private final RetryPolicy mRetryPolicy;
-    private final JobMasterClient mClient;
 
     private Long mJobId;
 
-    private JobAttempt(LoadConfig jobConfig, RetryPolicy retryPolicy, ClientContext clientContext) {
+    private JobAttempt(LoadConfig jobConfig, RetryPolicy retryPolicy) {
       mJobConfig = jobConfig;
       mRetryPolicy = retryPolicy;
-      mClient = JobMasterClient.Factory.create(
-          JobMasterClientContext.newBuilder(clientContext).build());
     }
 
     private boolean run() {
@@ -133,15 +131,11 @@ public final class DistributedLoadCommand extends AbstractFileSystemCommand {
       }
       return Status.RUNNING;
     }
-
-    private void close() throws IOException {
-      // propagate failing to close up to prevent potential memory leak
-      mClient.close();
-    }
   }
 
-  private final List<JobAttempt> mSubmittedJobAttempts;
+  private List<JobAttempt> mSubmittedJobAttempts;
   private int mActiveJobs;
+  private JobMasterClient mClient;
 
   /**
    * Constructs a new instance to load a file or directory in Alluxio space.
@@ -151,6 +145,9 @@ public final class DistributedLoadCommand extends AbstractFileSystemCommand {
   public DistributedLoadCommand(FileSystemContext fsContext) {
     super(fsContext);
     mSubmittedJobAttempts = Lists.newArrayList();
+    final ClientContext clientContext = mFsContext.getClientContext();
+    mClient = JobMasterClient.Factory.create(
+        JobMasterClientContext.newBuilder(clientContext).build());
   }
 
   @Override
@@ -178,6 +175,11 @@ public final class DistributedLoadCommand extends AbstractFileSystemCommand {
     return 0;
   }
 
+  @Override
+  public void close() throws IOException {
+    mClient.close();
+  }
+
   /**
    * Creates a new job to load a file in Alluxio space, makes it resident in memory.
    *
@@ -186,7 +188,7 @@ public final class DistributedLoadCommand extends AbstractFileSystemCommand {
    */
   private JobAttempt newJob(AlluxioURI filePath, int replication) {
     JobAttempt jobAttempt = new JobAttempt(new LoadConfig(filePath.getPath(), replication),
-        new CountingRetry(3), ClientContext.create(mFsContext.getPathConf(filePath)));
+        new CountingRetry(3));
 
     jobAttempt.run();
 
@@ -194,38 +196,29 @@ public final class DistributedLoadCommand extends AbstractFileSystemCommand {
   }
 
   /**
-   * Waits one job to complete.
+   * Waits for at least one job to complete.
    */
-  private void waitJob() throws IOException {
-    boolean removed = false;
+  private void waitJob() {
+    AtomicBoolean removed = new AtomicBoolean(false);
     while (true) {
-      Iterator<JobAttempt> iterator = mSubmittedJobAttempts.iterator();
-
-      while (iterator.hasNext()) {
-        JobAttempt jobAttempt = iterator.next();
+      mSubmittedJobAttempts = mSubmittedJobAttempts.stream().filter((jobAttempt) -> {
         Status check = jobAttempt.check();
-
         switch (check) {
           case CREATED:
           case RUNNING:
-            continue;
+            return true;
           case CANCELED:
           case COMPLETED:
-            removed = true;
-            jobAttempt.close();
-            iterator.remove();
-            continue;
+            removed.set(true);
+            return false;
           case FAILED:
-            if (!jobAttempt.run()) {
-              removed = true;
-              iterator.remove();
-            }
-            continue;
+            removed.set(true);
+            return false;
           default:
             throw new IllegalStateException(String.format("Unexpected Status: %s", check));
         }
-      }
-      if (removed) {
+      }).collect(Collectors.toList());
+      if (removed.get()) {
         return;
       }
     }

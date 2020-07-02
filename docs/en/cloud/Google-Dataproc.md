@@ -2,7 +2,7 @@
 layout: global
 title: Running Alluxio on Google Cloud Dataproc
 nickname: Google Dataproc
-group: Alluxio in the Cloud
+group: Cloud Native
 priority: 4
 ---
 
@@ -58,10 +58,23 @@ alluxio_site_properties="fs.gcs.accessKeyId=<my_access_key>;fs.gcs.secretAccessK
 The Alluxio deployment on Google Dataproc can customized for more complex scenarios by passing
 additional metadata labels to the `gcloud clusters create` command.
 {% accordion download %}
+  {% collapsible Enable Active Sync on HDFS Paths %}
+[Active Sync]({{ '/en/core-services/Unified-Namespace.html#metadata-active-sync-for-hdfs' | relativize_url}})
+can be enabled on paths in Alluxio for a root HDFS mount point using the metadata key
+`alluxio_sync_list`.
+Specify a list of paths in Alluxio delimited using `;`.
+```console
+...
+--metadata \
+alluxio_sync_list="/tmp;/user/hadoop",\
+...
+```
+  {% endcollapsible %}
+
   {% collapsible Download Additional Files %}
 Additional files can be downloaded into the Alluxio installation directory at `/opt/alluxio/conf`
 using the metadata key `alluxio_download_files_list`.
-Specify `http(s)` or `gs` uris delimited using `;.`
+Specify `http(s)` or `gs` uris delimited using `;`.
 ```console
 ...
 --metadata \
@@ -172,9 +185,14 @@ For further information, visit our Hive on Alluxio
 {% endnavtab %}
 {% navtab Presto %}
 
-Note: 
-* Initialization actions are executed sequentially and Presto installation must precede Alluxio.
-* The Presto initialization action should install in the home directory `/opt/presto-server`.
+Note: There are two ways to install Presto on Dataproc.
+* [Optional Component for Presto](https://cloud.google.com/dataproc/docs/concepts/components/presto)
+is the default Presto configuration with the install home as `/usr/lib/presto`.
+To use this mechanism, no additional configuration is needed for the Alluxio initialization action.
+* If using an initialization action to install an alternate distribution of Presto, override the
+default home directory as it differs from the install home for the optional component.
+Set the metadata label `alluxio_presto_home=/opt/presto-server` with the `gcloud clusters create`
+command to ensure Presto is configured to use Alluxio.
 
 To test Presto on Alluxio, simply run a query on the table created in the Hive section above:
 ```console

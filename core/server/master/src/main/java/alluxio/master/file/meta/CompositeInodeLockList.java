@@ -16,6 +16,7 @@ import alluxio.concurrent.LockMode;
 import com.google.common.base.Preconditions;
 
 import java.util.List;
+import java.util.concurrent.locks.Lock;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -42,11 +43,12 @@ public class CompositeInodeLockList implements InodeLockList {
    * Constructs a new lock list, using an existing lock list as the base list.
    *
    * @param baseLockList the base {@link InodeLockList} to use
+   * @param useTryLock whether or not use {@link Lock#tryLock()} or {@link Lock#lock()}
    */
-  public CompositeInodeLockList(InodeLockList baseLockList) {
+  public CompositeInodeLockList(InodeLockList baseLockList, boolean useTryLock) {
     mBaseLockList = baseLockList;
     mBaseListSize = baseLockList.numInodes();
-    mSubLockList = new SimpleInodeLockList(baseLockList.getInodeLockManager());
+    mSubLockList = new SimpleInodeLockList(baseLockList.getInodeLockManager(), useTryLock);
   }
 
   @Override
@@ -85,9 +87,9 @@ public class CompositeInodeLockList implements InodeLockList {
   }
 
   @Override
-  public void downgradeLastInode() {
+  public void downgradeToReadLocks() {
     if (canDowngradeLast()) {
-      mSubLockList.downgradeLastInode();
+      mSubLockList.downgradeToReadLocks();
     }
   }
 
@@ -107,16 +109,6 @@ public class CompositeInodeLockList implements InodeLockList {
     // Can't downgrade, just acquire new locks instead.
     mSubLockList.lockInode(inode, LockMode.WRITE);
     mSubLockList.lockEdge(inode, childName, LockMode.WRITE);
-  }
-
-  @Override
-  public void downgradeEdgeToInode(Inode inode, LockMode mode) {
-    if (canDowngradeLast()) {
-      mSubLockList.downgradeEdgeToInode(inode, mode);
-      return;
-    }
-    // Can't downgrade, just acquire new locks instead.
-    mSubLockList.lockInode(inode, LockMode.WRITE);
   }
 
   private boolean canDowngradeLast() {

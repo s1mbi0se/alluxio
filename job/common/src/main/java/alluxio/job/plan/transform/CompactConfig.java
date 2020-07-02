@@ -35,19 +35,17 @@ public final class CompactConfig implements PlanConfig {
 
   private static final String NAME = "Compact";
 
-  private final PartitionInfo mPartitionInfo;
+  private final PartitionInfo mInputPartitionInfo;
   /**
    * Files directly under this directory are compacted.
    */
   private final String mInput;
+
+  private final PartitionInfo mOutputPartitionInfo;
   /**
    * Compacted files are stored under this directory.
    */
   private final String mOutput;
-  /**
-   * The type of database to write the compacted table to.
-   */
-  private final String mDatabaseType;
   /**
    * Max number of files after compaction.
    */
@@ -58,32 +56,39 @@ public final class CompactConfig implements PlanConfig {
   private final long mMinFileSize;
 
   /**
-   * @param partitionInfo the partition info
+   * @param inputPartitionInfo the input partition info
    * @param input the input directory
+   * @param outputPartitionInfo the output partition info
    * @param output the output directory
-   * @param databaseType the type of database to write the compacted table to
    * @param maxNumFiles the maximum number of files after compaction
    * @param minFileSize the minimum file size for coalescing
    */
-  public CompactConfig(@JsonProperty("partitionInfo") PartitionInfo partitionInfo,
-      @JsonProperty("input") String input,
-      @JsonProperty("output") String output,
-      @JsonProperty("databaseType") String databaseType,
-      @JsonProperty("maxNumFiles") Integer maxNumFiles,
-      @JsonProperty("minFileSize") Long minFileSize) {
-    mPartitionInfo = partitionInfo;
+  public CompactConfig(@JsonProperty("inputPartitionInfo") PartitionInfo inputPartitionInfo,
+                       @JsonProperty("input") String input,
+                       @JsonProperty("outputPartitionInfo") PartitionInfo outputPartitionInfo,
+                       @JsonProperty("output") String output,
+                       @JsonProperty("maxNumFiles") Integer maxNumFiles,
+                       @JsonProperty("minFileSize") Long minFileSize) {
+    mInputPartitionInfo = inputPartitionInfo;
     mInput = Preconditions.checkNotNull(input, "input");
+    mOutputPartitionInfo = outputPartitionInfo;
     mOutput = Preconditions.checkNotNull(output, "output");
-    mDatabaseType = Preconditions.checkNotNull(databaseType, "databaseType");
     mMaxNumFiles = Preconditions.checkNotNull(maxNumFiles, "maxNumFiles");
     mMinFileSize = Preconditions.checkNotNull(minFileSize, "minFileSize");
   }
 
   /**
-   * @return the partition info
+   * @return the input partition info
    */
-  public PartitionInfo getPartitionInfo() {
-    return mPartitionInfo;
+  public PartitionInfo getInputPartitionInfo() {
+    return mInputPartitionInfo;
+  }
+
+  /**
+   * @return the output partition info
+   */
+  public PartitionInfo getOutputPartitionInfo() {
+    return mOutputPartitionInfo;
   }
 
   /**
@@ -98,13 +103,6 @@ public final class CompactConfig implements PlanConfig {
    */
   public String getOutput() {
     return mOutput;
-  }
-
-  /**
-   * @return the type of database to write the compacted table to
-   */
-  public String getDatabaseType() {
-    return mDatabaseType;
   }
 
   /**
@@ -133,9 +131,9 @@ public final class CompactConfig implements PlanConfig {
       return false;
     }
     CompactConfig that = (CompactConfig) obj;
-    return mPartitionInfo.equals(that.mPartitionInfo)
+    return mInputPartitionInfo.equals(that.mInputPartitionInfo)
+        && mOutputPartitionInfo.equals(that.mOutputPartitionInfo)
         && mInput.equals(that.mInput)
-        && mDatabaseType.equals(that.mDatabaseType)
         && mOutput.equals(that.mOutput)
         && mMaxNumFiles == that.mMaxNumFiles
         && mMinFileSize == that.mMinFileSize;
@@ -143,8 +141,8 @@ public final class CompactConfig implements PlanConfig {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(mPartitionInfo, mInput, mOutput,
-        mDatabaseType, mMaxNumFiles, mMinFileSize);
+    return Objects.hashCode(mInputPartitionInfo, mOutputPartitionInfo, mInput, mOutput,
+        mMaxNumFiles, mMinFileSize);
   }
 
   @Override
@@ -152,10 +150,10 @@ public final class CompactConfig implements PlanConfig {
     return MoreObjects.toStringHelper(this)
         .add("input", mInput)
         .add("output", mOutput)
-        .add("databaseType", mDatabaseType)
         .add("maxNumFiles", mMaxNumFiles)
         .add("minFileSize", mMinFileSize)
-        .add("partitionInfo", mPartitionInfo)
+        .add("inputPartitionInfo", mInputPartitionInfo)
+        .add("outputPartitionInfo", mOutputPartitionInfo)
         .toString();
   }
 

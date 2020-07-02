@@ -17,7 +17,7 @@ fullnameOverride: alluxio
 
 # Docker Image
 image: alluxio/alluxio
-imageTag: 2.2.1
+imageTag: 2.3.0
 imagePullPolicy: IfNotPresent
 
 # Security Context
@@ -33,7 +33,10 @@ properties:
 # Recommended JVM Heap options for running in Docker
 # Ref: https://developers.redhat.com/blog/2017/03/14/java-inside-docker/
 # These JVM options are common to all Alluxio services
-# jvmOptions: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=2 "
+# jvmOptions:
+#   - "-XX:+UnlockExperimentalVMOptions"
+#   - "-XX:+UseCGroupMemoryLimitForHeap"
+#   - "-XX:MaxRAMFraction=2"
 
 # Mount Persistent Volumes to all components
 # mounts:
@@ -57,9 +60,10 @@ master:
     # alluxio.master.metastore: ROCKS
     # alluxio.master.metastore.dir: /metastore
   resources:
+    # The default xmx is 8G
     limits:
-      cpu: "1"
-      memory: "1G"
+      cpu: "4"
+      memory: "8G"
     requests:
       cpu: "1"
       memory: "1G"
@@ -67,15 +71,15 @@ master:
     embedded: 19200
     rpc: 19998
     web: 19999
-  # JVM options specific to the master container
-  jvmOptions: ""
-  nodeSelector: {}
+  hostPID: false
   hostNetwork: false
-  dnsPolicy: ClusterFirst
-  # metastore:
-  #   medium: ""
-  #   size: 1Gi
-  #   mountPath: /metastore
+  # dnsPolicy will be ClusterFirstWithHostNet if hostNetwork: true
+  # and ClusterFirst if hostNetwork: false
+  # You can specify dnsPolicy here to override this inference
+  # dnsPolicy: ClusterFirst
+  # JVM options specific to the master container
+  jvmOptions:
+  nodeSelector: {}
 
 jobMaster:
   args:
@@ -84,8 +88,8 @@ jobMaster:
   properties:
   resources:
     limits:
-      cpu: "1"
-      memory: "1G"
+      cpu: "4"
+      memory: "8G"
     requests:
       cpu: "1"
       memory: "1G"
@@ -94,7 +98,7 @@ jobMaster:
     rpc: 20001
     web: 20002
   # JVM options specific to the jobMaster container
-  jvmOptions: ""
+  jvmOptions:
 
 # Alluxio supports journal type of UFS and EMBEDDED
 # UFS journal with HDFS example
@@ -106,43 +110,38 @@ jobMaster:
 #   type: "EMBEDDED"
 #   folder: "/journal"
 journal:
-  storageClass: "standard"
-  size: 1Gi
-  accessModes:
-    - ReadWriteOnce
   type: "UFS" # "UFS" or "EMBEDDED"
   ufsType: "local" # Ignored if type is "EMBEDDED". "local" or "HDFS"
   folder: "/journal" # Master journal folder
+  # volumeType controls the type of journal volume.
+  # It can be "persistentVolumeClaim" or "emptyDir"
+  volumeType: persistentVolumeClaim
+  size: 1Gi
+  # Attributes to use when the journal is persistentVolumeClaim
+  storageClass: "standard"
+  accessModes:
+    - ReadWriteOnce
+  # Attributes to use when the journal is emptyDir
+  medium: ""
   # Configuration for journal formatting job
   format:
     runFormat: false # Change to true to format journal
-    job:
-      activeDeadlineSeconds: 30
-      ttlSecondsAfterFinished: 10
-    resources:
-      limits:
-        cpu: "1"
-        memory: "1G"
-      requests:
-        cpu: "1"
-        memory: "1G"
+
+
+# You can enable metastore to use ROCKS DB instead of Heap
+# metastore:
+#   volumeType: persistentVolumeClaim # Options: "persistentVolumeClaim" or "emptyDir"
+#   size: 1Gi
+#   mountPath: /metastore
+# # Attributes to use when the metastore is persistentVolumeClaim
+#   storageClass: "standard"
+#   accessModes:
+#    - ReadWriteOnce
+# # Attributes to use when the metastore is emptyDir
+#   medium: ""
 
 
 ## Worker ##
-
-# Tiered Storage
-tieredstore:
-  levels:
-  - level: 0
-    mediumtype: MEM
-    path: /dev/shm
-    type: emptyDir
-    quota: 1G
-    high: 0.95
-    low: 0.7
-
-# The domain hostPath for uuid mode in short-circuit
-domainHostPath: "/tmp/alluxio-domain"
 
 worker:
   args:
@@ -152,26 +151,24 @@ worker:
   properties:
   resources:
     limits:
-      cpu: "1"
-      memory: "2G"
+      cpu: "4"
+      memory: "4G"
     requests:
       cpu: "1"
       memory: "2G"
   ports:
     rpc: 29999
     web: 30000
+  # hostPID requires escalated privileges
+  hostPID: false
+  hostNetwork: false
+  # dnsPolicy will be ClusterFirstWithHostNet if hostNetwork: true
+  # and ClusterFirst if hostNetwork: false
+  # You can specify dnsPolicy here to override this inference
+  # dnsPolicy: ClusterFirst
   # JVM options specific to the worker container
-  jvmOptions: ""
+  jvmOptions:
   nodeSelector: {}
-  domainHostPath: "/tmp/alluxio-domain"
-  hostNetwork: true
-  dnsPolicy: ClusterFirstWithHostNet
-  ramdisk:
-    size: 1Gi
-  # shortCircuitPolicy can be local or uuid,
-  # local means the cache directory is in the same mount namespace,
-  # uuid means interact with domain socket
-  shortCircuitPolicy: uuid
 
 jobWorker:
   args:
@@ -180,8 +177,8 @@ jobWorker:
   properties:
   resources:
     limits:
-      cpu: "1"
-      memory: "1G"
+      cpu: "4"
+      memory: "4G"
     requests:
       cpu: "1"
       memory: "1G"
@@ -190,14 +187,78 @@ jobWorker:
     data: 30002
     web: 30003
   # JVM options specific to the jobWorker container
-  jvmOptions: ""
+  jvmOptions:
+
+# Tiered Storage
+# emptyDir example
+#  - level: 0
+#    alias: MEM
+#    mediumtype: MEM
+#    path: /dev/shm
+#    type: emptyDir
+#    quota: 1G
+#
+# hostPath example
+#  - level: 0
+#    alias: MEM
+#    mediumtype: MEM
+#    path: /dev/shm
+#    type: hostPath
+#    quota: 1G
+#
+# persistentVolumeClaim example
+#  - level: 1
+#    alias: SSD
+#    mediumtype: SSD
+#    type: persistentVolumeClaim
+#    name: alluxio-ssd
+#    path: /dev/ssd
+#    quota: 10G
+#
+# multi-part mediumtype example
+#  - level: 1
+#    alias: SSD,HDD
+#    mediumtype: SSD,HDD
+#    type: persistentVolumeClaim
+#    name: alluxio-ssd,alluxio-hdd
+#    path: /dev/ssd,/dev/hdd
+#    quota: 10G,10G
+tieredstore:
+  levels:
+  - level: 0
+    alias: MEM
+    mediumtype: MEM
+    path: /dev/shm
+    type: emptyDir
+    quota: 1G
+    high: 0.95
+    low: 0.7
+
+# Short circuit related properties
+shortCircuit:
+  enabled: true
+  # The policy for short circuit can be "local" or "uuid",
+  # local means the cache directory is in the same mount namespace,
+  # uuid means interact with domain socket
+  policy: uuid
+  # volumeType controls the type of shortCircuit volume.
+  # It can be "persistentVolumeClaim" or "hostPath"
+  volumeType: persistentVolumeClaim
+  size: 1Mi
+  # Attributes to use if the domain socket volume is PVC
+  pvcName: alluxio-worker-domain-socket
+  accessModes:
+    - ReadWriteOnce
+  storageClass: standard
+  # Attributes to use if the domain socket volume is hostPath
+  hostPath: "/tmp/alluxio-domain" # The hostPath directory to use
 
 
 ## FUSE ##
 
 fuse:
   image: alluxio/alluxio-fuse
-  imageTag: 2.2.1
+  imageTag: 2.3.0
   imagePullPolicy: IfNotPresent
   # Change both to true to deploy FUSE
   enabled: false
@@ -206,8 +267,11 @@ fuse:
   properties:
   # Customize the MaxDirectMemorySize
   # These options are specific to the FUSE daemon
-  jvmOptions: " -XX:MaxDirectMemorySize=2g "
+  jvmOptions:
+    - "-XX:MaxDirectMemorySize=2g"
   hostNetwork: true
+  # hostPID requires escalated privileges
+  hostPID: true
   dnsPolicy: ClusterFirstWithHostNet
   user: 0
   group: 0
@@ -215,6 +279,8 @@ fuse:
   args:
     - fuse
     - --fuse-opts=allow_other
+  # Mount path in the host
+  mountPath: /mnt/alluxio-fuse
   resources:
     requests:
       cpu: "0.5"

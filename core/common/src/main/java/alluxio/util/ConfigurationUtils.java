@@ -15,6 +15,7 @@ import static java.util.stream.Collectors.toList;
 
 import alluxio.Constants;
 import alluxio.RuntimeConstants;
+import alluxio.cli.CommandUtils;
 import alluxio.conf.AlluxioConfiguration;
 import alluxio.conf.AlluxioProperties;
 import alluxio.conf.ConfigurationValueOptions;
@@ -42,6 +43,7 @@ import alluxio.util.network.NetworkAddressUtils.ServiceType;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,6 +58,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Properties;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
@@ -74,6 +77,8 @@ public final class ConfigurationUtils {
   private static String sSourcePropertyFile = null;
 
   private static final Object DEFAULT_PROPERTIES_LOCK = new Object();
+  private static final String MASTERS = "masters";
+  private static final String WORKERS = "workers";
 
   private ConfigurationUtils() {} // prevent instantiation
 
@@ -413,7 +418,12 @@ public final class ConfigurationUtils {
       // property file.
       AlluxioProperties properties = new AlluxioProperties();
       InstancedConfiguration conf = new InstancedConfiguration(properties);
-      properties.merge(System.getProperties(), Source.SYSTEM_PROPERTY);
+      // Can't directly pass System.getProperties() because it is not thread-safe
+      // This can cause a ConcurrentModificationException when merging.
+      Properties sysProps = new Properties();
+      System.getProperties().stringPropertyNames()
+          .forEach(key -> sysProps.setProperty(key, System.getProperty(key)));
+      properties.merge(sysProps, Source.SYSTEM_PROPERTY);
 
       // Step2: Load site specific properties file if not in test mode. Note that we decide
       // whether in test mode by default properties and system properties (via getBoolean).
@@ -624,5 +634,47 @@ public final class ConfigurationUtils {
   public static List<String> parseAsList(String value, String delimiter) {
     return Lists.newArrayList(Splitter.on(delimiter).trimResults().omitEmptyStrings()
         .split(value));
+  }
+
+  /**
+   * Reads a list of nodes from given file name ignoring comments and empty lines.
+   * Can be used to read conf/workers or conf/masters.
+   * @param fileName name of a file that contains the list of the nodes
+   * @return list of the node names, null when file fails to read
+   */
+  @Nullable
+  private static Set<String> readNodeList(String fileName, AlluxioConfiguration conf) {
+    String confDir = conf.get(PropertyKey.CONF_DIR);
+    return CommandUtils.readNodeList(confDir, fileName);
+  }
+
+  /**
+   * Gets list of masters in conf directory.
+   *
+   * @param conf configuration
+   * @return master hostnames
+   */
+  public static Set<String> getMasterHostnames(AlluxioConfiguration conf) {
+    return readNodeList(MASTERS, conf);
+  }
+
+  /**
+   * Gets list of workers in conf directory.
+   *
+   * @param conf configuration
+   * @return workers hostnames
+   */
+  public static Set<String> getWorkerHostnames(AlluxioConfiguration conf) {
+    return readNodeList(WORKERS, conf);
+  }
+
+  /**
+   * Gets list of masters/workers in conf directory.
+   *
+   * @param conf configuration
+   * @return server hostnames
+   */
+  public static Set<String> getServerHostnames(AlluxioConfiguration conf) {
+    return Sets.union(getMasterHostnames(conf), getWorkerHostnames(conf));
   }
 }

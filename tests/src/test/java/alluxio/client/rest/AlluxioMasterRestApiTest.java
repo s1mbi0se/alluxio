@@ -63,8 +63,7 @@ public final class AlluxioMasterRestApiTest extends RestApiTest {
   public static LocalAlluxioClusterResource sResource = new LocalAlluxioClusterResource.Builder()
       .setProperty(PropertyKey.SECURITY_AUTHORIZATION_PERMISSION_ENABLED, "false")
       .setProperty(PropertyKey.SECURITY_AUTHENTICATION_TYPE, AuthType.NOSASL.getAuthName())
-      .setProperty(PropertyKey.USER_FILE_BUFFER_BYTES, "1KB")
-      .build();
+      .setProperty(PropertyKey.USER_FILE_BUFFER_BYTES, "1KB").build();
 
   @Rule
   public TestRule mResetRule = sResource.getResetResource();
@@ -169,7 +168,7 @@ public final class AlluxioMasterRestApiTest extends RestApiTest {
 
   @Test
   public void getMountPoints() throws Exception {
-    Map<String, MountPointInfo> mountTable = mFileSystemMaster.getMountTable();
+    Map<String, MountPointInfo> mountTable = mFileSystemMaster.getMountPointInfoSummary();
     Map<String, MountPointInfo> mountPoints = getInfo(NO_PARAMS).getMountPoints();
     assertEquals(mountTable.size(), mountPoints.size());
     for (Map.Entry<String, MountPointInfo> mountPoint : mountTable.entrySet()) {

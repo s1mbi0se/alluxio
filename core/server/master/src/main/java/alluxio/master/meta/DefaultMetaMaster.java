@@ -13,7 +13,6 @@ package alluxio.master.meta;
 
 import alluxio.ClientContext;
 import alluxio.Constants;
-import alluxio.ProjectConstants;
 import alluxio.Server;
 import alluxio.clock.SystemClock;
 import alluxio.collections.IndexDefinition;
@@ -40,6 +39,7 @@ import alluxio.heartbeat.HeartbeatThread;
 import alluxio.master.CoreMaster;
 import alluxio.master.CoreMasterContext;
 import alluxio.master.MasterClientContext;
+import alluxio.master.StateLockOptions;
 import alluxio.master.backup.BackupLeaderRole;
 import alluxio.master.backup.BackupRole;
 import alluxio.master.backup.BackupWorkerRole;
@@ -312,8 +312,8 @@ public final class DefaultMetaMaster extends CoreMaster implements MetaMaster {
           mState.applyAndJournal(context, clusterID);
           LOG.info("Created new cluster ID {}", clusterID);
         }
-        if (Boolean.valueOf(ProjectConstants.UPDATE_CHECK_ENABLED)
-            && ServerConfiguration.getBoolean(PropertyKey.MASTER_UPDATE_CHECK_ENABLED)) {
+        if (ServerConfiguration.getBoolean(PropertyKey.MASTER_UPDATE_CHECK_ENABLED)
+            && !ServerConfiguration.getBoolean(PropertyKey.TEST_MODE)) {
           getExecutorService().submit(new HeartbeatThread(HeartbeatContext.MASTER_UPDATE_CHECK,
               new UpdateChecker(this),
               (int) ServerConfiguration.getMs(PropertyKey.MASTER_UPDATE_CHECK_INTERVAL),
@@ -357,8 +357,9 @@ public final class DefaultMetaMaster extends CoreMaster implements MetaMaster {
   }
 
   @Override
-  public BackupStatus backup(BackupPRequest request) throws AlluxioException {
-    return mBackupRole.backup(request);
+  public BackupStatus backup(BackupPRequest request, StateLockOptions stateLockOptions)
+      throws AlluxioException {
+    return mBackupRole.backup(request, stateLockOptions);
   }
 
   @Override
@@ -368,11 +369,14 @@ public final class DefaultMetaMaster extends CoreMaster implements MetaMaster {
 
   @Override
   public String checkpoint() throws IOException {
-    try (LockResource lr = new LockResource(mMasterContext.pauseStateLock())) {
+    try (LockResource lr =
+        mMasterContext.getStateLockManager().lockExclusive(StateLockOptions.defaults())) {
       mJournalSystem.checkpoint();
+      return NetworkAddressUtils.getConnectHost(NetworkAddressUtils.ServiceType.MASTER_RPC,
+          ServerConfiguration.global());
+    } catch (Exception e) {
+      throw new IOException("Failed to take a checkpoint.", e);
     }
-    return NetworkAddressUtils.getConnectHost(NetworkAddressUtils.ServiceType.MASTER_RPC,
-        ServerConfiguration.global());
   }
 
   @Override

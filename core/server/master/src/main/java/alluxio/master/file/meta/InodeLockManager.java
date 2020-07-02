@@ -16,6 +16,7 @@ import alluxio.concurrent.LockMode;
 import alluxio.conf.PropertyKey;
 import alluxio.conf.ServerConfiguration;
 import alluxio.resource.LockResource;
+import alluxio.resource.RWLockResource;
 import alluxio.util.interfaces.Scoped;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -24,6 +25,8 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.Striped;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -41,7 +44,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * WeakSafeReentrantReadWriteLock stores the reference to the original lock to avoid this problem.
  * See https://github.com/google/guava/issues/2477
  */
-public class InodeLockManager {
+public class InodeLockManager implements Closeable {
   /**
    * Pool for supplying inode locks. To lock an inode, its inode id must be searched in this
    * pool to get the appropriate read lock.
@@ -49,7 +52,7 @@ public class InodeLockManager {
    * We use weak values so that when nothing holds a reference to
    * a lock, the garbage collector can remove the lock's entry from the pool.
    */
-  public final LockPool<Long> mInodeLocks =
+  private final LockPool<Long> mInodeLocks =
       new LockPool<>((key)-> new ReentrantReadWriteLock(),
           ServerConfiguration.getInt(PropertyKey.MASTER_LOCK_POOL_INITSIZE),
           ServerConfiguration.getInt(PropertyKey.MASTER_LOCK_POOL_LOW_WATERMARK),
@@ -58,7 +61,7 @@ public class InodeLockManager {
   /**
    * Cache for supplying edge locks, similar to mInodeLocks.
    */
-  public final LockPool<Edge> mEdgeLocks =
+  private final LockPool<Edge> mEdgeLocks =
       new LockPool<>((key)-> new ReentrantReadWriteLock(),
           ServerConfiguration.getInt(PropertyKey.MASTER_LOCK_POOL_INITSIZE),
           ServerConfiguration.getInt(PropertyKey.MASTER_LOCK_POOL_LOW_WATERMARK),
@@ -142,10 +145,14 @@ public class InodeLockManager {
    *
    * @param inode the inode to lock
    * @param mode the mode to lock in
+   * @param useTryLock whether to acquire with {@link Lock#tryLock()} or {@link Lock#lock()}. This
+   *                   method differs from {@link #tryLockInode(Long, LockMode)} because it will
+   *                   block until the inode has been successfully locked.
    * @return a lock resource which must be closed to release the lock
+   * @see #tryLockInode(Long, LockMode)
    */
-  public LockResource lockInode(InodeView inode, LockMode mode) {
-    return mInodeLocks.get(inode.getId(), mode);
+  public RWLockResource lockInode(InodeView inode, LockMode mode, boolean useTryLock) {
+    return mInodeLocks.get(inode.getId(), mode, useTryLock);
   }
 
   /**
@@ -155,7 +162,7 @@ public class InodeLockManager {
    * @param mode the mode to lock in
    * @return either an empty optional, or a lock resource which must be closed to release the lock
    */
-  public Optional<LockResource> tryLockInode(Long inodeId, LockMode mode) {
+  public Optional<RWLockResource> tryLockInode(Long inodeId, LockMode mode) {
     return mInodeLocks.tryGet(inodeId, mode);
   }
 
@@ -164,10 +171,14 @@ public class InodeLockManager {
    *
    * @param edge the edge to lock
    * @param mode the mode to lock in
+   * @param useTryLock whether to acquire with {@link Lock#tryLock()} or {@link Lock#lock()}. This
+   *                   method differs from {@link #tryLockEdge(Edge, LockMode)} because it will
+   *                   block until the edge has been successfully locked.
    * @return a lock resource which must be closed to release the lock
+   * @see #tryLockEdge(Edge, LockMode)
    */
-  public LockResource lockEdge(Edge edge, LockMode mode) {
-    return mEdgeLocks.get(edge, mode);
+  public RWLockResource lockEdge(Edge edge, LockMode mode, boolean useTryLock) {
+    return mEdgeLocks.get(edge, mode, useTryLock);
   }
 
   /**
@@ -177,7 +188,7 @@ public class InodeLockManager {
    * @param mode the mode to lock in
    * @return either an empty optional, or a lock resource which must be closed to release the lock
    */
-  public Optional<LockResource> tryLockEdge(Edge edge, LockMode mode) {
+  public Optional<RWLockResource> tryLockEdge(Edge edge, LockMode mode) {
     return mEdgeLocks.tryGet(edge, mode);
   }
 
@@ -205,5 +216,11 @@ public class InodeLockManager {
    */
   public LockResource lockUpdate(long inodeId) {
     return new LockResource(mParentUpdateLocks.get(inodeId));
+  }
+
+  @Override
+  public void close() throws IOException {
+    mInodeLocks.close();
+    mEdgeLocks.close();
   }
 }

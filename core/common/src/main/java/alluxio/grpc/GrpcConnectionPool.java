@@ -245,7 +245,7 @@ public class GrpcConnectionPool {
           default:
             return null;
         }
-      }, WaitForOptions.defaults().setTimeoutMs((int) healthCheckTimeoutMs));
+      }, (b) -> b != null, WaitForOptions.defaults().setTimeoutMs((int) healthCheckTimeoutMs));
       return res;
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();

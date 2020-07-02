@@ -26,6 +26,7 @@ import alluxio.grpc.ServiceType;
 import alluxio.master.CoreMasterContext;
 import alluxio.master.MasterClientContext;
 import alluxio.master.MasterInquireClient;
+import alluxio.master.StateLockOptions;
 import alluxio.master.journal.CatchupFuture;
 import alluxio.master.transport.GrpcMessagingClient;
 import alluxio.retry.ExponentialBackoffRetry;
@@ -143,7 +144,8 @@ public class BackupWorkerRole extends AbstractBackupRole {
   }
 
   @Override
-  public BackupStatus backup(BackupPRequest request) throws AlluxioException {
+  public BackupStatus backup(BackupPRequest request, StateLockOptions stateLockOptions)
+      throws AlluxioException {
     throw new IllegalStateException("Backup-worker role can't serve RPCs");
   }
 
@@ -203,6 +205,7 @@ public class BackupWorkerRole extends AbstractBackupRole {
 
     // Cancel timeout task created by suspend message handler.
     if (!mBackupTimeoutTask.cancel(true)) {
+      LOG.warn("Journal has been resumed due to a time-out");
       mBackupTracker.updateError(new BackupException("Journal has been resumed due to a time-out"));
       return msgFuture;
     }
@@ -232,6 +235,7 @@ public class BackupWorkerRole extends AbstractBackupRole {
           LOG.warn("Failed to wait for backup heartbeat completion. ", e);
         }
       } catch (Exception e) {
+        LOG.error("Backup failed at worker", e);
         mBackupTracker.updateError(
             new BackupException(String.format("Backup failed at worker: %s", e.getMessage()), e));
       } finally {
@@ -334,14 +338,22 @@ public class BackupWorkerRole extends AbstractBackupRole {
         (int) mLeaderConnectionIntervalMin, (int) mLeaderConnectionIntervalMax, Integer.MAX_VALUE);
 
     while (infiniteRetryPolicy.attempt()) {
+      // Get leader address.
+      Address leaderAddress;
       try {
         // Create inquire client to determine leader address.
         MasterInquireClient inquireClient =
             MasterClientContext.newBuilder(ClientContext.create(ServerConfiguration.global()))
                 .build().getMasterInquireClient();
-        // Get leader address.
-        Address leaderAddress = new Address(inquireClient.getPrimaryRpcAddress());
 
+        leaderAddress = new Address(inquireClient.getPrimaryRpcAddress());
+      } catch (Throwable t) {
+        LOG.warn("Failed to get backup-leader address. {}. Error:{}. Attempt:{}", t.toString(),
+            infiniteRetryPolicy.getAttemptCount());
+        continue;
+      }
+      // Address acquired. Establish messaging connection with the leader.
+      try {
         // Create messaging client for backup-leader.
         GrpcMessagingClient messagingClient = new GrpcMessagingClient(ServerConfiguration.global(),
             mServerUserState, mExecutorService, "BackupWorker");
@@ -354,9 +366,9 @@ public class BackupWorkerRole extends AbstractBackupRole {
         activateLeaderConnection(mLeaderConnection);
         LOG.info("Established connection to backup-leader: {}", leaderAddress);
         break;
-      } catch (Exception e) {
-        LOG.warn("Failed to establish connection to backup-leader. Error:{}. Attempt:{}",
-            e.toString(), infiniteRetryPolicy.getAttemptCount());
+      } catch (Throwable t) {
+        LOG.warn("Failed to establish connection to backup-leader: {}. Error:{}. Attempt:{}",
+            leaderAddress, t.toString(), infiniteRetryPolicy.getAttemptCount());
       }
     }
   }

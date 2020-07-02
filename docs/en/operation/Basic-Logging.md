@@ -127,9 +127,65 @@ ALLUXIO_JAVA_OPTS+=" -XX:+PrintGCDetails -XX:+PrintTenuringDistribution -XX:+Pri
 Alternatively, modify `ALLUXIO_MASTER_JAVA_OPTS`, `ALLUXIO_WORKER_JAVA_OPTS`
 to turn on GC for each individual process.
 
+### Logging all FUSE API calls
+
+Set in `conf/log4j.properties`:
+
+```properties
+log4j.logger.alluxio.fuse.AlluxioFuseFileSystem=DEBUG
+```
+
+You will see debug logs at the beginning and the end of each FUSE API call with its arguments and result
+in `logs/fuse.log`:
+
+```
+2020-03-03 14:33:35,129 DEBUG AlluxioFuseFileSystem - Enter: chmod(path=/aaa,mode=100644)
+2020-03-03 14:33:35,131 DEBUG AlluxioFuseFileSystem - Exit (0): chmod(path=/aaa,mode=100644) in 2 ms
+2020-03-03 14:33:35,132 DEBUG AlluxioFuseFileSystem - Enter: getattr(path=/aaa)
+2020-03-03 14:33:35,135 DEBUG AlluxioFuseFileSystem - Exit (0): getattr(path=/aaa) in 3 ms
+2020-03-03 14:33:35,138 DEBUG AlluxioFuseFileSystem - Enter: getattr(path=/._aaa)
+2020-03-03 14:33:35,140 DEBUG AlluxioFuseFileSystem - Failed to get info of /._aaa, path does not exist or is invalid
+2020-03-03 14:33:35,140 DEBUG AlluxioFuseFileSystem - Exit (-2): getattr(path=/._aaa) in 2 ms
+```
+
+### Logging RPCs Calls Sent by Client
+
+Add the following to your application-side `log4j.properties` to capture RPCs between the Alluxio client
+and FileSystem Master:
+
+```properties
+log4j.logger.alluxio.client.file.FileSystemMasterClient=DEBUG
+```
+
+Similarly, capture lower-level RPCs between Alluxio client and Block Master:
+
+```properties
+log4j.logger.alluxio.client.block.BlockMasterClient=DEBUG
+```
+
+You will see debug logs at the beginning and end of each RPC with its arguments and result
+in the client logs like the following:
+
+```
+2020-03-03 15:56:40,115 DEBUG FileSystemMasterClient - Enter: GetStatus(path=/.DS_Store,options=loadMetadataType: ONCE
+commonOptions {
+  syncIntervalMs: -1
+  ttl: -1
+  ttlAction: DELETE
+}
+)
+2020-03-03 15:56:40,117 DEBUG FileSystemMasterClient - Exit (ERROR): GetStatus(path=/.DS_Store,options=loadMetadataType: ONCE
+commonOptions {
+  syncIntervalMs: -1
+  ttl: -1
+  ttlAction: DELETE
+}
+) in 2 ms: alluxio.exception.status.NotFoundException: Path "/.DS_Store" does not exist.
+```
+
 ### Logging RPC Calls Received by Masters
 
-On the master, debug-level RPC logging for File System level RPC calls can be turned on (e.g.,
+On the master, debug-level logging for incoming File System level RPC calls can be turned on (e.g.,
 creating/reading/writing/removing files, updating file attributions) using the `logLevel` command:
 
 ```console
@@ -145,4 +201,45 @@ blocks):
 $ ./bin/alluxio logLevel \
 --logName=alluxio.master.block.BlockMasterClientServiceHandler \
 --target master --level=DEBUG
+```
+
+### Logging UnderFileSystem Operations
+
+Sometimes it can be useful to log all operations on under storage. 
+On the master, debug-level logging for UnderFileSystem operations can be turned on (e.g.,
+creating/reading/writing/removing files on UFS) using the `logLevel` command:
+
+```console
+$ ./bin/alluxio logLevel \
+--logName=alluxio.underfs.UnderFileSystemWithLogging \
+--target master --level=DEBUG
+```
+
+One can similarly turn on UFS operations on workers by passing `--target workers`.
+You can see operations in corresponding master or worker logs like below:
+
+```
+2020-06-02 11:28:21,824 DEBUG UnderFileSystemWithLogging - Enter: GetSpace: path=/opt/alluxio/underFSStorage, type=SPACE_USED
+2020-06-02 11:28:21,824 DEBUG UnderFileSystemWithLogging - Exit (OK): GetSpace: path=/opt/alluxio/underFSStorage, type=SPACE_USED
+```
+
+### Identifying Expensive Client RPCs / FUSE calls
+
+When debugging the performance, it is often useful to understand which RPCs take most of the time
+but without recording all the communication (e.g., enabling all debug logging).
+There are two properties introduced in v2.3.0 in Alluxio to record expensive calls or RPCs in logs with WARN level.
+Setting in `conf/alluxio-site.properties` records client-side RPCs taking more than 200ms and FUSE APIs taking more than 1s:
+
+```properties
+alluxio.user.logging.threshold=200ms
+alluxio.fuse.logging.threshold=1s
+```
+
+Example results are:
+
+```
+2020-03-08 23:40:44,374 WARN  BlockMasterClient - GetBlockMasterInfo(fields=[USED_BYTES,
+FREE_BYTES, CAPACITY_BYTES]) returned BlockMasterInfo{capacityBytes=11453246122,
+capacityBytesOnTiers={}, freeBytes=11453237930, liveWorkerNum=0, lostWorkerNum=0, usedBytes=8192, usedBytesOnTiers={}} in 600 ms
+2020-03-08 23:40:44,374 WARN  AlluxioFuseFileSystem - statfs(path=/) returned 0 in 1200 ms
 ```

@@ -17,7 +17,7 @@ import alluxio.AlluxioTestDirectory;
 import alluxio.conf.PropertyKey;
 import alluxio.conf.PropertyKey.Name;
 import alluxio.conf.ServerConfiguration;
-import alluxio.testutils.LocalAlluxioClusterResource.Config;
+import alluxio.testutils.LocalAlluxioClusterResource;
 
 import org.junit.Test;
 
@@ -29,9 +29,13 @@ import java.nio.file.Paths;
 /**
  * Integration tests for the backup command.
  */
+@LocalAlluxioClusterResource.ServerConfig(
+    confParams = {
+        Name.MASTER_BACKUP_DIRECTORY, "${alluxio.work.dir}/backups",
+        Name.MASTER_SHELL_BACKUP_STATE_LOCK_TRY_DURATION, "3s",
+        Name.MASTER_SHELL_BACKUP_STATE_LOCK_TIMEOUT, "3s"})
 public final class BackupCommandIntegrationTest extends AbstractFsAdminShellTest {
   @Test
-  @Config(confParams = {Name.MASTER_BACKUP_DIRECTORY, "${alluxio.work.dir}/backups"})
   public void defaultDirectory() throws IOException {
     Path dir = Paths.get(ServerConfiguration.get(PropertyKey.MASTER_BACKUP_DIRECTORY));
     Files.createDirectories(dir);

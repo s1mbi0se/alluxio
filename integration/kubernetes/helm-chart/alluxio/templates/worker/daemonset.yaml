@@ -9,8 +9,11 @@
 # See the NOTICE file distributed with this work for information regarding copyright ownership.
 #
 
-{{ $isRoot := eq (int .Values.user) 0 }}
-{{- $ugi := printf "%v:%v" .Values.user .Values.group -}}
+{{- $shortCircuitEnabled := .Values.shortCircuit.enabled }}
+{{- $needDomainSocketVolume := and $shortCircuitEnabled (eq .Values.shortCircuit.policy "uuid") }}
+{{- $hostNetwork := .Values.worker.hostNetwork }}
+{{- $hostPID := .Values.worker.hostPID }}
+
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -36,8 +39,9 @@ spec:
         heritage: {{ .Release.Service }}
         role: alluxio-worker
     spec:
-      hostNetwork: {{ .Values.worker.hostNetwork }}
-      dnsPolicy: {{ .Values.worker.dnsPolicy }}
+      hostNetwork: {{ $hostNetwork }}
+      hostPID: {{ $hostPID }}
+      dnsPolicy: {{ .Values.worker.dnsPolicy | default ($hostNetwork | ternary "ClusterFirstWithHostNet" "ClusterFirst") }}
       securityContext:
         fsGroup: {{ .Values.fsGroup }}
       nodeSelector:
@@ -45,17 +49,6 @@ spec:
 {{ toYaml .Values.worker.nodeSelector | trim | indent 8  }}
       {{- else if .Values.nodeSelector }}
 {{ toYaml .Values.nodeSelector | trim | indent 8  }}
-      {{- end }}
-      {{- if not $isRoot }}
-      initContainers:
-      - name: socket-chown
-        securityContext:
-          runAsUser: 0
-        image: {{ .Values.image }}:{{ .Values.imageTag }}
-        command: ["/bin/chown","-R", {{ $ugi | quote }}, "/opt/domain"]
-        volumeMounts:
-        - name: alluxio-domain
-          mountPath: /opt/domain
       {{- end }}
       containers:
         - name: alluxio-worker
@@ -77,17 +70,27 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: status.hostIP
+          {{- if not .Values.worker.hostNetwork }}
+          - name: ALLUXIO_WORKER_CONTAINER_HOSTNAME
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          {{- end }}
           envFrom:
           - configMapRef:
               name: {{ template "alluxio.fullname" . }}-config
+{{ include "alluxio.worker.readinessProbe" . | indent 10 }}
+{{ include "alluxio.worker.livenessProbe" . | indent 10 }}
           ports:
           - containerPort: {{ .Values.worker.ports.rpc }}
             name: rpc
           - containerPort: {{ .Values.worker.ports.web }}
             name: web
           volumeMounts:
+            {{- if $needDomainSocketVolume }}
             - name: alluxio-domain
               mountPath: /opt/domain
+            {{- end }}
             {{- if .Values.secrets -}}
               {{- if .Values.secrets.worker -}}
 {{- include "alluxio.worker.secretVolumeMounts" . }}
@@ -118,9 +121,17 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: status.hostIP
+          {{- if not .Values.worker.hostNetwork }}
+          - name: ALLUXIO_WORKER_CONTAINER_HOSTNAME
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          {{- end }}
           envFrom:
           - configMapRef:
               name: {{ template "alluxio.fullname" . }}-config
+{{ include "alluxio.jobWorker.readinessProbe" . | indent 10 }}
+{{ include "alluxio.jobWorker.livenessProbe" . | indent 10 }}
           ports:
           - containerPort: {{ .Values.jobWorker.ports.rpc }}
             name: job-rpc
@@ -129,8 +140,10 @@ spec:
           - containerPort: {{ .Values.jobWorker.ports.web }}
             name: job-web
           volumeMounts:
+            {{- if $needDomainSocketVolume }}
             - name: alluxio-domain
               mountPath: /opt/domain
+            {{- end }}
             {{- if .Values.secrets }}
               {{- if .Values.secrets.worker }}
 {{- include "alluxio.worker.secretVolumeMounts" . }}
@@ -144,10 +157,9 @@ spec:
             {{- end }}
       restartPolicy: Always
       volumes:
-        - name: alluxio-domain
-          hostPath:
-            path: {{ .Values.domainHostPath }}
-            type: DirectoryOrCreate
+        {{- if $needDomainSocketVolume }}
+{{- include "alluxio.worker.shortCircuit.volume" . }}
+        {{- end }}
         {{- if .Values.secrets }}
           {{- if .Values.secrets.worker }}
 {{- include "alluxio.worker.secretVolumes" . }}
