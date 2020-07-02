@@ -91,7 +91,7 @@ public class SaslClientHandlerPlain extends AbstractSaslClientHandler {
    * @param   password          the password for the PlainSaslClientCallbackHandler
    * @param   impersonationUser the impersonation user
    * @return  the new SASL client with the provided information
-   * @throws UnauthenticatedException If a {@link SaslException} is thrown.
+   * @throws UnauthenticatedException if a {@link SaslException} is thrown.
    */
   private SaslClient createSaslClient(String username, String password, String impersonationUser)
       throws UnauthenticatedException {
