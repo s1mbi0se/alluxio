@@ -164,9 +164,17 @@ public abstract class AbstractClient implements Client {
   }
 
   /**
-   * This method is called before the connection is connected. Implementations should add any
-   * additional operations before the connection is connected.
-   * loading the cluster defaults
+   * Loads configuration if they were not loaded from meta master and the client is not connected yet.
+   * <p>
+   * This method is called before the connection is established. Implementations should add any
+   * additional operations that may need to occur before the connection is made loading the cluster
+   * defaults.
+   * <p>
+   * Checks whether {@link AbstractClient#isConnected} returns true. If it does, loads configurations
+   * from {@link AbstractClient#mConfAddress} if they were not loaded yet by invoking
+   * {@link ClientContext#loadConfIfNotLoaded} from {@link AbstractClient#mContext}.
+   *
+   * @throws IOException  If an unforeseen I/O-bound operation fails.
    */
   protected void beforeConnect()
       throws IOException {
