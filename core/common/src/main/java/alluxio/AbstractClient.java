@@ -315,7 +315,15 @@ public abstract class AbstractClient implements Client {
   }
 
   /**
-   * @return true if this client is connected to the remote
+   * Returns a boolean value representing whether this client is connected to the remote.
+   * <p>
+   * Returns {@link AbstractClient#mConnected}, informing whether or not this client is
+   * connected to the remote. Returns true if it is connected, otherwise returns false;
+   * <p>
+   * This method is synchronized in order to avoid threads get outdated information when
+   * accessing it.
+   *
+   * @return true if this client is connected to the remote; otherwise, false
    */
   public synchronized boolean isConnected() {
     return mConnected;
