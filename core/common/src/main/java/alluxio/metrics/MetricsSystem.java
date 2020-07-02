@@ -401,12 +401,25 @@ public final class MetricsSystem {
   }
 
   /**
-   * Builds unique metric registry names with unique ID (set to host name). The pattern is
-   * instance.metricName.hostname
+   * Builds unique metric registry names with unique ID, which is set to host name.
+   * <p>
+   * Builds a unique metric registry name. The pattern is {@code instance.metricName.hostname}.
+   * <p>
+   * Checks whether the provided name starts with the string representation of the provided
+   * {@link InstanceType}. If true, concatenates:
+   *          1) the provided {@code name}, followed by a '.'
+   *          2) the string value of {@link #sSourceNameSupplier},
+   *          returned from {@link Supplier#get}.
+   * <p>
+   * Returns a concatenation following this order, if the aforementioned verification results to false:
+   *          1) the provided {@code instance}, followed by a '.';
+   *          2) the provided {@code name}, followed by a '.';
+   *          3) the string value of {@link #sSourceNameSupplier},
+   *          returned from {@link Supplier#get}.
    *
-   * @param instance the instance name
-   * @param name the metric name
-   * @return the metric registry name
+   * @param   instance  the instance name
+   * @param   name      the metric name
+   * @return  the metric registry name
    */
   private static String getMetricNameWithUniqueId(InstanceType instance, String name) {
     if (name.startsWith(instance.toString())) {
