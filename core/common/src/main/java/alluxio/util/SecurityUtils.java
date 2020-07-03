@@ -132,15 +132,20 @@ public final class SecurityUtils {
   }
 
   /**
-   * Creates a new {@link LoginContext} with the correct class loader.
+   * Creates and returns a new LoginContext with the current class loader.
+   * <p>
+   * Instantiates and returns a new {@link LoginContext}, which describes
+   * the basic methods used to authenticate {@link Subject}s and provides
+   * a way to develop an application independent of the underlying
+   * authentication technology.
    *
-   * @param authType the {@link AuthType} to use
-   * @param subject the {@link Subject} to use
-   * @param classLoader the {@link ClassLoader} to use
-   * @param configuration the {@link javax.security.auth.login.Configuration} to use
+   * @param authType        the {@link AuthType} to use
+   * @param subject         the {@link Subject} to use
+   * @param classLoader     the {@link ClassLoader} to use
+   * @param configuration   the {@link javax.security.auth.login.Configuration} to use
    * @param callbackHandler the {@link CallbackHandler}
-   * @return the new {@link LoginContext} instance
-   * @throws LoginException if LoginContext cannot be created
+   * @return                the new {@link LoginContext} instance
+   * @throws LoginException if LoginContext cannot be created for any reason whatsoever
    */
   public static LoginContext createLoginContext(AuthType authType, Subject subject,
       ClassLoader classLoader, Configuration configuration, CallbackHandler callbackHandler)
