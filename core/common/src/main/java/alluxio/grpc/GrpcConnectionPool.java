@@ -146,6 +146,16 @@ public class GrpcConnectionPool {
     });
   }
 
+  /**
+   * Creates a new gRPC connection key.
+   * <p>
+   * Creates a new object used to define
+   * a key for this {@link GrpcConnectionPool}.
+   *
+   * @param   channelKey  the gRPC channel key
+   * @param   conf        the Alluxio configuration
+   * @return  the new {@link GrpcConnectionKey}.
+   */
   private GrpcConnectionKey getConnectionKey(GrpcChannelKey channelKey, AlluxioConfiguration conf) {
     // Assign index within the network group.
     long groupIndex = mNetworkGroupCounters.get(channelKey.getNetworkGroup()).incrementAndGet();
