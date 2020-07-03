@@ -88,8 +88,14 @@ public class GrpcChannelKey {
   }
 
   /**
+   * Sets the address for the gRPC server and returns this instance of GrpcChannelKey.
+   * <p>
+   * Sets {@link #mServerAddress} to the provided {@link GrpcServerAddress}.
+   * <p>
+   * Returns this {@link GrpcChannelKey}.
+   *
    * @param address destination address of the channel
-   * @return the modified {@link GrpcChannelKey}
+   * @return        the modified {@link GrpcChannelKey}
    */
   public GrpcChannelKey setServerAddress(GrpcServerAddress address) {
     mServerAddress = address;
