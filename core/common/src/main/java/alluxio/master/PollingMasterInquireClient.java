@@ -103,9 +103,9 @@ public class PollingMasterInquireClient implements MasterInquireClient {
    * <p>
    * Iterates through each {@link InetSocketAddress} in
    * {@link #mConnectDetails} and tries to connect to
-   * one of them. Returns the address of the successfully
-   * made connection. Throws an exception if no connection
-   * is established.
+   * one of them following the retry policy from {@link #mRetryPolicySupplier}.
+   * Returns the address of the successfully made connection. Throws an exception
+   * if no connection is established.
    *
    * @return  the INET socket address for the
    * @throws  UnavailableException  If the primary master
