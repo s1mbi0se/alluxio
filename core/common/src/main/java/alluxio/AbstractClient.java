@@ -362,6 +362,16 @@ public abstract class AbstractClient implements Client {
     return mAddress;
   }
 
+  /**
+   * Gets the address from which to load the configuration for this client.
+   * <p>
+   * Checks whether {@link #mConfAddress} is null. If {@code mConfAddress}
+   * is null, the address should be found in {@link #mAddress}, and that is
+   * returned. Otherwise, {@code} mConfAddress is returned.
+   *
+   * @return the address to load configuration
+   * @throws UnavailableException if the address cannot be reached
+   */
   @Override
   public synchronized InetSocketAddress getConfAddress() throws UnavailableException {
     if (mConfAddress != null) {
