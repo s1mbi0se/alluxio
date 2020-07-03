@@ -88,8 +88,14 @@ public class GrpcChannelKey {
   }
 
   /**
+   * Sets the address for the gRPC server and returns this instance of GrpcChannelKey.
+   * <p>
+   * Sets {@link #mServerAddress} to the provided {@link GrpcServerAddress}.
+   * <p>
+   * Returns this {@link GrpcChannelKey}.
+   *
    * @param address destination address of the channel
-   * @return the modified {@link GrpcChannelKey}
+   * @return        the modified {@link GrpcChannelKey}
    */
   public GrpcChannelKey setServerAddress(GrpcServerAddress address) {
     mServerAddress = address;
@@ -113,8 +119,12 @@ public class GrpcChannelKey {
   }
 
   /**
-   * @param clientType the client type
-   * @return the modified {@link GrpcChannelKey}
+   * Sets the client type for this gRPC channel key, updates this object, and returns it.
+   * <p>
+   * Updates the existing {@link #mClientType} to the provided {@code clientType}.
+   *
+   * @param   clientType  the new client type
+   * @return  the modified {@link GrpcChannelKey}, updated with a new client type
    */
   public GrpcChannelKey setClientType(String clientType) {
     mClientType = clientType;

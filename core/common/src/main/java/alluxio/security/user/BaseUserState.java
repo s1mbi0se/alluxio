@@ -67,6 +67,15 @@ public abstract class BaseUserState implements UserState {
     return mSubject;
   }
 
+  /**
+   * Attempts to get the user for this instance.
+   * <p>
+   * Attempts to login through {@link #tryLogin}
+   * and return the {@link User} for this instance.
+   *
+   * @return  the existing {@link #mUser}
+   * @throws  UnauthenticatedException if the login fails
+   */
   @Override
   public User getUser() throws UnauthenticatedException {
     tryLogin();

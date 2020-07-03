@@ -123,7 +123,11 @@ public class ChannelAuthenticator {
   }
 
   /**
-   * @return the authentication driver
+   * Gets the object responsible for driving authentication traffic from client-side.
+   * <p>
+   * Returns the existing {@link #mAuthDriver}.
+   *
+   * @return the client-side authentication driver
    */
   public AuthenticatedChannelClientDriver getAuthenticationDriver() {
     return mAuthDriver;

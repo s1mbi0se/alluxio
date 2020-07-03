@@ -134,7 +134,15 @@ public final class NettyUtils {
   }
 
   /**
-   * @return whether netty epoll is available to the system
+   * Returns whether or not Netty epoll is available to the system.
+   * <p>
+   * Checks whether {@link #sNettyEpollAvailable} exists. Returns
+   * it if true; otherwise assigns the return value of
+   * {@link #checkNettyEpollAvailable()} to it, and returns
+   * that.
+   *
+   * @return  a boolean representing whether {@link Epoll} is
+   * available to the system
    */
   public static synchronized boolean isNettyEpollAvailable() {
     if (sNettyEpollAvailable == null) {
