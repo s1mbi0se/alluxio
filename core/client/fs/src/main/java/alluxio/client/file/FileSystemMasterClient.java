@@ -52,10 +52,14 @@ public interface FileSystemMasterClient extends Client {
     private Factory() {} // prevent instantiation
 
     /**
-     * Factory method for {@link FileSystemMasterClient}.
+     * Creates a new wrapper for the gRPC client to interact with the file system master, for Alluxio clients.
+     * <p>
+     * Factory method for returning a new instance of {@link FileSystemMasterClient} with the provided
+     * {@link MasterClientContext}.
      *
-     * @param conf master client configuration
-     * @return a new {@link FileSystemMasterClient} instance
+     * @param   conf  master client configuration
+     * @return  a new object of type {@code FileSystemMasterClient}
+     *          with the provided master client configuration
      */
     public static FileSystemMasterClient create(MasterClientContext conf) {
       return new RetryHandlingFileSystemMasterClient(conf);
