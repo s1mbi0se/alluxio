@@ -128,6 +128,16 @@ public class GrpcMessagingTransport implements Transport {
     return server;
   }
 
+  /**
+   * Closes messaging transport clients,
+   * <p>
+   * Iterates through each {@link GrpcMessagingClient} in {@link #mClients},
+   * invoking {@link GrpcMessagingClient#close}. Attempts to close all messaging
+   * transport clients and server in {@link #mServers}, and invokes {@link List#clear}
+   * to clear both {@code mClients} and {@code mServers}.
+   * <p>
+   * Immediately shuts down the transport executor.
+   */
   @Override
   public synchronized void close() {
     if (!mClosed) {
