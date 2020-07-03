@@ -107,7 +107,7 @@ public class PollingMasterInquireClient implements MasterInquireClient {
    * Returns the address of the successfully made connection. Throws an exception
    * if no connection is established.
    *
-   * @return  the INET socket address for the
+   * @return  the INET socket address for the primary master.
    * @throws  UnavailableException  If the primary master
    *                                RPC address is not
    *                                found.
