@@ -212,7 +212,7 @@ public final class Metric implements Serializable {
    * Gets the metric name with the appendix of tags.
    * <p>
    * Returns the metric name with the provided tags.
-   * The returned name is of the pattern is
+   * The returned name is of the pattern
    * {@code name[.tagName:tagValue]*}.
    * <p>
    * Checks whether there is an even number of arguments
