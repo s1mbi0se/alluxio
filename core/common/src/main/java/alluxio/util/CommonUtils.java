@@ -769,8 +769,6 @@ public final class CommonUtils {
    * Updates and returns supplier, implementing memoization
    * <p>
    * Memoize implementation for {@link Supplier<T>}.
-   * <p>
-   * Memoize implementation for the Java supplier.
    *
    * @param   original  the original supplier
    * @param   <T>       the object type
