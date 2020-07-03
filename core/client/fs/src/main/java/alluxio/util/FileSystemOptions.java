@@ -125,8 +125,19 @@ public class FileSystemOptions {
   }
 
   /**
-   * @param conf Alluxio configuration
-   * @return options based on the configuration
+   * Returns an instance of the generated protocol message class for the file system master.
+   * <p>
+   * Creates an object of type {@link FileSystemMasterCommonPOptions} and sets the following
+   * configuration based on the values from {@link PropertyKey}:
+   *          1) the sync interval in milliseconds;
+   *          2) the time to live in milliseconds;
+   *          3) the action to take once the time to live has expired,
+   *          set to {@link TtlAction#DELETE} by default.
+   * <p>
+   * Returns the new {@code FileSystemMasterCommonPOptions} built.
+   *
+   * @param   conf  Alluxio configuration
+   * @return  options based on the configuration
    */
   public static FileSystemMasterCommonPOptions commonDefaults(
       AlluxioConfiguration conf) {
