@@ -83,6 +83,25 @@ public class AuthenticatedChannelServerDriver implements StreamObserver<SaslMess
     mChannelAuthenticated = true;
   }
 
+  /**
+   * Closes the authenticated channel.
+   * <p>
+   * Checks if {@link #mChannelAuthenticated}
+   * is true, which would indicate the channel
+   * is authenticated. Unregisters this channel
+   * from {@link #mAuthenticationServer} and sets
+   * {@link #mChannelAuthenticated} to false.
+   * <p>
+   * Checks if {@link #mSaslServerHandler} exists,
+   * closing it if it does.
+   * <p>
+   * Invokes {@link #mRequestObserver#onCompleted}
+   * if the provided {@code signalOwner} is true,
+   * attempting to notify the request observer of
+   * a successful stream completion.
+   *
+   * @param signalOwner the signal owner
+   */
   private void closeAuthenticatedChannel(boolean signalOwner) {
     if (mChannelAuthenticated) {
       LOG.debug("Closing authenticated channel for {}", mChannelRef);
