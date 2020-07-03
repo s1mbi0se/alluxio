@@ -176,17 +176,7 @@ public final class MetricsSystem {
    * Constructs and returns the source name of metrics in this metrics system.
    * <p>
    * Sets {@code sourceKey} according to the value of {@link CommonUtils#PROCESS_TYPE}.
-   * If its value is {@link CommonUtils.ProcessType#MASTER}, sets {@code sourceKey} to
-   * {@link PropertyKey#MASTER_HOSTNAME}. If its value is
-   * {@link CommonUtils.ProcessType#WORKER}, sets {@code sourceKey} to
-   * {@link PropertyKey#WORKER_HOSTNAME}. If its value is
-   * {@link CommonUtils.ProcessType#CLIENT}, sets {@code sourceKey} to
-   * {@link PropertyKey#USER_APP_ID}. If its value is
-   * {@link CommonUtils.ProcessType#JOB_MASTER}, sets {@code sourceKey}
-   * to {@link PropertyKey#JOB_MASTER_HOSTNAME}. If its value is
-   * {@link CommonUtils.ProcessType#JOB_WORKER}, sets {@code sourceKey}
-   * to {@link PropertyKey#JOB_WORKER_HOSTNAME}. If its value is none of
-   * the above, keeps {@code sourceKey} as null.
+   * Sets {@code sourceKey} to the appropriate source name according to its value.
    * <p>
    * Returns the {@code sourceKey} if it exists and the
    * {@link AlluxioConfiguration} {@code conf} contains a

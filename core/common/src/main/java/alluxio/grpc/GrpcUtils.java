@@ -656,6 +656,8 @@ public final class GrpcUtils {
   }
 
   /**
+   * Checks if target enum is contained within the given source.
+   *
    * @param source source enum
    * @param target target enum
    * @return true if target enum is contained within the source
