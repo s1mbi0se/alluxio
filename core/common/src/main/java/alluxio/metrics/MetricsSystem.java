@@ -173,7 +173,32 @@ public final class MetricsSystem {
   }
 
   /**
-   * Constructs the source name of metrics in this {@link MetricsSystem}.
+   * Constructs and returns the source name of metrics in this metrics system.
+   * <p>
+   * Sets {@code sourceKey} according to the value of {@link CommonUtils#PROCESS_TYPE}.
+   * If its value is {@link CommonUtils.ProcessType#MASTER}, sets {@code sourceKey} to
+   * {@link PropertyKey#MASTER_HOSTNAME}. If its value is
+   * {@link CommonUtils.ProcessType#WORKER}, sets {@code sourceKey} to
+   * {@link PropertyKey#WORKER_HOSTNAME}. If its value is
+   * {@link CommonUtils.ProcessType#CLIENT}, sets {@code sourceKey} to
+   * {@link PropertyKey#USER_APP_ID}. If its value is
+   * {@link CommonUtils.ProcessType#JOB_MASTER}, sets {@code sourceKey}
+   * to {@link PropertyKey#JOB_MASTER_HOSTNAME}. If its value is
+   * {@link CommonUtils.ProcessType#JOB_WORKER}, sets {@code sourceKey}
+   * to {@link PropertyKey#JOB_WORKER_HOSTNAME}. If its value is none of
+   * the above, keeps {@code sourceKey} as null.
+   * <p>
+   * Returns the {@code sourceKey} if it exists and the
+   * {@link AlluxioConfiguration} {@code conf} contains a
+   * value for it. Returns a local hostname for the host this
+   * JVM is running on with '.' replaced with '_' for metrics usage.
+   *
+   * @return  the source name of metrics in this metrics system
+   * @throws  RuntimeException  if a connection to the localhost
+   *                            cannot be established before the timeout
+   *                            set as {@link #sResolveTimeout} while attempting
+   *                            to get the localhost metric name with
+   *                            {@link NetworkAddressUtils#getLocalHostMetricName}.
    */
   private static String constructSourceName() {
     PropertyKey sourceKey = null;
