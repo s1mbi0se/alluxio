@@ -108,6 +108,13 @@ public final class RetryHandlingFileSystemMasterClient extends AbstractMasterCli
     return ServiceType.FILE_SYSTEM_MASTER_CLIENT_SERVICE;
   }
 
+  /**
+   * Gets the name for the master client service.
+   * <p>
+   * Returns the value from {@link Constants#FILE_SYSTEM_MASTER_CLIENT_SERVICE_NAME}.
+   *
+   * @return  the file system master client service name
+   */
   @Override
   protected String getServiceName() {
     return Constants.FILE_SYSTEM_MASTER_CLIENT_SERVICE_NAME;
