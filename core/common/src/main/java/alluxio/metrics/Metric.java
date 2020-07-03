@@ -209,12 +209,26 @@ public final class Metric implements Serializable {
   }
 
   /**
-   * Gets the metric name with the appendix of tags. The returned name is of the pattern
-   * name[.tagName:tagValue]*.
+   * Gets the metric name with the appendix of tags.
+   * <p>
+   * Returns the metric name with the provided tags.
+   * The returned name is of the pattern is
+   * {@code name[.tagName:tagValue]*}.
+   * <p>
+   * Checks whether there is an even number of arguments
+   * in {@code tags}. Throws an exception if there is not.
+   * The reason for this is that the arguments should always
+   * consist of tag name and tag value pairs.
+   * <p>
+   * Creates a StringBuilder in order to create the final
+   * metric name with the addition of tags and returns its
+   * string value.
    *
-   * @param name the metric name
-   * @param tags the tag name and tag value pairs
-   * @return the name with the tags appended
+   * @param   name  the metric name
+   * @param   tags  the tag name and tag value pairs
+   * @return  the name with the tags appended
+   * @throws  IllegalArgumentException  if the tag arguments are not
+   *                                    tag name and tag value pairs
    */
   public static String getMetricNameWithTags(String name, String... tags) {
     Preconditions.checkArgument(tags.length % 2 == 0,
