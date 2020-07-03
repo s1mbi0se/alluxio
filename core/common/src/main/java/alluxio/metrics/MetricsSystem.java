@@ -176,7 +176,17 @@ public final class MetricsSystem {
    * Constructs and returns the source name of metrics in this metrics system.
    * <p>
    * Sets {@code sourceKey} according to the value of {@link CommonUtils#PROCESS_TYPE}.
-   * Sets {@code sourceKey} to the appropriate source name according to its value.
+   * If its value is {@link CommonUtils.ProcessType#MASTER}, sets {@code sourceKey} to
+   * {@link PropertyKey#MASTER_HOSTNAME}. If its value is
+   * {@link CommonUtils.ProcessType#WORKER}, sets {@code sourceKey} to
+   * {@link PropertyKey#WORKER_HOSTNAME}. If its value is
+   * {@link CommonUtils.ProcessType#CLIENT}, sets {@code sourceKey} to
+   * {@link PropertyKey#USER_APP_ID}. If its value is
+   * {@link CommonUtils.ProcessType#JOB_MASTER}, sets {@code sourceKey}
+   * to {@link PropertyKey#JOB_MASTER_HOSTNAME}. If its value is
+   * {@link CommonUtils.ProcessType#JOB_WORKER}, sets {@code sourceKey}
+   * to {@link PropertyKey#JOB_WORKER_HOSTNAME}. If its value is none of
+   * the above, keeps {@code sourceKey} as null.
    * <p>
    * Returns the {@code sourceKey} if it exists and the
    * {@link AlluxioConfiguration} {@code conf} contains a
@@ -572,14 +582,11 @@ public final class MetricsSystem {
   }
 
   /**
-   * Gets or registers timer with the given name.
-   * <p>
-   * Gets or adds timer with the provided name.
-   * The returned timer may be changed due to
-   * {@link #resetAllMetrics}.
+   * Get or add timer with the given name.
+   * The returned timer may be changed due to {@link #resetAllMetrics}
    *
-   * @param   name  the name of the metric
-   * @return  timer object with the qualified metric name
+   * @param name the name of the metric
+   * @return a timer object with the qualified metric name
    */
   public static Timer timer(String name) {
     return METRIC_REGISTRY.timer(getMetricName(name));
