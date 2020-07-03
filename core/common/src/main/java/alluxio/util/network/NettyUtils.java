@@ -188,13 +188,29 @@ public final class NettyUtils {
   }
 
   /**
-   * Get the proper channel class.
+   * Gets the proper channel class based on the provided property key and Alluxio configuration.
+   * <p>
+   * Throws an exception if domain socket is enabled and channel type is {@link ChannelType#EPOLL}.
+   * Otherwise, returns {@code EpollDomainSocketChannel.class} if channel type is not EPOLL.
+   * <p>
+   * Throws an exception if domain socket is disabled and {@code channelType} is neither
+   * {@link ChannelType#NIO} nor EPOLL.
+   * <p>
+   * Returns {@code NioSocketChannel.class} if {@code channelType is NIO} and domain
+   * socket is disabled. Otherwise, returns {@code EpollSocketChannel.class} if the
+   * channel type is EPOLL.
+   * <p>
    * Always returns {@link NioSocketChannel} NIO if EPOLL is not available.
    *
-   * @param isDomainSocket whether this is for a domain channel
-   * @param key the property key for looking up the configured channel type
-   * @param conf the Alluxio configuration
-   * @return the channel type to use
+   * @param   isDomainSocket  whether this is for a domain channel
+   * @param   key             the property key for looking up the configured
+   *                          channel type
+   * @param   conf            the Alluxio configuration
+   * @return  the channel type to use
+   * @throws IllegalStateException      If domain socket is enabled and
+   *                                    the channel type is EPOLL. This
+   *                                    option is not supported.
+   * @throws  IllegalArgumentException  if the channel type is unknown
    */
   public static Class<? extends Channel> getChannelClass(boolean isDomainSocket, PropertyKey key,
       AlluxioConfiguration conf) {

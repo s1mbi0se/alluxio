@@ -32,6 +32,15 @@ public class SingleMasterInquireClient implements MasterInquireClient {
     mConnectDetails = new SingleMasterConnectDetails(address);
   }
 
+  /**
+   * Gets the primary RPC address for the master.
+   * <p>
+   * Returns the {@link InetSocketAddress} of
+   * {@link SingleMasterInquireClient#mConnectDetails}
+   * through {@code mConnectDetails.getAddress()}.
+   *
+   * @return  the primary RPC address
+   */
   @Override
   public InetSocketAddress getPrimaryRpcAddress() {
     return mConnectDetails.getAddress();

@@ -73,6 +73,12 @@ public interface UserState {
     private static final Logger LOG = LoggerFactory.getLogger(Factory.class);
 
     /**
+     * Creates and returns a new user state with the provided configurations.
+     * <p>
+     * Instantiates a new object of type {@link UserState}, which handles logging
+     * in any client, maintains the state, and provides access to the {@link Subject}
+     * and the {@link User} for the client.
+     *
      * @param conf the configuration to use
      * @return a new UserState instance
      */

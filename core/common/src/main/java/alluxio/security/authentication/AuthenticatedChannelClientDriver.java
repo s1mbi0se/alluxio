@@ -82,9 +82,11 @@ public class AuthenticatedChannelClientDriver implements StreamObserver<SaslMess
   }
 
   /**
-   * Sets the server's Sasl stream.
+   * Sets the server's Simple Authentication and Security Layer stream.
+   * <p>
+   * Defines the {@link #mRequestObserver}.
    *
-   * @param requestObserver server Sasl stream
+   * @param requestObserver server SASL stream
    */
   public void setServerObserver(StreamObserver<SaslMessage> requestObserver) {
     mRequestObserver = requestObserver;
@@ -241,6 +243,20 @@ public class AuthenticatedChannelClientDriver implements StreamObserver<SaslMess
     }
   }
 
+  /**
+   * Closes the Simple Authentication and Security Layer (SASL) client handler.
+   * <p>
+   * Closes the {@link #mSaslClientHandler} and sets
+   * {@link #mChannelAuthenticated} to false, which
+   * indicates whether this channel is authenticated.
+   * <p>
+   * Attempts to notify {@link #mRequestObserver} that the
+   * stream was successfully completed if {@code signalServer}
+   * is set to true.
+   *
+   * @param signalServer  a boolean indicating whether
+   *                      the server should be signaled
+   */
   private void closeAuthenticatedChannel(boolean signalServer) {
     mSaslClientHandler.close();
     // Authentication failed either during or after handshake.
