@@ -1200,9 +1200,15 @@ public class UnderFileSystemWithLogging implements UnderFileSystem {
   }
 
   /**
+   * Gets the correct name for a given metric.
+   * <p>
+   * Checks if authentication is enabled and
+   * there is an authenticated client user in
+   * {@link #mConf}. Returns the appropriate
+   * metric name with tags.
    *
-   * @param metricName
-   * @return
+   * @param   metricName  the metric name
+   * @return  the qualified metric name
    */
   // TODO(calvin): General tag logic should be in getMetricName
   private String getQualifiedMetricName(String metricName) {
