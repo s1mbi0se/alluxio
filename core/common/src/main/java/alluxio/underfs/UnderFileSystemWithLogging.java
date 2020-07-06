@@ -1199,6 +1199,11 @@ public class UnderFileSystemWithLogging implements UnderFileSystem {
     return mUnderFileSystem.isSeekable();
   }
 
+  /**
+   *
+   * @param metricName
+   * @return
+   */
   // TODO(calvin): General tag logic should be in getMetricName
   private String getQualifiedMetricName(String metricName) {
     try {
