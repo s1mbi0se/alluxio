@@ -195,7 +195,9 @@ public abstract class AbstractClient implements Client {
   }
 
   /**
-   * This method is called after the connection is disconnected. Implementations should clean up any
+   * Should clean up any additional state created for the connection.
+   * <p>
+   * This method is called after the connection is unmade. Implementations should clean up any
    * additional state created for the connection.
    */
   protected void afterDisconnect() {

@@ -75,9 +75,11 @@ public class ChannelAuthenticator {
   }
 
   /**
-   * It builds an authenticated channel.
+   * Builds an authenticated channel.
    *
-   * @throws AlluxioStatusException
+   * @throws  AlluxioStatusException  if an unforeseen exception occurs
+   *                                  while trying to build the authenticated
+   *                                  channel.
    */
   public void authenticate() throws AlluxioStatusException {
     LOG.debug("Authenticating channel: {}. AuthType: {}", mChannelKey.toStringShort(), mAuthType);
