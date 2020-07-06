@@ -91,7 +91,12 @@ public abstract class AbstractSaslClientHandler implements SaslClientHandler {
   }
 
   /**
-   * This is synchronized in order to protect {@link #mSaslClient}.
+   * Closes the SASL client handler and disposes internal resources.
+   * <p>
+   * Checks if there is an active {@link #mSaslClient}, attempting to
+   * close it. Sets {@code mSaslClient} to null.
+   * <p>
+   * This is synchronized in order to protect {@code #mSaslClient}.
    */
   @Override
   public synchronized void close() {
