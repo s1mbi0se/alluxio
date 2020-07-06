@@ -486,6 +486,20 @@ public abstract class AbstractClient implements Client {
         + " attempts: " + ex.toString(), ex);
   }
 
+  /**
+   * Gets the qualified name for a given metric.
+   * <p>
+   * Returns the metric name with the {@link MetricInfo#TAG_USER}
+   * tag if authentication is enabled in the {@link #mContext}
+   * cluster configuration and the context has a non-null
+   * {@link alluxio.security.User}. Returns {@code metricName}
+   * otherwise.
+   *
+   * @param metricName  the metric name from which to get the
+   *                    qualified name
+   * @return  a String with the qualified name for the provided
+   *          {@code metricName}
+   */
   // TODO(calvin): General tag logic should be in getMetricName
   private String getQualifiedMetricName(String metricName) {
     try {
