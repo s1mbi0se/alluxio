@@ -122,6 +122,16 @@ public abstract class AbstractClient implements Client {
    */
   protected abstract ServiceType getRemoteServiceType();
 
+  /**
+   * Gets the remote service version.
+   * <p>
+   * Returns a long value representing the version for the remote service
+   * utilizing the {@link #mVersionService}.
+   *
+   * @return  the remote service version
+   * @throws  AlluxioStatusException  if an unforeseen exception occurs while
+   *                                  trying to get the remote service version
+   */
   protected long getRemoteServiceVersion() throws AlluxioStatusException {
     // Calling directly as this method is subject to an encompassing retry loop.
     return mVersionService
