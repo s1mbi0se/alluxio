@@ -147,8 +147,10 @@ public class ClientContext {
   /**
    * Loads configuration if not loaded from meta master yet.
    *
-   * @param address meta master address
-   * @throws AlluxioStatusException
+   * @param   address the meta master INET socket address
+   * @throws  AlluxioStatusException  if an exception occurs
+   *                                  while trying to load
+   *                                  the configuration
    */
   public synchronized void loadConfIfNotLoaded(InetSocketAddress address)
       throws AlluxioStatusException {
