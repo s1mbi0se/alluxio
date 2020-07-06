@@ -122,6 +122,16 @@ public abstract class AbstractClient implements Client {
    */
   protected abstract ServiceType getRemoteServiceType();
 
+  /**
+   * Gets the remote service version.
+   * <p>
+   * Returns a long value representing the version for the remote service
+   * using the {@link #mVersionService}.
+   *
+   * @return  the remote service version
+   * @throws  AlluxioStatusException  if an exception occurs while trying
+   *                                  to get the remote service version
+   */
   protected long getRemoteServiceVersion() throws AlluxioStatusException {
     // Calling directly as this method is subject to an encompassing retry loop.
     return mVersionService
@@ -141,19 +151,9 @@ public abstract class AbstractClient implements Client {
   protected abstract long getServiceVersion();
 
   /**
-   * Checks whether the service version is compatible with the client.
-   * <p>
-   * Checks whether the service version is compatible with this {@link Client}.
-   * Throws an exception if it is not. Does nothing otherwise.
-   * <p>
-   * Gets remote service version if {@link #mServiceVersion} is an
-   * {@link Constants#UNKNOWN_SERVICE_VERSION} and verifies if that
-   * corresponds to the provided {@code clientVersion}. Throws an
-   * exception if the versions diverge.
+   * Checks that the service version is compatible with the client.
    *
-   * @param   clientVersion the client version
-   * @throws  IOException   if the {@link #mServiceVersion} is not the same as the
-   *                        provided {@code clientVersion}
+   * @param clientVersion the client version
    */
   protected void checkVersion(long clientVersion) throws IOException {
     if (mServiceVersion == Constants.UNKNOWN_SERVICE_VERSION) {
@@ -174,9 +174,17 @@ public abstract class AbstractClient implements Client {
   }
 
   /**
-   * This method is called before the connection is connected. Implementations should add any
-   * additional operations before the connection is connected.
-   * loading the cluster defaults
+   * Loads configuration if they were not loaded from meta master and the client is not connected yet.
+   * <p>
+   * This method is called before the connection is established. Implementations should add any
+   * additional operations that may need to occur before the connection is made loading the cluster
+   * defaults.
+   * <p>
+   * Checks whether {@link AbstractClient#isConnected} returns true. If it does, loads configurations
+   * from {@link AbstractClient#mConfAddress} if they were not loaded yet by invoking
+   * {@link ClientContext#loadConfIfNotLoaded} from {@link AbstractClient#mContext}.
+   *
+   * @throws IOException  If an unforeseen I/O-bound operation fails.
    */
   protected void beforeConnect()
       throws IOException {
@@ -187,7 +195,9 @@ public abstract class AbstractClient implements Client {
   }
 
   /**
-   * This method is called after the connection is disconnected. Implementations should clean up any
+   * Should clean up any additional state created for the connection.
+   * <p>
+   * This method is called after the connection is unmade. Implementations should clean up any
    * additional state created for the connection.
    */
   protected void afterDisconnect() {
@@ -203,7 +213,27 @@ public abstract class AbstractClient implements Client {
   }
 
   /**
-   * Connects with the remote.
+   * Attempts to connect with the remote client.
+   * <p>
+   * Verifies whether or not a connection has already been
+   * established, in which case it halts its execution. Otherwise,
+   * checks whether or not this client is closed. If it happens
+   * to be closed, no further attempts at a connection will be made.
+   * <p>
+   * Attempts to connect to this client multiple times while also
+   * counting the number of attempts to a connection. If all attempts
+   * fail continuously, the exception caused by the last attempt is
+   * thrown again and no more attempts at a connection are made.
+   *
+   * @throws FailedPreconditionException  If the client is already closed, in which case
+   *                                      the connection cannot be established.
+   * @throws UnavailableException         If it fails to determine the RPC address, in
+   *                                      which case a new attempt is called for. Also if
+   *                                      it continuously fails to establish a connection.
+   * @throws UnauthenticatedException     If the credentials have expired, in which case
+   *                                      a new login is called for.
+   * @throws NotFoundException            If the service is not found in the server.
+   *
    */
   @Override
   public synchronized void connect() throws AlluxioStatusException {
@@ -290,17 +320,8 @@ public abstract class AbstractClient implements Client {
   }
 
   /**
-   * Closes the connection with the Alluxio remote and does the necessary cleanup.
-   * <p>
-   * Checks whether {@link #mConnected} is {@code true}, in which case there is an
-   * active connection with the remote. Prepares for shut down with {@link #beforeDisconnect}
-   * and shuts down {@link #mChannel} if such connection exists. Does the necessary cleanup with
-   * {@link #afterDisconnect} after closing the connection.
-   * <p>
-   * Does nothing if {@code mConnected} is {@code false}, because there is no active connection.
-   * <p>
-   * This method should be used if the client has not connected with the remote for
-   * a while, for example.
+   * Closes the connection with the Alluxio remote and does the necessary cleanup. It should be used
+   * if the client has not connected with the remote for a while, for example.
    */
   public synchronized void disconnect() {
     if (mConnected) {
@@ -314,7 +335,15 @@ public abstract class AbstractClient implements Client {
   }
 
   /**
-   * @return true if this client is connected to the remote
+   * Returns a boolean value representing whether this client is connected to the remote.
+   * <p>
+   * Returns {@link AbstractClient#mConnected}, informing whether or not this client is
+   * connected to the remote. Returns true if it is connected, otherwise returns false;
+   * <p>
+   * This method is synchronized in order to avoid threads get outdated information when
+   * accessing it.
+   *
+   * @return true if this client is connected to the remote; otherwise, false
    */
   public synchronized boolean isConnected() {
     return mConnected;
@@ -330,11 +359,31 @@ public abstract class AbstractClient implements Client {
     mClosed = true;
   }
 
+  /**
+   * Attempts to get the INET socket address for this client.
+   * <p>
+   * Returns the existing {@link #mAddress} for this client.
+   *
+   * @return the INET socket address for this client
+   * @throws UnavailableException If an unforeseen exception occurs
+   *                              while attempting to get the
+   *                              {@link InetSocketAddress}.
+   */
   @Override
   public synchronized InetSocketAddress getAddress() throws UnavailableException {
     return mAddress;
   }
 
+  /**
+   * Gets the address from which to load the configuration for this client.
+   * <p>
+   * Checks whether {@link #mConfAddress} is null. If {@code mConfAddress}
+   * is null, the address should be found in {@link #mAddress}, and that is
+   * returned. Otherwise, {@code} mConfAddress is returned.
+   *
+   * @return the address to load configuration
+   * @throws UnavailableException if the address cannot be reached
+   */
   @Override
   public synchronized InetSocketAddress getConfAddress() throws UnavailableException {
     if (mConfAddress != null) {
@@ -359,20 +408,22 @@ public abstract class AbstractClient implements Client {
   }
 
   /**
-   * Tries to execute an RPC defined as a {@link RpcCallable}. Metrics will be recorded based on
+   * Attempts to execute an RPC and record metrics based the provided name for the RPC.
+   * <p>
+   * Tries to execute an RPC defined as an {@link RpcCallable}. Metrics will be recorded based on
    * the provided rpc name.
-   *
-   * If a {@link UnavailableException} occurs, a reconnection will be tried through
+   * <p>
+   * If an {@link UnavailableException} occurs, a reconnection will be tried through
    * {@link #connect()} and the action will be re-executed.
    *
-   * @param <V> type of return value of the RPC call
-   * @param rpc the RPC call to be executed
-   * @param logger the logger to use for this call
-   * @param rpcName the human readable name of the RPC call
+   * @param <V>         type of return value of the RPC call
+   * @param rpc         the RPC call to be executed
+   * @param logger      the logger to use for this call
+   * @param rpcName     the human readable name of the RPC call
    * @param description the format string of the description, used for logging
-   * @param args the arguments for the description
-   * @return the return value of the RPC call
-   * @throws AlluxioStatusException
+   * @param args        the arguments for the description
+   * @return            the return value of the RPC call
+   * @throws AlluxioStatusException If an unforeseen exception is thrown.
    */
   protected synchronized <V> V retryRPC(RpcCallable<V> rpc, Logger logger, String rpcName,
       String description, Object... args) throws AlluxioStatusException {
@@ -405,32 +456,6 @@ public abstract class AbstractClient implements Client {
     }
   }
 
-  /**
-   * Attempts to establish an RPC. Attempts to connect until:
-   *          1) a connection is successfully made; or
-   *          2) there are no more retries left from the {@link RetryPolicy}.
-   * Returns {@code rpc.call()} if a connection is successfully made.
-   * <p>
-   * Throws an {@link IOException} if the client is closed, a {@link RuntimeException}
-   * occurs, or the RPC connection fails.
-   * <p>
-   * Calls {@code onRetry.get()} and disconnects if the previous attempt to establish an RPC
-   * fails.
-   * <p>
-   * Throws an exception if the return of {@link RetryPolicy#getAttemptCount} is greater than
-   * the established maximum number of retries.
-   *
-   * @param   rpc     the RPC call to be executed
-   * @param   onRetry the action to take on a retry
-   * @param   <V>     the return value of {@link RpcCallable#call()}
-   * @return  the RPC result; otherwise, an exception is thrown
-   * @throws  FailedPreconditionException if the client is closed
-   * @throws  AlluxioStatusException      if a {@link StatusRuntimeException}
-   *                                      is thrown
-   * @throws  UnavailableException        if the RPC connection fails multiple times
-   *                                      and disrespects the {@link RetryPolicy}
-   *                                      from the {@link #mRetryPolicySupplier}
-   */
   private synchronized <V> V retryRPCInternal(RpcCallable<V> rpc, Supplier<Void> onRetry)
       throws AlluxioStatusException {
     RetryPolicy retryPolicy = mRetryPolicySupplier.get();
@@ -461,6 +486,20 @@ public abstract class AbstractClient implements Client {
         + " attempts: " + ex.toString(), ex);
   }
 
+  /**
+   * Gets the qualified name for a given metric.
+   * <p>
+   * Returns the metric name with the {@link MetricInfo#TAG_USER}
+   * tag if authentication is enabled in the {@link #mContext}
+   * cluster configuration and the context has a non-null
+   * {@link alluxio.security.User}. Returns {@code metricName}
+   * otherwise.
+   *
+   * @param metricName  the metric name from which to get the
+   *                    qualified name
+   * @return  a String with the qualified name for the provided
+   *          {@code metricName}
+   */
   // TODO(calvin): General tag logic should be in getMetricName
   private String getQualifiedMetricName(String metricName) {
     try {
