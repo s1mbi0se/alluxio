@@ -215,10 +215,26 @@ public final class FormatUtils {
   private static final Pattern SEP_DIGIT_LETTER = Pattern.compile("([-]?[0-9]*)([a-zA-Z]*)");
 
   /**
-   * Parses a String size to Milliseconds. Supports negative numbers.
+   * Parses a String size to milliseconds. Supports negative numbers.
+   * <p>
+   * Converts a String representing a time size to a long corresponding
+   * to milliseconds. Utilizes the pattern from {@link #SEP_DIGIT_LETTER}
+   * to separate the String into two components:
+   *          1) the time value (such as 10, 20, 30)
+   *          2) the unit of time (such as M, H, D)
+   * <p>
+   * Multiplies the numeric value by the number of milliseconds corresponding
+   * to the unit of time provided in the String {@code timeSize}.
    *
-   * @param timeSize the size of a time, e.g. 1M, 5H, 10D, -1
-   * @return the time size in milliseconds
+   * @param   timeSize  the size of a time, e.g. 1M, 5H, 10D, -1
+   * @return  the time size in milliseconds
+   * @throws  IllegalArgumentException  If the provided unit of time
+   *                                    is not supported. The currently
+   *                                    supported units of time are:
+   *                                    millisecond/ms, second/sec,
+   *                                    minute/min/m, hour/hr/h,
+   *                                    day/d. The validation is
+   *                                    case-insensitive.
    */
   public static long parseTimeSize(String timeSize) {
     double alpha = 0.0001;
