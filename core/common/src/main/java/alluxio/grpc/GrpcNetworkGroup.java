@@ -26,7 +26,11 @@ public enum GrpcNetworkGroup {
   ;
 
   /**
-   * @return the code used to refer to this group in property key templates
+   * Returns the code used to refer to this network group in property key templates.
+   *
+   * @return the code used to refer to this gRPC network group in property key templates
+   * @throws IllegalArgumentException if the network group is not recognized. Only {@link #RPC}
+   *                                  and {@link #STREAMING} are supported.
    */
   public String getPropertyCode() {
     switch (this) {
