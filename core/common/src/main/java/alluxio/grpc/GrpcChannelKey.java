@@ -168,7 +168,15 @@ public class GrpcChannelKey {
   }
 
   /**
-   * @return short representation of this channel key
+   * Returns a short String representation of this gRPC channel key.
+   * <p>
+   * Returns a short representation of this channel key, following
+   * this template:
+   * {@code GrpcChannelKey{ClientType=mClientType, ClientHostname=mLocalHostName, ChannelId=mChannelId}}
+   * <p>
+   * Null values are omitted.
+   *
+   * @return short representation of this gRPC channel key
    */
   public String toStringShort() {
     return MoreObjects.toStringHelper(this)
