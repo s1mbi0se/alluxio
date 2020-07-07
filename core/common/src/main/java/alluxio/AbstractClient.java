@@ -141,9 +141,19 @@ public abstract class AbstractClient implements Client {
   protected abstract long getServiceVersion();
 
   /**
-   * Checks that the service version is compatible with the client.
+   * Checks whether the service version is compatible with the client.
+   * <p>
+   * Checks whether the service version is compatible with this {@link Client}.
+   * Throws an exception if it is not. Does nothing otherwise.
+   * <p>
+   * Gets remote service version if {@link #mServiceVersion} is an
+   * {@link Constants#UNKNOWN_SERVICE_VERSION} and verifies if that
+   * corresponds to the provided {@code clientVersion}. Throws an
+   * exception if the versions diverge.
    *
-   * @param clientVersion the client version
+   * @param   clientVersion the client version
+   * @throws  IOException   if the {@link #mServiceVersion} is not the same as the
+   *                        provided {@code clientVersion}
    */
   protected void checkVersion(long clientVersion) throws IOException {
     if (mServiceVersion == Constants.UNKNOWN_SERVICE_VERSION) {
