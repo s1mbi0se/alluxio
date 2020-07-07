@@ -572,9 +572,9 @@ public final class MetricsSystem {
   }
 
   /**
-   * Gets or creates timer with the given name.
+   * Gets or registers timer with the given name.
    * <p>
-   * Gets or creates timer with the provided name.
+   * Gets or adds timer with the provided name.
    * The returned timer may be changed due to
    * {@link #resetAllMetrics}.
    *
