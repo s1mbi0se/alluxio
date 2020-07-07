@@ -81,6 +81,7 @@ public class GrpcChannelKey {
   }
 
   /**
+   * Returns the destination address of the gRPC channel.
    * @return destination address of the channel
    */
   public GrpcServerAddress getServerAddress() {
@@ -112,6 +113,12 @@ public class GrpcChannelKey {
   }
 
   /**
+   * Gets the network group for this gRPC channel key.
+   * <p>
+   * Returns the {@link #mNetworkGroup} of this {@link GrpcChannelKey},
+   * set by default to {@link GrpcNetworkGroup#RPC}, a networking group
+   * for RPC traffic.
+   *
    * @return the network group
    */
   public GrpcNetworkGroup getNetworkGroup() {
@@ -179,7 +186,15 @@ public class GrpcChannelKey {
   }
 
   /**
-   * @return short representation of this channel key
+   * Returns a short String representation of this gRPC channel key.
+   * <p>
+   * Returns a short representation of this channel key, following
+   * this template:
+   * {@code GrpcChannelKey{ClientType=mClientType, ClientHostname=mLocalHostName, ChannelId=mChannelId}}
+   * <p>
+   * Null values are omitted.
+   *
+   * @return short representation of this gRPC channel key
    */
   public String toStringShort() {
     return MoreObjects.toStringHelper(this)
