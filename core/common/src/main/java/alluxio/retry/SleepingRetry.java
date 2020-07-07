@@ -36,9 +36,9 @@ public abstract class SleepingRetry implements RetryPolicy {
   }
 
   /**
-   * Checks if a new attempt at a request can be made. Sleeps between retries.
+   * Checks if a new attempt can be made. Sleeps between retries.
    * <p>
-   * Checks if a new attempt at a request can be made by comparing the
+   * Checks if a new attempt can be made by comparing the
    * {@link #mAttemptCount} to the number of {@link #mMaxRetries}.
    * Returns true right away if this is the first attempt and skips
    * the following part.
