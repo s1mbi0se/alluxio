@@ -63,7 +63,7 @@ public final class ExponentialTimeBoundedRetry extends TimeBoundedRetry {
   }
 
   /**
-   * Creates and returns a new builder for this retry policy.
+   * Creates and returns a new retry policy with exponential backoff.
    * <p>
    * Instantiates and returns a new object of type
    * {@link ExponentialTimeBoundedRetry.Builder}, used to

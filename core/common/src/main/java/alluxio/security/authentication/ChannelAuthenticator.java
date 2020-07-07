@@ -77,8 +77,8 @@ public class ChannelAuthenticator {
   /**
    * Builds an authenticated channel.
    *
-   * @throws  AlluxioStatusException  if an unforeseen exception occurs
-   *                                  while trying to build the authenticated
+   * @throws  AlluxioStatusException  if an exception occurs while
+   *                                  trying to build the authenticated
    *                                  channel.
    */
   public void authenticate() throws AlluxioStatusException {

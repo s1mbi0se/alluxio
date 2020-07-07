@@ -86,9 +86,9 @@ public final class MountCommand extends AbstractFileSystemCommand {
    * <p>
    * Keeps all command line arguments stored in a collection. Checks
    * if this collection is empty, in which case information about the
-   * mount table with all actively synced paths is printed and the exit
-   * code 0 is returned. If the collection is not empty, this step is
-   * skipped.
+   * mount table with all actively synchronized paths is printed and the
+   * exit code 0 is returned. If the collection is not empty, this step
+   * is skipped.
    * <p>
    * The first command line argument corresponds to the Alluxio path,
    * and the second one corresponds to the under file storage path.
