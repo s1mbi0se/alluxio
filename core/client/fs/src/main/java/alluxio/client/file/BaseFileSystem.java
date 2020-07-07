@@ -501,13 +501,22 @@ public class BaseFileSystem implements FileSystem {
 
   /**
    * Sends an RPC to filesystem master.
+   * <p>
+   * A resource is internally acquired to block {@link FileSystemContext}
+   * reinitialization before sending the RPC.
    *
-   * A resource is internally acquired to block FileSystemContext reinitialization before sending
-   * the RPC.
-   *
-   * @param fn the RPC call
+   * @param fn  the RPC call
    * @param <R> the type of return value for the RPC
-   * @return the RPC result
+   * @return    the RPC result
+   * @throws FileDoesNotExistException  if the file does not exist
+   * @throws FileAlreadyExistsException if the file already exists
+   * @throws InvalidArgumentException   if an invalid argument is provided
+   * @throws InvalidPathException       if the path is invalid
+   * @throws DirectoryNotEmptyException if the directory is not empty
+   * @throws UnavailableException       if the service is unavailable
+   * @throws UnauthenticatedException   if authentication cannot be established
+   * @throws AlluxioException           if some other {@link AlluxioStatusException}
+   *                                    is thrown
    */
   private <R> R rpc(RpcCallable<FileSystemMasterClient, R> fn)
       throws IOException, AlluxioException {
