@@ -40,9 +40,9 @@ public class CountingRetry implements RetryPolicy {
   }
 
   /**
-   * Checks if a new attempt can be made given the maximum number for retries in this policy.
+   * Checks if a new attempt to execute a method can be made given the maximum number for retries in this policy.
    * <p>
-   * Returns a boolean value indicating whether a new attempt can be made based
+   * Returns a boolean value indicating whether a new attempt to execute a method can be made based
    * on how many attempts were registered by the {@link #mAttemptCount} and the the number of
    * {@link #mMaxRetries} established by this {@link CountingRetry}.
    *
