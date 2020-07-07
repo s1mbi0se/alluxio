@@ -160,7 +160,9 @@ public class AuthenticatedChannelClientDriver implements StreamObserver<SaslMess
    * Starts authentication with the server and wait until completion.
    *
    * @param timeoutMs time to wait for authentication
-   * @throws UnauthenticatedException
+   * @throws UnauthenticatedException if an exception occurs while
+   *                                  trying to authenticate the
+   *                                  channel
    */
   public void startAuthenticatedChannel(long timeoutMs) throws AlluxioStatusException {
     try {
