@@ -71,7 +71,9 @@ public final class LoginModuleConfigurationUtils {
   }
 
   /**
-   * @return the OS principal class name
+   * Gets the principal class name for the current operating system.
+   *
+   * @return the principal class name according to the operating system
    */
   private static String getOSPrincipalClassName() {
     String principalClassName;

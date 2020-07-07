@@ -75,9 +75,11 @@ public class ChannelAuthenticator {
   }
 
   /**
-   * It builds an authenticated channel.
+   * Builds an authenticated channel.
    *
-   * @throws AlluxioStatusException
+   * @throws  AlluxioStatusException  if an exception occurs while
+   *                                  trying to build the authenticated
+   *                                  channel.
    */
   public void authenticate() throws AlluxioStatusException {
     LOG.debug("Authenticating channel: {}. AuthType: {}", mChannelKey.toStringShort(), mAuthType);
@@ -164,13 +166,20 @@ public class ChannelAuthenticator {
   }
 
   /**
-   * Create Sasl level handler for client.
+   * Create Simple Authentication and Security Layer-level handler for client.
+   * <p>
+   * Creates and returns a new {@link alluxio.security.authentication.plain.SaslClientHandlerPlain}
+   * with the existing {@link #mParentSubject} and {@link #mConfiguration} if the provided
+   * authentication scheme is supported.
    *
-   * @param serverAddress target server address
-   * @param authScheme authentication scheme to use
-   * @param subject the subject to use
-   * @return the created {@link SaslClientHandler} instance
-   * @throws UnauthenticatedException
+   * @param   serverAddress the target {@link GrpcServerAddress}
+   * @param   authScheme    the {@link ChannelAuthenticationScheme} to use
+   * @param   subject       the {@link Subject} to use
+   * @return  the created {@link SaslClientHandler} instance
+   * @throws UnauthenticatedException if the provided channel authentication
+   *                                  scheme is not supported. The only supported
+   *                                  schemes are {@link ChannelAuthenticationScheme#SIMPLE}
+   *                                  and {@link ChannelAuthenticationScheme#CUSTOM}.
    */
   private SaslClientHandler createSaslClientHandler(GrpcServerAddress serverAddress,
       ChannelAuthenticationScheme authScheme, Subject subject) throws UnauthenticatedException {

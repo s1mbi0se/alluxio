@@ -122,6 +122,16 @@ public abstract class AbstractClient implements Client {
    */
   protected abstract ServiceType getRemoteServiceType();
 
+  /**
+   * Gets the remote service version.
+   * <p>
+   * Returns a long value representing the version for the remote service
+   * using the {@link #mVersionService}.
+   *
+   * @return  the remote service version
+   * @throws  AlluxioStatusException  if an exception occurs while trying
+   *                                  to get the remote service version
+   */
   protected long getRemoteServiceVersion() throws AlluxioStatusException {
     // Calling directly as this method is subject to an encompassing retry loop.
     return mVersionService
@@ -185,7 +195,9 @@ public abstract class AbstractClient implements Client {
   }
 
   /**
-   * This method is called after the connection is disconnected. Implementations should clean up any
+   * Should clean up any additional state created for the connection.
+   * <p>
+   * This method is called after the connection is unmade. Implementations should clean up any
    * additional state created for the connection.
    */
   protected void afterDisconnect() {
@@ -474,6 +486,20 @@ public abstract class AbstractClient implements Client {
         + " attempts: " + ex.toString(), ex);
   }
 
+  /**
+   * Gets the qualified name for a given metric.
+   * <p>
+   * Returns the metric name with the {@link MetricInfo#TAG_USER}
+   * tag if authentication is enabled in the {@link #mContext}
+   * cluster configuration and the context has a non-null
+   * {@link alluxio.security.User}. Returns {@code metricName}
+   * otherwise.
+   *
+   * @param metricName  the metric name from which to get the
+   *                    qualified name
+   * @return  a String with the qualified name for the provided
+   *          {@code metricName}
+   */
   // TODO(calvin): General tag logic should be in getMetricName
   private String getQualifiedMetricName(String metricName) {
     try {

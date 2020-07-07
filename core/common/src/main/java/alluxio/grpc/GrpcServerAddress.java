@@ -57,6 +57,12 @@ public class GrpcServerAddress {
   }
 
   /**
+   * Gets the socket address for the gRPC server.
+   * <p>
+   * Returns the existing {@link #mSocketAddress},
+   * the physical address of this endpoint of the
+   * gRPC server.
+   *
    * @return the socket address
    */
   public SocketAddress getSocketAddress() {

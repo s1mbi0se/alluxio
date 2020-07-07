@@ -48,6 +48,15 @@ public abstract class TimeBoundedRetry implements RetryPolicy {
     return mAttemptCount;
   }
 
+  /**
+   * Checks if a new attempt at a request can be made before a certain period of time has elapsed.
+   * <p>
+   * Returns a boolean representing whether a new attempt can be made by comparing the
+   * {@link #mStartTime} to the established {@link #mEndTime}.
+   *
+   * @return  a boolean value representing whether a new attempt can be made according to
+   *          this {@link RetryPolicy}
+   */
   @Override
   public boolean attempt() {
     if (mAttemptCount == 0) {
