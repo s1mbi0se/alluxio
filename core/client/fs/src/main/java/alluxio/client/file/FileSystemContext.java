@@ -418,7 +418,13 @@ public class FileSystemContext implements Closeable {
   }
 
   /**
-   * @return the cluster level configuration backing this {@link FileSystemContext}
+   * Gets the cluster configuration for the master client context.
+   * <p>
+   * Returns the {@link AlluxioConfiguration} for the cluster from
+   * {@link #mMasterClientContext}.
+   *
+   * @return the cluster level configuration backing this
+   *         {@link FileSystemContext}
    */
   public AlluxioConfiguration getClusterConf() {
     return getClientContext().getClusterConf();
