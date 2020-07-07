@@ -53,7 +53,12 @@ public class GrpcConnection implements AutoCloseable {
   }
 
   /**
-   * @return the channel
+   * Returns the RPC channel.
+   * <p>
+   * Returns the existing {@link #mChannel}, a virtual connection
+   * to a conceptual endpoint, to perform RPCs.
+   *
+   * @return the RPC channel
    */
   public Channel getChannel() {
     return mChannel;
