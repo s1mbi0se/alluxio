@@ -99,6 +99,12 @@ public class GrpcChannelKey {
   }
 
   /**
+   * Gets the network group for this gRPC channel key.
+   * <p>
+   * Returns the {@link #mNetworkGroup} of this {@link GrpcChannelKey},
+   * set by default to {@link GrpcNetworkGroup#RPC}, a networking group
+   * for RPC traffic.
+   *
    * @return the network group
    */
   public GrpcNetworkGroup getNetworkGroup() {
