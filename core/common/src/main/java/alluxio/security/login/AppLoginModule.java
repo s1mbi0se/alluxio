@@ -44,6 +44,17 @@ public final class AppLoginModule implements LoginModule {
    */
   public AppLoginModule() {}
 
+  /**
+   * Initialized the subject and callback handler for this login module.
+   * <p>
+   * Sets {@link #mSubject} to the provided {@code subject}.
+   * <p>
+   * Sets {@link #mCallbackHandler} to the provided {@code callbackHandler}.
+   *
+   * @param subject         the new {@link Subject} for this {@link AppLoginModule}
+   * @param callbackHandler the new {@link CallbackHandler} for this {@link LoginModule}.
+   *                        All other parameters are ignored.
+   */
   @Override
   public void initialize(Subject subject, CallbackHandler callbackHandler,
       Map<String, ?> sharedState, Map<String, ?> options) {
