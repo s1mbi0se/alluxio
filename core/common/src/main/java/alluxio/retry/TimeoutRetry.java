@@ -47,7 +47,7 @@ public class TimeoutRetry implements RetryPolicy {
   }
 
   /**
-   * Checks if a new attempt to execute a given method can be made before the established timeout.
+   * Checks if a new attempt to execute a method can be made before the established timeout.
    * <p>
    * Sets {@link #mStartMs} to the current time if this is the first attempt
    * and returns true right away.
