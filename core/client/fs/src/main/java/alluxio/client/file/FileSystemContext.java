@@ -435,10 +435,14 @@ public class FileSystemContext implements Closeable {
   }
 
   /**
-   * Acquires a file system master client from the file system master client pool. The resource is
-   * {@code Closeable}.
+   * Acquires a file system master client from the file system master client pool.
+   * <p>
+   * Acquires a file system master client, a client used to interact with a file system master.
+   * Gets it from the {@link #mFileSystemMasterClientPool}. Returns a
+   * {@link CloseableResource<FileSystemMasterClient>}, a wrapper around a resource of type
+   * {@code FileSystemMasterClient} which must do some sort of cleanup when it is no longer in use.
    *
-   * @return the acquired file system master client resource
+   * @return  the acquired file system master client resource
    */
   public CloseableResource<FileSystemMasterClient> acquireMasterClientResource() {
     try (ReinitBlockerResource r = blockReinit()) {
