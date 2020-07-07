@@ -173,7 +173,22 @@ public final class MetricsSystem {
   }
 
   /**
-   * Constructs the source name of metrics in this {@link MetricsSystem}.
+   * Constructs and returns the source name of metrics in this metrics system.
+   * <p>
+   * Sets {@code sourceKey} according to the value of {@link CommonUtils#PROCESS_TYPE}.
+   * Sets {@code sourceKey} to the appropriate source name according to its value.
+   * <p>
+   * Returns the {@code sourceKey} if it exists and the
+   * {@link AlluxioConfiguration} {@code conf} contains a
+   * value for it. Returns a local hostname for the host this
+   * JVM is running on with '.' replaced with '_' for metrics usage.
+   *
+   * @return  the source name of metrics in this metrics system
+   * @throws  RuntimeException  if a connection to the localhost
+   *                            cannot be established before the timeout
+   *                            set as {@link #sResolveTimeout} while attempting
+   *                            to get the localhost metric name with
+   *                            {@link NetworkAddressUtils#getLocalHostMetricName}.
    */
   private static String constructSourceName() {
     PropertyKey sourceKey = null;
@@ -258,8 +273,17 @@ public final class MetricsSystem {
   /**
    * Converts a simple string to a qualified metric name based on the process type.
    *
-   * @param name the name of the metric
-   * @return the metric with instance and id tags
+   * @param name  the name of the metric
+   * @return      the metric with instance and ID tags
+   * @throws IllegalStateException  If {@link CommonUtils#PROCESS_TYPE}
+   *                                does not correspond to an actual
+   *                                existing Alluxio process such as
+   *                                {@link CommonUtils.ProcessType#CLIENT},
+   *                                {@link CommonUtils.ProcessType#MASTER},
+   *                                {@link CommonUtils.ProcessType#JOB_MASTER},
+   *                                {@link CommonUtils.ProcessType#WORKER},
+   *                                {@link CommonUtils.ProcessType#JOB_WORKER},
+   *                                or {@link CommonUtils.ProcessType#PROXY}
    */
   public static String getMetricName(String name) {
     if (name.startsWith(CLUSTER)) {
@@ -316,7 +340,24 @@ public final class MetricsSystem {
   }
 
   /**
-   * Builds metric registry name for client instance. The pattern is instance.uniqueId.metricName.
+   * Builds and returns metric registry name for client instance.
+   * <p>
+   * Creates and returns the client metric name. The pattern is
+   * {@code instance.uniqueId.metricName}.
+   * <p>
+   * Checks whether the name is already in the {@link #CACHED_METRICS}.
+   * Returns the name from the cache if it is there.
+   * <p>
+   * Checks whether the name start with {@link InstanceType#MASTER} or
+   * {@link InstanceType#CLUSTER}. Returns the name and saves it
+   * in cache if true.
+   * <p>
+   * Checks whether the name starts with {@link InstanceType#WORKER}.
+   * Returns {@link #getWorkerMetricName} if true, and saves the result
+   * in the cached metrics.
+   * <p>
+   * Returns a new metric name with an unique ID if none of the verifications
+   * above result to true and saves it in cache.
    *
    * @param name the metric name
    * @return the metric registry name
@@ -375,12 +416,25 @@ public final class MetricsSystem {
   }
 
   /**
-   * Builds unique metric registry names with unique ID (set to host name). The pattern is
-   * instance.metricName.hostname
+   * Builds unique metric registry names with unique ID, which is set to host name.
+   * <p>
+   * Builds a unique metric registry name. The pattern is {@code instance.metricName.hostname}.
+   * <p>
+   * Checks whether the provided name starts with the string representation of the provided
+   * {@link InstanceType}. If true, concatenates:
+   *          1) the provided {@code name}, followed by a '.'
+   *          2) the string value of {@link #sSourceNameSupplier},
+   *          returned from {@link Supplier#get}.
+   * <p>
+   * Returns a concatenation following this order, if the aforementioned verification results to false:
+   *          1) the provided {@code instance}, followed by a '.';
+   *          2) the provided {@code name}, followed by a '.';
+   *          3) the string value of {@link #sSourceNameSupplier},
+   *          returned from {@link Supplier#get}.
    *
-   * @param instance the instance name
-   * @param name the metric name
-   * @return the metric registry name
+   * @param   instance  the instance name
+   * @param   name      the metric name
+   * @return  the metric registry name
    */
   private static String getMetricNameWithUniqueId(InstanceType instance, String name) {
     if (name.startsWith(instance.toString())) {
@@ -518,11 +572,14 @@ public final class MetricsSystem {
   }
 
   /**
-   * Get or add timer with the given name.
-   * The returned timer may be changed due to {@link #resetAllMetrics}
+   * Gets or registers timer with the given name.
+   * <p>
+   * Gets or adds timer with the provided name.
+   * The returned timer may be changed due to
+   * {@link #resetAllMetrics}.
    *
-   * @param name the name of the metric
-   * @return a timer object with the qualified metric name
+   * @param   name  the name of the metric
+   * @return  timer object with the qualified metric name
    */
   public static Timer timer(String name) {
     return METRIC_REGISTRY.timer(getMetricName(name));
