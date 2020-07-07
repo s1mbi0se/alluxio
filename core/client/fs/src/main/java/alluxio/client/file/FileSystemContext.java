@@ -264,6 +264,28 @@ public class FileSystemContext implements Closeable {
     LOG.debug("Closed context with id: {}", mId);
   }
 
+  /**
+   * Closes this file system context.
+   * <p>
+   * Checks if this {@link FileSystemContext} is already closed
+   * or has not yet been initialized, in which case nothing is done.
+   * Otherwise, attempts to close this {@link Closeable}.
+   * <p>
+   * Closes the {@link #mFileSystemMasterClientPool} and
+   * the {@link #mBlockMasterClientPool}, setting both fields
+   * to null.
+   * <p>
+   * Iterates through each {@link BlockWorkerClientPool} in
+   * {@link #mBlockWorkerClientPoolMap} and closes each client
+   * pool. Clears {@code mBlockWorkerClientPoolMap} and sets it
+   * to null. Sets {@link #mLocalWorker} to null. Closing the
+   * worker group allows clean termination for open streams.
+   * <p>
+   * Removes subscription to the heartbeat service if {@link #mMetricsEnabled}.
+   *
+   * @throws IOException  if an I/O-bound operation fails
+   *                      unexpectedly
+   */
   private synchronized void closeContext() throws IOException {
     if (!mClosed.get()) {
       // Setting closed should be the first thing we do because if any of the close operations
@@ -396,7 +418,13 @@ public class FileSystemContext implements Closeable {
   }
 
   /**
-   * @return the cluster level configuration backing this {@link FileSystemContext}
+   * Gets the cluster configuration for the master client context.
+   * <p>
+   * Returns the {@link AlluxioConfiguration} for the cluster from
+   * {@link #mMasterClientContext}.
+   *
+   * @return the cluster level configuration backing this
+   *         {@link FileSystemContext}
    */
   public AlluxioConfiguration getClusterConf() {
     return getClientContext().getClusterConf();
