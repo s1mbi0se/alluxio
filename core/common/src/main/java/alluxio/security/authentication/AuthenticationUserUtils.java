@@ -33,9 +33,11 @@ public final class AuthenticationUserUtils {
   private static final Logger LOG = LoggerFactory.getLogger(AuthenticationUserUtils.class);
 
   /**
-   * @param subject the subject to use (can be null)
-   * @param conf Alluxio configuration
-   * @return the configured impersonation user, or null if impersonation is not used
+   * Gets the configured impersonation user if impersonation is used.
+   *
+   * @param   subject the {@link Subject} to use, which can be null
+   * @param   conf    the {@link AlluxioConfiguration}
+   * @return  the configured impersonation user, or null if impersonation is not used
    */
   @Nullable
   public static String getImpersonationUser(Subject subject, AlluxioConfiguration conf) {
