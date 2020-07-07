@@ -311,6 +311,10 @@ public final class AlluxioURI implements Comparable<AlluxioURI>, Serializable {
     return !(mUri.getAuthority() instanceof NoAuthority);
   }
 
+  /**
+   * Gets the hash code for the {@link URI}.
+   * @return  the hash code for the existing {@link #mUri}
+   */
   @Override
   public int hashCode() {
     return mUri.hashCode();
