@@ -111,19 +111,19 @@ public class ClientContext {
   }
 
   /**
-   * This method will load the cluster and path level configuration defaults and update
-   * the configuration in one RPC.
-   *
+   * Loads the cluster and path level configuration defaults and updates the configuration in an RPC
+   * <p>
    * This method should be synchronized so that concurrent calls to it don't continually overwrite
    * the previous configuration.
-   *
+   * <p>
    * The cluster defaults are updated per connection establishment, or when cluster defaults
    * updates are detected on client side.
    *
-   * @param address the address to load cluster defaults from
+   * @param address         the address to load cluster defaults from
    * @param loadClusterConf whether to load cluster level configuration
-   * @param loadPathConf whether to load path level configuration
-   * @throws AlluxioStatusException
+   * @param loadPathConf    whether to load path level configuration
+   * @throws AlluxioStatusException if cannot determine the configuration
+   *                                for the cluster
    */
   public synchronized void loadConf(InetSocketAddress address, boolean loadClusterConf,
       boolean loadPathConf) throws AlluxioStatusException {
