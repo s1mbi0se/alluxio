@@ -496,9 +496,8 @@ public class FileSystemContext implements Closeable {
    * Acquires a client resource from {@link #mBlockMasterClientPool} or
    * {@link #mFileSystemMasterClientPool}.
    * <p>
-   * Because it's possible for a context re-initialization to occur while the resource is
-   * acquired this method uses an inline class which will save the reference to the pool used to
-   * acquire the resource.
+   * Uses an inline class which will save the reference to the pool used to acquire
+   * the resource because it's possible for a context re-initialization to occur while the resource is acquired by this method
    * <p>
    * There are three different cases to which may occur during the release of the resource:
    *          1. release while the context is re-initializing
