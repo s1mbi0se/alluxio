@@ -44,6 +44,15 @@ public abstract class BaseUserState implements UserState {
     mUser = getUserFromSubject();
   }
 
+  /**
+   *  Returns the subject representing the user.
+   *  <p>
+   *  Attempts to login with the user's credentials
+   *  and then returns the subject of the user.
+   *
+   * @return  {@link BaseUserState#mSubject}, an object of type
+   *          {@link Subject} representing the user to be logged in.
+   */
   @Override
   public Subject getSubject() {
     try {
@@ -58,14 +67,46 @@ public abstract class BaseUserState implements UserState {
     return mSubject;
   }
 
+  /**
+   * Attempts to get the user for this instance.
+   * <p>
+   * Attempts to login through {@link #tryLogin}
+   * and return the {@link User} for this instance.
+   *
+   * @return  the existing {@link #mUser}
+   * @throws  UnauthenticatedException if the login fails
+   */
   @Override
   public User getUser() throws UnauthenticatedException {
     tryLogin();
     return mUser;
   }
 
+  /**
+   * Logs in the Alluxio user.
+   * <p>
+   * Attempts to log in the {@link #mUser}.
+   *
+   * @return  the Alluxio {@link User} that was logged in
+   * @throws UnauthenticatedException if an exception occurs
+   *                                  while trying to log in
+   */
   protected abstract User login() throws UnauthenticatedException;
 
+  /**
+   * Attempts to login the user if it is not already logged in.
+   * <p>
+   * Checks whether the user is not yet logged in by checking if
+   * {@link #mUser} is null. Synchronizes this implementation
+   * of {@link UserState} to make sure concurrent threads
+   * cannot manipulate this object while a second check is
+   * made to ensure whether user has not been logged in yet.
+   * <p>
+   * Logs in the user if not logged in yet.
+   *
+   * @throws UnauthenticatedException if an exception occurs
+   *                                  while trying to {@link #login}
+   */
   private void tryLogin() throws UnauthenticatedException {
     if (mUser == null) {
       synchronized (this) {

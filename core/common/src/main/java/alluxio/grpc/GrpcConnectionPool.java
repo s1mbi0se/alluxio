@@ -121,11 +121,14 @@ public class GrpcConnectionPool {
   }
 
   /**
+   * Decreases ref-count of the managed channel and shuts it down if the counter reaches zero.
+   * <p>
    * Decreases the ref-count of the {@link ManagedChannel} for the given address. It shuts down the
    * underlying channel if reference count reaches zero.
    *
    * @param connectionKey the connection key
-   * @param conf the Alluxio configuration
+   * @param conf          the Alluxio configuration
+   * @throws Exception    If connection does not exist.
    */
   public void releaseConnection(GrpcConnectionKey connectionKey, AlluxioConfiguration conf) {
     mChannels.compute(connectionKey, (key, ref) -> {
@@ -143,6 +146,16 @@ public class GrpcConnectionPool {
     });
   }
 
+  /**
+   * Creates a new gRPC connection key.
+   * <p>
+   * Creates a new object used to define
+   * a key for this {@link GrpcConnectionPool}.
+   *
+   * @param   channelKey  the gRPC channel key
+   * @param   conf        the Alluxio configuration
+   * @return  the new {@link GrpcConnectionKey}.
+   */
   private GrpcConnectionKey getConnectionKey(GrpcChannelKey channelKey, AlluxioConfiguration conf) {
     // Assign index within the network group.
     long groupIndex = mNetworkGroupCounters.get(channelKey.getNetworkGroup()).incrementAndGet();
@@ -155,7 +168,19 @@ public class GrpcConnectionPool {
   }
 
   /**
-   * Creates a {@link ManagedChannel} by given pool key.
+   * Creates and returns a managed Netty channel by given pool key.
+   * <p>
+   * Creates a {@link NettyChannelBuilder} with the {@link SocketAddress} from
+   * {@link GrpcChannelKey#getServerAddress()}. If the address is a
+   * {@link InetSocketAddress}, delays domain name system lookup in
+   * order to detect changes when instantiating the builder.
+   * <p>
+   * Builds a new {@link ManagedChannel} and returns it.
+   *
+   * @param channelKey  the unique identifier for the {@link GrpcChannel}
+   * @param conf        the Alluxio configuration
+   * @return            the new instance of ManagedChannel created using
+   *                    {@link NettyChannelBuilder#build()}
    */
   private ManagedChannel createManagedChannel(GrpcChannelKey channelKey,
       AlluxioConfiguration conf) {
@@ -177,7 +202,25 @@ public class GrpcConnectionPool {
   }
 
   /**
-   * It updates and returns the given {@link NettyChannelBuilder} based on network group settings.
+   * Creates and returns a new builder for a Netty channel.
+   * <p>
+   * Instantiates a new object of type {@link NettyChannelBuilder} and
+   * sets its properties based on the provided configurations.
+   * <p>
+   * Returns the created builder.
+   *
+   * @param key             the gRPC channel key
+   * @param channelBuilder  the Netty channel builder
+   * @param conf            the Alluxio configuration used to determine:
+   *                            1) how long the channel builder should be kept alive for;
+   *                            2) the maximum message size allowed for a single gRPC frame;
+   *                            3) the flow control window in bytes;
+   *                            4) the channel type, such as {@link io.netty.channel.epoll.EpollSocketChannel}
+   *                            or {@link io.netty.channel.socket.nio.NioSocketChannel}
+   *                            5) the {@link EventLoopGroup} to be used by the Netty transport;
+   * @return  a new Netty channel builder with the provided configurations,
+   *          which will be used to help simplify construction of channels
+   *          using the Netty transport
    */
   private NettyChannelBuilder applyGroupDefaults(GrpcChannelKey key,
       NettyChannelBuilder channelBuilder, AlluxioConfiguration conf) {
@@ -241,8 +284,11 @@ public class GrpcConnectionPool {
   }
 
   /**
-   * Tries to gracefully shut down the managed channel. If falls back to forceful shutdown if
-   * graceful shutdown times out.
+   * Attempts to gracefully shut down the managed channel.
+   * <p>
+   * Tries to gracefully shut down the managed channel.
+   * Falls back to forceful shutdown if graceful shutdown
+   * times out.
    */
   private void shutdownManagedChannel(ManagedChannel managedChannel, AlluxioConfiguration conf) {
     // Close the gRPC managed-channel if not shut down already.
@@ -274,6 +320,21 @@ public class GrpcConnectionPool {
     }
   }
 
+  /**
+   * Acquires event loop for the network group of a given gRPC channel key.
+   * <p>
+   * Checks if there is already an event loop linked to the network group
+   * to which the {@code channelKey} belongs. Returns the event loop if
+   * found, increasing its {@link CountingReference#mRefCount}.
+   * <p>
+   * Creates a new event loop if none was found for the network group,
+   * saving it in {@link #mEventLoops}. Returns the created event loop.
+   *
+   * @param   channelKey  the gRPC channel key from which to
+   *                      get the network group
+   * @param   conf        the Alluxio configuration
+   * @return  the {@link EventLoopGroup} for the provided {@code channelKey}
+   */
   private EventLoopGroup acquireNetworkEventLoop(GrpcChannelKey channelKey,
       AlluxioConfiguration conf) {
     return mEventLoops.compute(channelKey.getNetworkGroup(), (key, v) -> {
@@ -305,6 +366,21 @@ public class GrpcConnectionPool {
     }).get();
   }
 
+  /**
+   * Attempts to release network event loop for a provided gRPC channel key.
+   * <p>
+   * Searches for the value {@link CountingReference<EventLoopGroup>} assigned to
+   * the key {@link GrpcChannelKey#getNetworkGroup()} in the ConcurrentMap
+   * {@link #mEventLoops}. Throws an exception if the value is null.
+   * <p>
+   * Checks whether the event loop group should be shutdown by comparing the return value
+   * of {@link CountingReference#dereference()} and comparing it to zero. Shuts down the server
+   * and sets its reference to null if true; otherwise keeps everything as is.
+   *
+   * @param channelKey             the gRPC channel key from which the network group
+   *                               will be provided
+   * @throws NullPointerException  If the provided gRPC channel key points to null.
+   */
   private void releaseNetworkEventLoop(GrpcChannelKey channelKey) {
     mEventLoops.compute(channelKey.getNetworkGroup(), (key, ref) -> {
       Preconditions.checkNotNull(ref, "Cannot release nonexistent event-loop");
@@ -333,7 +409,12 @@ public class GrpcConnectionPool {
     }
 
     /**
-     * @return the underlying object after increasing ref-count
+     * Returns the underlying object, increasing the reference count.
+     * <p>
+     * Increments the {@link #mRefCount} of the underlying {@link #mObject}
+     * of type {@code T} and returns this {@link CountingReference<T>}.
+     *
+     * @return  the underlying object after increasing ref-count
      */
     private CountingReference reference() {
       mRefCount.incrementAndGet();
@@ -341,23 +422,32 @@ public class GrpcConnectionPool {
     }
 
     /**
-     * Decrement the ref-count for underlying object.
+     * Decrements the reference count for the underlying object.
+     * <p>
+     * Decrements the {@link #mRefCount} for the underlying {@link #mObject}
+     * and returns the updated value for the reference count.
      *
-     * @return the current ref count after dereference
+     * @return  the current reference count after dereference
      */
     private int dereference() {
       return mRefCount.decrementAndGet();
     }
 
     /**
-     * @return current ref-count
+     * Returns current reference count of the underlying object.
+     * <p>
+     * Gets the current {@link #mRefCount} for the underlying {@link #mObject}.
+     *
+     * @return the current reference count
      */
     private int getRefCount() {
       return mRefCount.get();
     }
 
     /**
-     * @return the underlying object without changing the ref-count
+     * Returns the underlying object without changing the reference count.
+     *
+     * @return the {@link #mObject} without changing the {@link #mRefCount}.
      */
     private T get() {
       return mObject;
