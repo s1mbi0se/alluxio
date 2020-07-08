@@ -91,8 +91,11 @@ public final class GrpcChannelBuilder {
 
   /**
    * Disables authentication with the server.
+   * <p>
+   * Sets {@link #mAuthenticateChannel} to false and returns
+   * this {@link GrpcChannelBuilder} updated.
    *
-   * @return the updated {@link GrpcChannelBuilder} instance
+   * @return the updated {@code GrpcChannelBuilder} instance
    */
   public GrpcChannelBuilder disableAuthentication() {
     mAuthenticateChannel = false;
