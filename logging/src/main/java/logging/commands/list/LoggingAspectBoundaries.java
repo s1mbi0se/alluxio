@@ -8,7 +8,8 @@ public class LoggingAspectBoundaries {
             + "!within(alluxio.heartbeat..*) && "
             + "!within(alluxio.resource..*) && "
             + "!within(alluxio.time..*) && "
-            + "!within(alluxio.conf..*)";
+            + "!within(alluxio.conf..*) && "
+            + "!within(br.com.simbiose..*)";
     public static final String finish = "execution(* alluxio.security.authentication.onCompleted(..))";
     public static final Long artificialThreadId = -2L;
 }
