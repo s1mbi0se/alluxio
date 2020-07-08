@@ -136,16 +136,21 @@ public final class FileSystemContextReinitializer implements Closeable {
 
   /**
    * Acquires the resource to block reinitialization.
-   *
+   * <p>
    * When the context is being reinitialized, this call blocks.
    * If the reinitialization fails, an exception is thrown.
+   * <p>
+   * If there is an existing reinitialization exception, immediately
+   * throws an exception without trying to block further reinitialization.
+   * <p>
+   * Throws an exception if the {@link #mExecutor} fails to complete its
+   * heartbeat task.
    *
-   * If there is an existing reinitialization exception, immediately throw an exception
-   * without trying to block further reinitialization.
-   *
-   * @throws IOException when reinitialization fails before or during this method
-   * @throws InterruptedException if interrupted during being blocked
+   * @throws IOException          if reinitialization fails before or during this method
+   * @throws InterruptedException if interrupted while being blocked
    * @return the resource
+   * @throws IOException  if the {@link ConfigHashSync} fails throws an exception, failing
+   *                      to complete its task
    */
   public ReinitBlockerResource block() throws IOException, InterruptedException {
     Optional<IOException> exception = mExecutor.getException();
