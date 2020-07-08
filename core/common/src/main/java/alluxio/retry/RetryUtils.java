@@ -47,12 +47,14 @@ public final class RetryUtils {
   }
 
   /**
+   * Returns an exponential time-bounded retry policy configured with the provided parameters.
+   * <p>
    * Gives a ClientRetry based on the given parameters.
    *
-   * @param maxRetryDuration the maximum total duration to retry for
-   * @param baseSleepMs initial sleep time in milliseconds
-   * @param maxSleepMs max sleep time in milliseconds
-   * @return the default client retry
+   * @param   maxRetryDuration  the maximum total duration to retry for
+   * @param   baseSleepMs       initial sleep time in milliseconds
+   * @param   maxSleepMs        max sleep time in milliseconds
+   * @return  the default client retry
    */
   public static RetryPolicy defaultClientRetry(Duration maxRetryDuration, Duration baseSleepMs,
       Duration maxSleepMs) {
