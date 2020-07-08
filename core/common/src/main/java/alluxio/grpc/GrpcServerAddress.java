@@ -33,8 +33,14 @@ public class GrpcServerAddress {
   }
 
   /**
-   * @param socketAddress physical address
-   * @return created server address instance
+   * Creates and returns a new gRPC server address.
+   * <p>
+   * Instantiates and returns a new {@link GrpcServerAddress} with
+   * the provided {@link InetSocketAddress}. Defines a gRPC server
+   * endpoint.
+   *
+   * @param   socketAddress physical address
+   * @return  created server address instance
    */
   public static GrpcServerAddress create(InetSocketAddress socketAddress) {
     return new GrpcServerAddress(socketAddress.getHostName(), socketAddress);

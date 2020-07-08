@@ -38,6 +38,19 @@ public final class AlluxioLoginModule implements LoginModule {
    */
   public AlluxioLoginModule() {}
 
+  /**
+   * Initializes the subject for this login module.
+   * <p>
+   * Sets {@link #mSubject} to the provided {@code subject}.
+   *
+   * @param subject         the new subject for this {@link AlluxioLoginModule}.
+   * @param callbackHandler the callback handler. This parameter is ignored and
+   *                        is only required for overriding purposes.
+   * @param sharedState     the shared state. This parameter is ignored and
+   *                        is only required for overriding purposes.
+   * @param options         the options. This parameter is ignored and
+   *    *                   is only required for overriding purposes.
+   */
   @Override
   public void initialize(Subject subject, CallbackHandler callbackHandler,
       Map<String, ?> sharedState, Map<String, ?> options) {

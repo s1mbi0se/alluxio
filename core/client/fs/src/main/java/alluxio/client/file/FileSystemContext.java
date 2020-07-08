@@ -491,31 +491,34 @@ public class FileSystemContext implements Closeable {
   }
 
   /**
-   * Acquire a client resource from {@link #mBlockMasterClientPool} or
+   * Acquires a closeable client resource from the provided dynamic resource pool.
+   * <p>
+   * Acquires a client resource from {@link #mBlockMasterClientPool} or
    * {@link #mFileSystemMasterClientPool}.
+   * <p>
+   * Uses an inline class which will save the reference to the pool used to acquire
+   * the resource because it's possible for a context re-initialization to occur while the resource is acquired by this method
+   * <p>
+   * There are three different cases to which may occur during the release of the resource:
+   *          1. release while the context is re-initializing
+   *                The original {@link #mBlockMasterClientPool} or {@link #mFileSystemMasterClientPool}
+   *                may be null, closed, or overwritten with a difference pool. The inner class here saves
+   *                the original pool from being GCed because it holds a reference to the pool that was used
+   *                to acquire the client initially. Releasing into the closed pool is harmless.
+   *          2. release after the context has been re-initialized
+   *                Similar to the above scenario the original {@link #mBlockMasterClientPool} or
+   *                {@link #mFileSystemMasterClientPool} are going to be using an entirely new pool. Since
+   *                this method will save the original pool reference, this method would result in releasing
+   *                into a closed pool which is harmless
+   *          3. release before any re-initialization
+   *                This is the normal case. There are no special considerations
    *
-   * Because it's possible for a context re-initialization to occur while the resource is
-   * acquired this method uses an inline class which will save the reference to the pool used to
-   * acquire the resource.
-   *
-   * There are three different cases to which may occur during the release of the resource
-   *
-   * 1. release while the context is re-initializing
-   *    - The original {@link #mBlockMasterClientPool} or {@link #mFileSystemMasterClientPool}
-   *    may be null, closed, or overwritten with a difference pool. The inner class here saves
-   *    the original pool from being GCed because it holds a reference to the pool that was used
-   *    to acquire the client initially. Releasing into the closed pool is harmless.
-   * 2. release after the context has been re-initialized
-   *    - Similar to the above scenario the original {@link #mBlockMasterClientPool} or
-   *    {@link #mFileSystemMasterClientPool} are going to be using an entirely new pool. Since
-   *    this method will save the original pool reference, this method would result in releasing
-   *    into a closed pool which is harmless
-   * 3. release before any re-initialization
-   *    - This is the normal case. There are no special considerations
-   *
-   * @param pool the pool to acquire from and release to
-   * @param <T> the resource type
-   * @return a {@link CloseableResource}
+   * @param   pool  the pool to acquire from and release to
+   * @param   <T>   the resource type
+   * @return  a {@link CloseableResource}
+   * @throws  RuntimeException  if an {@link IOException} occurs while attempting
+   *                            to acquire a resource of type {@code T} from the
+   *                            provided {@code pool}
    */
   private <T> CloseableResource<T> acquireClosableClientResource(DynamicResourcePool<T> pool) {
     try {

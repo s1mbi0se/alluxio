@@ -247,11 +247,15 @@ public final class NettyUtils {
   }
 
   /**
-   * Get the proper channel type. Always returns {@link ChannelType} NIO if EPOLL is not available.
+   * Gets the channel type.
+   * <p>
+   * Returns the proper channel type. Always returns {@link ChannelType#NIO}
+   * if {@link ChannelType#EPOLL} is not available. Otherwise, returns the channel
+   * type according to the provided {@link PropertyKey} and {@link AlluxioConfiguration}.
    *
-   * @param key the property key for looking up the configured channel type
-   * @param conf the Alluxio configuration
-   * @return the channel type to use
+   * @param   key   the property key for looking up the configured channel type
+   * @param   conf  the Alluxio configuration
+   * @return  the channel type to use
    */
   public static ChannelType getChannelType(PropertyKey key, AlluxioConfiguration conf) {
     if (!isNettyEpollAvailable()) {
