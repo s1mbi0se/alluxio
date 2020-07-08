@@ -158,10 +158,20 @@ public final class FormatUtils {
   }
 
   /**
-   * Parses a String size to Bytes.
+   * Converts a given space size to bytes.
+   * <p>
+   * Parses a String containing a space size and converts
+   * the original long corresponding to the same value in
+   * bytes.
    *
-   * @param spaceSize the size of a space, e.g. 10GB, 5TB, 1024
-   * @return the space size in bytes
+   * @param   spaceSize the size of a space, such as 1024MB, 10GB, 5TB
+   * @return  the space size in bytes
+   * @throws  IllegalArgumentException  if the String does not contain
+   *                                    a valid unit of space size. The
+   *                                    supported space size units are:
+   *                                    kb/k, mb/m, gb/g, tb/t, pb/p.
+   *                                    The verification is
+   *                                    case-insensitive.
    */
   public static long parseSpaceSize(String spaceSize) {
     double alpha = 0.0001;
@@ -191,7 +201,7 @@ public final class FormatUtils {
       return (long) (ret * Constants.TB + alpha);
     } else if (end.equals("pb") || end.equals("p")) {
       // When parsing petabyte values, we can't multiply with doubles and longs, since that will
-      // lose presicion with such high numbers. Therefore we use a BigDecimal.
+      // lose precision with such high numbers. Therefore we use a BigDecimal.
       BigDecimal pBDecimal = new BigDecimal(Constants.PB);
       return pBDecimal.multiply(BigDecimal.valueOf(ret)).longValue();
     } else {
