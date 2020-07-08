@@ -325,17 +325,19 @@ public class FileSystemContext implements Closeable {
 
   /**
    * Acquires the resource to block reinitialization.
+   * <p>
+   * If reinitialization is happening, this method will block until success or failure.
+   * Throws an exception and automatically closes the resource if reinitialization fails.
+   * <p>
+   * Attempts to return the {@link ReinitBlockerResource} from the existing
+   * {@link #mReinitializer}.
    *
-   * If reinitialization is happening, this method will block until reinitialization succeeds or
-   * fails, if it fails, a RuntimeException will be thrown explaining the
-   * reinitialization's failure and automatically closes the resource.
+   * @return the {@link Closeable} resource to block reinitialization
+   * @throws RuntimeException if reinitialization fails. Since this method is called before
+   *                          requiring resources from the context, these resources might be
+   *                          half closed. This exception is thrown to prevent resource leaks
+   *                          and to force callers to fail since there is no way to recover.
    *
-   * RuntimeException is thrown because this method is called before requiring resources from the
-   * context, if reinitialization fails, the resources might be half closed, to prevent resource
-   * leaks, we thrown RuntimeException here to force callers to fail since there is no way to
-   * recover.
-   *
-   * @return the resource
    */
   public ReinitBlockerResource blockReinit() {
     try {

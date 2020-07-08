@@ -320,6 +320,21 @@ public class GrpcConnectionPool {
     }
   }
 
+  /**
+   * Acquires event loop for the network group of a given gRPC channel key.
+   * <p>
+   * Checks if there is already an event loop linked to the network group
+   * to which the {@code channelKey} belongs. Returns the event loop if
+   * found, increasing its {@link CountingReference#mRefCount}.
+   * <p>
+   * Creates a new event loop if none was found for the network group,
+   * saving it in {@link #mEventLoops}. Returns the created event loop.
+   *
+   * @param   channelKey  the gRPC channel key from which to
+   *                      get the network group
+   * @param   conf        the Alluxio configuration
+   * @return  the {@link EventLoopGroup} for the provided {@code channelKey}
+   */
   private EventLoopGroup acquireNetworkEventLoop(GrpcChannelKey channelKey,
       AlluxioConfiguration conf) {
     return mEventLoops.compute(channelKey.getNetworkGroup(), (key, v) -> {
@@ -394,14 +409,10 @@ public class GrpcConnectionPool {
     }
 
     /**
-     *
+     * Returns the underlying object, increasing the reference count.
      * <p>
-     * Invokes {@link AtomicInteger#incrementAndGet} on
-     * {@link GrpcConnectionPool.CountingReference#mRefCount}.
-     * <p>
-     * Returns this instance of {@link CountingReference}, used
-     * as a reference counting wrapper over an instance of a
-     * given type.
+     * Increments the {@link #mRefCount} of the underlying {@link #mObject}
+     * of type {@code T} and returns this {@link CountingReference<T>}.
      *
      * @return  the underlying object after increasing ref-count
      */
@@ -411,28 +422,32 @@ public class GrpcConnectionPool {
     }
 
     /**
-     * Decrement the ref-count for underlying object.
+     * Decrements the reference count for the underlying object.
+     * <p>
+     * Decrements the {@link #mRefCount} for the underlying {@link #mObject}
+     * and returns the updated value for the reference count.
      *
-     * @return the current ref count after dereference
+     * @return  the current reference count after dereference
      */
     private int dereference() {
       return mRefCount.decrementAndGet();
     }
 
     /**
-     * Returns current ref-count
+     * Returns current reference count of the underlying object.
      * <p>
-     * Gets current value for {@link GrpcConnectionPool.CountingReference#mRefCount},
-     * used by {@link GrpcConnectionPool#releaseConnection(GrpcConnectionKey, AlluxioConfiguration)}.
+     * Gets the current {@link #mRefCount} for the underlying {@link #mObject}.
      *
-     * @return current ref-count
+     * @return the current reference count
      */
     private int getRefCount() {
       return mRefCount.get();
     }
 
     /**
-     * @return the underlying object without changing the ref-count
+     * Returns the underlying object without changing the reference count.
+     *
+     * @return the {@link #mObject} without changing the {@link #mRefCount}.
      */
     private T get() {
       return mObject;
