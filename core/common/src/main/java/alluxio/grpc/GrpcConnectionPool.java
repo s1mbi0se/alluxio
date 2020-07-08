@@ -331,7 +331,7 @@ public class GrpcConnectionPool {
    * saving it in {@link #mEventLoops}. Returns the created event loop.
    *
    * @param   channelKey  the gRPC channel key from which to
-   *                    get the network group
+   *                      get the network group
    * @param   conf        the Alluxio configuration
    * @return  the {@link EventLoopGroup} for the provided {@code channelKey}
    */

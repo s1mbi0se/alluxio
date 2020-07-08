@@ -96,7 +96,7 @@ public abstract class BaseUserState implements UserState {
   /**
    * Attempts to login the user if it is not already logged in.
    * <p>
-   * Checks whether the user not yet logged in by checking if
+   * Checks whether the user is not yet logged in by checking if
    * {@link #mUser} is null. Synchronizes this implementation
    * of {@link UserState} to make sure concurrent threads
    * cannot manipulate this object while a second check is
