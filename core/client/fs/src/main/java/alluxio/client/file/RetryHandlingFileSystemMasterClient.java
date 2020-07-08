@@ -95,6 +95,14 @@ public final class RetryHandlingFileSystemMasterClient extends AbstractMasterCli
     super(conf);
   }
 
+  /**
+   * Gets the type of remote service for the file system master client.
+   * <p>
+   * Returns {@link ServiceType#FILE_SYSTEM_MASTER_CLIENT_SERVICE},
+   * which is the service type for this {@link alluxio.Client}.
+   *
+   * @return  the type of remote service
+   */
   @Override
   protected ServiceType getRemoteServiceType() {
     return ServiceType.FILE_SYSTEM_MASTER_CLIENT_SERVICE;
