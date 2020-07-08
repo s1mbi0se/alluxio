@@ -54,6 +54,10 @@ public final class AppLoginModule implements LoginModule {
    * @param subject         the new {@link Subject} for this {@link AppLoginModule}
    * @param callbackHandler the new {@link CallbackHandler} for this {@link LoginModule}.
    *                        All other parameters are ignored.
+   * @param sharedState     the shared state. This parameter is ignored and
+   *                        is only required for overriding purposes.
+   * @param options         the options. This parameter is ignored and
+   *                        is only required for overriding purposes.
    */
   @Override
   public void initialize(Subject subject, CallbackHandler callbackHandler,
