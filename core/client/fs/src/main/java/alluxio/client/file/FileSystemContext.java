@@ -264,6 +264,28 @@ public class FileSystemContext implements Closeable {
     LOG.debug("Closed context with id: {}", mId);
   }
 
+  /**
+   * Closes this file system context.
+   * <p>
+   * Checks if this {@link FileSystemContext} is already closed
+   * or has not yet been initialized, in which case nothing is done.
+   * Otherwise, attempts to close this {@link Closeable}.
+   * <p>
+   * Closes the {@link #mFileSystemMasterClientPool} and
+   * the {@link #mBlockMasterClientPool}, setting both fields
+   * to null.
+   * <p>
+   * Iterates through each {@link BlockWorkerClientPool} in
+   * {@link #mBlockWorkerClientPoolMap} and closes each client
+   * pool. Clears {@code mBlockWorkerClientPoolMap} and sets it
+   * to null. Sets {@link #mLocalWorker} to null. Closing the
+   * worker group allows clean termination for open streams.
+   * <p>
+   * Removes subscription to the heartbeat service if {@link #mMetricsEnabled}.
+   *
+   * @throws IOException  if an I/O-bound operation fails
+   *                      unexpectedly
+   */
   private synchronized void closeContext() throws IOException {
     if (!mClosed.get()) {
       // Setting closed should be the first thing we do because if any of the close operations
@@ -303,17 +325,19 @@ public class FileSystemContext implements Closeable {
 
   /**
    * Acquires the resource to block reinitialization.
+   * <p>
+   * If reinitialization is happening, this method will block until success or failure.
+   * Throws an exception and automatically closes the resource if reinitialization fails.
+   * <p>
+   * Attempts to return the {@link ReinitBlockerResource} from the existing
+   * {@link #mReinitializer}.
    *
-   * If reinitialization is happening, this method will block until reinitialization succeeds or
-   * fails, if it fails, a RuntimeException will be thrown explaining the
-   * reinitialization's failure and automatically closes the resource.
+   * @return the {@link Closeable} resource to block reinitialization
+   * @throws RuntimeException if reinitialization fails. Since this method is called before
+   *                          requiring resources from the context, these resources might be
+   *                          half closed. This exception is thrown to prevent resource leaks
+   *                          and to force callers to fail since there is no way to recover.
    *
-   * RuntimeException is thrown because this method is called before requiring resources from the
-   * context, if reinitialization fails, the resources might be half closed, to prevent resource
-   * leaks, we thrown RuntimeException here to force callers to fail since there is no way to
-   * recover.
-   *
-   * @return the resource
    */
   public ReinitBlockerResource blockReinit() {
     try {
@@ -383,26 +407,42 @@ public class FileSystemContext implements Closeable {
   }
 
   /**
-   * @return the {@link ClientContext} backing this {@link FileSystemContext}
+   * Returns the client context for this file system context.
+   * <p>
+   * Returns an object of type {@link alluxio.ClientContext}
+   * containing only the information required to create network
+   * connections and perform remote operations on Alluxio processes.
+   *
+   * @return the client context backing this {@link FileSystemContext}
    */
   public ClientContext getClientContext() {
     return mMasterClientContext;
   }
 
   /**
-   * @return the cluster level configuration backing this {@link FileSystemContext}
+   * Gets the cluster configuration for the master client context.
+   * <p>
+   * Returns the {@link AlluxioConfiguration} for the cluster from
+   * {@link #mMasterClientContext}.
+   *
+   * @return the cluster level configuration backing this
+   *         {@link FileSystemContext}
    */
   public AlluxioConfiguration getClusterConf() {
     return getClientContext().getClusterConf();
   }
 
   /**
-   * The path level configuration is a {@link SpecificPathConfiguration}.
-   *
-   * If path level configuration has never been loaded from meta master yet, it will be loaded.
+   * Returns the configuration for a specific path.
+   * <p>
+   * Gets a specific path level configuration for
+   * this {@link AlluxioURI}, returning a
+   * {@link SpecificPathConfiguration}.
+   * If path level configuration has never been loaded
+   * from meta master yet, it will be loaded.
    *
    * @param path the path to get the configuration for
-   * @return the path level configuration for the specific path
+   * @return     the path level configuration for the specific path
    */
   public AlluxioConfiguration getPathConf(AlluxioURI path) {
     return new SpecificPathConfiguration(getClientContext().getClusterConf(),
@@ -425,10 +465,14 @@ public class FileSystemContext implements Closeable {
   }
 
   /**
-   * Acquires a file system master client from the file system master client pool. The resource is
-   * {@code Closeable}.
+   * Acquires a file system master client from the file system master client pool.
+   * <p>
+   * Acquires a file system master client, a client used to interact with a file system master.
+   * Gets it from the {@link #mFileSystemMasterClientPool}. Returns a
+   * {@link CloseableResource<FileSystemMasterClient>}, a wrapper around a resource of type
+   * {@code FileSystemMasterClient} which must do some sort of cleanup when it is no longer in use.
    *
-   * @return the acquired file system master client resource
+   * @return  the acquired file system master client resource
    */
   public CloseableResource<FileSystemMasterClient> acquireMasterClientResource() {
     try (ReinitBlockerResource r = blockReinit()) {
@@ -449,31 +493,34 @@ public class FileSystemContext implements Closeable {
   }
 
   /**
-   * Acquire a client resource from {@link #mBlockMasterClientPool} or
+   * Acquires a closeable client resource from the provided dynamic resource pool.
+   * <p>
+   * Acquires a client resource from {@link #mBlockMasterClientPool} or
    * {@link #mFileSystemMasterClientPool}.
+   * <p>
+   * Uses an inline class which will save the reference to the pool used to acquire
+   * the resource because it's possible for a context re-initialization to occur while the resource is acquired by this method
+   * <p>
+   * There are three different cases to which may occur during the release of the resource:
+   *          1. release while the context is re-initializing
+   *                The original {@link #mBlockMasterClientPool} or {@link #mFileSystemMasterClientPool}
+   *                may be null, closed, or overwritten with a difference pool. The inner class here saves
+   *                the original pool from being GCed because it holds a reference to the pool that was used
+   *                to acquire the client initially. Releasing into the closed pool is harmless.
+   *          2. release after the context has been re-initialized
+   *                Similar to the above scenario the original {@link #mBlockMasterClientPool} or
+   *                {@link #mFileSystemMasterClientPool} are going to be using an entirely new pool. Since
+   *                this method will save the original pool reference, this method would result in releasing
+   *                into a closed pool which is harmless
+   *          3. release before any re-initialization
+   *                This is the normal case. There are no special considerations
    *
-   * Because it's possible for a context re-initialization to occur while the resource is
-   * acquired this method uses an inline class which will save the reference to the pool used to
-   * acquire the resource.
-   *
-   * There are three different cases to which may occur during the release of the resource
-   *
-   * 1. release while the context is re-initializing
-   *    - The original {@link #mBlockMasterClientPool} or {@link #mFileSystemMasterClientPool}
-   *    may be null, closed, or overwritten with a difference pool. The inner class here saves
-   *    the original pool from being GCed because it holds a reference to the pool that was used
-   *    to acquire the client initially. Releasing into the closed pool is harmless.
-   * 2. release after the context has been re-initialized
-   *    - Similar to the above scenario the original {@link #mBlockMasterClientPool} or
-   *    {@link #mFileSystemMasterClientPool} are going to be using an entirely new pool. Since
-   *    this method will save the original pool reference, this method would result in releasing
-   *    into a closed pool which is harmless
-   * 3. release before any re-initialization
-   *    - This is the normal case. There are no special considerations
-   *
-   * @param pool the pool to acquire from and release to
-   * @param <T> the resource type
-   * @return a {@link CloseableResource}
+   * @param   pool  the pool to acquire from and release to
+   * @param   <T>   the resource type
+   * @return  a {@link CloseableResource}
+   * @throws  RuntimeException  if an {@link IOException} occurs while attempting
+   *                            to acquire a resource of type {@code T} from the
+   *                            provided {@code pool}
    */
   private <T> CloseableResource<T> acquireClosableClientResource(DynamicResourcePool<T> pool) {
     try {
