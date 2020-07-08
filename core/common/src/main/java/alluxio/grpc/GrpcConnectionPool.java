@@ -394,14 +394,10 @@ public class GrpcConnectionPool {
     }
 
     /**
-     *
+     * Returns the underlying object, increasing the reference count.
      * <p>
-     * Invokes {@link AtomicInteger#incrementAndGet} on
-     * {@link GrpcConnectionPool.CountingReference#mRefCount}.
-     * <p>
-     * Returns this instance of {@link CountingReference}, used
-     * as a reference counting wrapper over an instance of a
-     * given type.
+     * Increments the {@link #mRefCount} of the underlying {@link #mObject}
+     * of type {@code T} and returns this {@link CountingReference<T>}.
      *
      * @return  the underlying object after increasing ref-count
      */
@@ -411,21 +407,23 @@ public class GrpcConnectionPool {
     }
 
     /**
-     * Decrement the ref-count for underlying object.
+     * Decrements the reference count for the underlying object.
+     * <p>
+     * Decrements the {@link #mRefCount} for the underlying {@link #mObject}
+     * and returns the updated value for the reference count.
      *
-     * @return the current ref count after dereference
+     * @return  the current reference count after dereference
      */
     private int dereference() {
       return mRefCount.decrementAndGet();
     }
 
     /**
-     * Returns current ref-count
+     * Returns current reference count of the underlying object.
      * <p>
-     * Gets current value for {@link GrpcConnectionPool.CountingReference#mRefCount},
-     * used by {@link GrpcConnectionPool#releaseConnection(GrpcConnectionKey, AlluxioConfiguration)}.
+     * Gets the current {@link #mRefCount} for the underlying {@link #mObject}.
      *
-     * @return current ref-count
+     * @return the current reference count
      */
     private int getRefCount() {
       return mRefCount.get();
