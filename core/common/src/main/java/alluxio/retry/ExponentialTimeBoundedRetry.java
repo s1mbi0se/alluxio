@@ -97,8 +97,14 @@ public final class ExponentialTimeBoundedRetry extends TimeBoundedRetry {
     }
 
     /**
-     * @param maxDuration max total duration to retry for
-     * @return the builder
+     * Sets the max duration for this retry policy.
+     * <p>
+     * Sets {@link #mMaxDuration} to retry for.
+     *
+     * @param   maxDuration max total duration to retry for
+     *                    in this {@link RetryPolicy}.
+     * @return  the builder with the max duration set to
+     *          {@code maxDuration}
      */
     public Builder withMaxDuration(Duration maxDuration) {
       mMaxDuration = maxDuration;
