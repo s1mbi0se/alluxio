@@ -445,7 +445,9 @@ public class GrpcConnectionPool {
     }
 
     /**
-     * @return the underlying object without changing the ref-count
+     * Returns the underlying object without changing the reference count.
+     *
+     * @return the {@link #mObject} without changing the {@link #mRefCount}.
      */
     private T get() {
       return mObject;
