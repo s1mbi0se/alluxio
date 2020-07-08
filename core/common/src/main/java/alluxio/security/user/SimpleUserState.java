@@ -79,7 +79,7 @@ public class SimpleUserState extends BaseUserState {
    * The username is used to create a new {@code LoginContext} with a {@link AuthType#SIMPLE}
    * authentication type, the {@link #mSubject} of this instance, the {@link User} {@code ClassLoader},
    * a new {@link LoginModuleConfiguration} instance, and a new object of type
-   * {@link AppLoginModule.AppCallbackHandler(String)} with the String for the username.
+   * {@link AppLoginModule.AppCallbackHandler(String)} with the username String.
    * <p>
    * Attempts to login using the created {@code LoginContext}. Throws an exception if the login cannot
    * be made.
