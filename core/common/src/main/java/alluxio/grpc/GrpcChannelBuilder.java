@@ -70,7 +70,7 @@ public final class GrpcChannelBuilder {
   /**
    * Sets human readable name for the channel's client.
    * <p>
-   * Invokes {@link GrpcChannelBuilder#mChannelKey#setClientType}
+   * Executes {@link GrpcChannelBuilder#mChannelKey#setClientType}
    * to set the client type to the one corresponding to the string
    * provided to represent the client type.
    * <p>
