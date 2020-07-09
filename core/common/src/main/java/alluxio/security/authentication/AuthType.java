@@ -46,6 +46,11 @@ public enum AuthType {
   ;
 
   /**
+   * Gets the string value of the authentication type.
+   * <p>
+   * Returns a string representation of the authentication
+   * type using {@link AuthType#valueOf}.
+   *
    * @return the string value of AuthType
    */
   public String getAuthName() {

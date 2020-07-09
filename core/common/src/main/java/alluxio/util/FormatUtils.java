@@ -158,10 +158,20 @@ public final class FormatUtils {
   }
 
   /**
-   * Parses a String size to Bytes.
+   * Converts a given space size to bytes.
+   * <p>
+   * Parses a String containing a space size and converts
+   * the original long corresponding to the same value in
+   * bytes.
    *
-   * @param spaceSize the size of a space, e.g. 10GB, 5TB, 1024
-   * @return the space size in bytes
+   * @param   spaceSize the size of a space, such as 1024MB, 10GB, 5TB
+   * @return  the space size in bytes
+   * @throws  IllegalArgumentException  if the String does not contain
+   *                                    a valid unit of space size. The
+   *                                    supported space size units are:
+   *                                    kb/k, mb/m, gb/g, tb/t, pb/p.
+   *                                    The verification is
+   *                                    case-insensitive.
    */
   public static long parseSpaceSize(String spaceSize) {
     double alpha = 0.0001;
@@ -191,7 +201,7 @@ public final class FormatUtils {
       return (long) (ret * Constants.TB + alpha);
     } else if (end.equals("pb") || end.equals("p")) {
       // When parsing petabyte values, we can't multiply with doubles and longs, since that will
-      // lose presicion with such high numbers. Therefore we use a BigDecimal.
+      // lose precision with such high numbers. Therefore we use a BigDecimal.
       BigDecimal pBDecimal = new BigDecimal(Constants.PB);
       return pBDecimal.multiply(BigDecimal.valueOf(ret)).longValue();
     } else {
@@ -205,10 +215,26 @@ public final class FormatUtils {
   private static final Pattern SEP_DIGIT_LETTER = Pattern.compile("([-]?[0-9]*)([a-zA-Z]*)");
 
   /**
-   * Parses a String size to Milliseconds. Supports negative numbers.
+   * Parses a String size to milliseconds. Supports negative numbers.
+   * <p>
+   * Converts a String representing a time size to a long corresponding
+   * to milliseconds. Utilizes the pattern from {@link #SEP_DIGIT_LETTER}
+   * to separate the String into two components:
+   *          1) the time value (such as 10, 20, 30)
+   *          2) the unit of time (such as M, H, D)
+   * <p>
+   * Multiplies the numeric value by the number of milliseconds corresponding
+   * to the unit of time provided in the String {@code timeSize}.
    *
-   * @param timeSize the size of a time, e.g. 1M, 5H, 10D, -1
-   * @return the time size in milliseconds
+   * @param   timeSize  the size of a time, e.g. 1M, 5H, 10D, -1
+   * @return  the time size in milliseconds
+   * @throws  IllegalArgumentException  If the provided unit of time
+   *                                    is not supported. The currently
+   *                                    supported units of time are:
+   *                                    millisecond/ms, second/sec,
+   *                                    minute/min/m, hour/hr/h,
+   *                                    day/d. The validation is
+   *                                    case-insensitive.
    */
   public static long parseTimeSize(String timeSize) {
     double alpha = 0.0001;

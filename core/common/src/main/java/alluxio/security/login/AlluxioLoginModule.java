@@ -38,6 +38,19 @@ public final class AlluxioLoginModule implements LoginModule {
    */
   public AlluxioLoginModule() {}
 
+  /**
+   * Initializes the subject for this login module.
+   * <p>
+   * Sets {@link #mSubject} to the provided {@code subject}.
+   *
+   * @param subject         the new subject for this {@link AlluxioLoginModule}.
+   * @param callbackHandler the callback handler. This parameter is ignored and
+   *                        is only required for overriding purposes.
+   * @param sharedState     the shared state. This parameter is ignored and
+   *                        is only required for overriding purposes.
+   * @param options         the options. This parameter is ignored and
+   *                        is only required for overriding purposes.
+   */
   @Override
   public void initialize(Subject subject, CallbackHandler callbackHandler,
       Map<String, ?> sharedState, Map<String, ?> options) {
@@ -123,11 +136,19 @@ public final class AlluxioLoginModule implements LoginModule {
 
   /**
    * Gets a principal user.
+   * <p>
+   * Attempts to load the class with the corresponding name. Throws an
+   * exception if the class cannot be determined.
+   * <p>
+   * Checks if there is at least one instance of {@code className} in
+   * the existing {@link #mSubject}. Returns null if there is none.
+   * Returns the corresponding principal user if there is one. Throws
+   * an exception if there are multiple matches.
    *
-   * @param className the name of class extending Principal
-   * @return a user extending a specified Principal
-   * @throws LoginException if the specified class can not be found,
-   * or there are are more than one instance of Principal
+   * @param   className the name of class extending {@link Principal}
+   * @return  a user extending a specified Principal
+   * @throws  LoginException  if the specified class can not be found,
+   *                          or there are multiple instances of Principal
    */
   @Nullable
   private Principal getPrincipalUser(String className) throws LoginException {

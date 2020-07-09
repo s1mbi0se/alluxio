@@ -51,15 +51,22 @@ public final class NettyUtils {
   private NettyUtils() {}
 
   /**
+   * Creates a Netty event loop group based on the channel type.
+   * <p>
    * Creates a Netty {@link EventLoopGroup} based on {@link ChannelType}.
+   * Uses {@link ThreadFactoryUtils#build} to create a new object of type
+   * {@link ThreadFactory}, responsible for creating all threads in this
+   * event loop group.
    *
-   * @param type Selector for which form of low-level IO we should use
-   * @param numThreads target number of threads
-   * @param threadPrefix name pattern for each thread. should contain '%d' to distinguish between
-   *        threads.
-   * @param isDaemon if true, the {@link java.util.concurrent.ThreadFactory} will create daemon
-   *        threads.
-   * @return EventLoopGroup matching the ChannelType
+   * @param type          selector for which form of low-level IO should be used
+   * @param numThreads    target number of threads
+   * @param threadPrefix  name pattern for each thread. Should contain '%d' to distinguish between
+   *                      threads.
+   * @param isDaemon      boolean representing whether the {@link java.util.concurrent.ThreadFactory}
+   *                      should create daemon threads.
+   * @return              an object of type EventLoopGroup matching the ChannelType
+   * @throws IllegalStateException  If the specified channel type is unknown/outside of the switch-case
+   *                                structure.
    */
   public static EventLoopGroup createEventLoop(ChannelType type, int numThreads,
       String threadPrefix, boolean isDaemon) {
@@ -127,7 +134,15 @@ public final class NettyUtils {
   }
 
   /**
-   * @return whether netty epoll is available to the system
+   * Returns whether or not Netty epoll is available to the system.
+   * <p>
+   * Checks whether {@link #sNettyEpollAvailable} exists. Returns
+   * it if true; otherwise assigns the return value of
+   * {@link #checkNettyEpollAvailable()} to it, and returns
+   * that.
+   *
+   * @return  a boolean representing whether {@link Epoll} is
+   * available to the system
    */
   public static synchronized boolean isNettyEpollAvailable() {
     if (sNettyEpollAvailable == null) {
@@ -173,13 +188,29 @@ public final class NettyUtils {
   }
 
   /**
-   * Get the proper channel class.
+   * Gets the proper channel class based on the provided property key and Alluxio configuration.
+   * <p>
+   * Throws an exception if domain socket is enabled and channel type is {@link ChannelType#EPOLL}.
+   * Otherwise, returns {@code EpollDomainSocketChannel.class} if channel type is not EPOLL.
+   * <p>
+   * Throws an exception if domain socket is disabled and {@code channelType} is neither
+   * {@link ChannelType#NIO} nor EPOLL.
+   * <p>
+   * Returns {@code NioSocketChannel.class} if {@code channelType is NIO} and domain
+   * socket is disabled. Otherwise, returns {@code EpollSocketChannel.class} if the
+   * channel type is EPOLL.
+   * <p>
    * Always returns {@link NioSocketChannel} NIO if EPOLL is not available.
    *
-   * @param isDomainSocket whether this is for a domain channel
-   * @param key the property key for looking up the configured channel type
-   * @param conf the Alluxio configuration
-   * @return the channel type to use
+   * @param   isDomainSocket  whether this is for a domain channel
+   * @param   key             the property key for looking up the configured
+   *                          channel type
+   * @param   conf            the Alluxio configuration
+   * @return  the channel type to use
+   * @throws IllegalStateException      If domain socket is enabled and
+   *                                    the channel type is EPOLL. This
+   *                                    option is not supported.
+   * @throws  IllegalArgumentException  if the channel type is unknown
    */
   public static Class<? extends Channel> getChannelClass(boolean isDomainSocket, PropertyKey key,
       AlluxioConfiguration conf) {

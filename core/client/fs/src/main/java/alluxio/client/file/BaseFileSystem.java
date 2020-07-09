@@ -452,8 +452,20 @@ public class BaseFileSystem implements FileSystem {
   }
 
   /**
-   * Checks an {@link AlluxioURI} for scheme and authority information. Warn the user and throw an
-   * exception if necessary.
+   * Checks the provided URI.
+   * <p>
+   * Checks an {@link AlluxioURI} for scheme and authority information. Warns the user and throws an
+   * exception if necessary. Does nothing if {@link #mFsContext} has URI validation disabled.
+   * <p>
+   * Validates the scheme if the URI has one. Throws an exception if the URI scheme is not
+   * {@link Constants#SCHEME}, which means it is invalid.
+   * <p>
+   * Checks if the given URI has authority, throwing an exception if its authority does not match
+   * the configuration.
+   *
+   * @param   uri the {@link AlluxioURI} to be checked
+   * @throws  IllegalArgumentException  if the provided scheme in the {@code uri} is invalid, or
+   *                                    the {@code uri} authority does not match the configuration.
    */
   protected void checkUri(AlluxioURI uri) {
     Preconditions.checkNotNull(uri, "uri");
@@ -501,13 +513,22 @@ public class BaseFileSystem implements FileSystem {
 
   /**
    * Sends an RPC to filesystem master.
+   * <p>
+   * A resource is internally acquired to block {@link FileSystemContext}
+   * reinitialization before sending the RPC.
    *
-   * A resource is internally acquired to block FileSystemContext reinitialization before sending
-   * the RPC.
-   *
-   * @param fn the RPC call
+   * @param fn  the RPC call
    * @param <R> the type of return value for the RPC
-   * @return the RPC result
+   * @return    the RPC result
+   * @throws FileDoesNotExistException  if the file does not exist
+   * @throws FileAlreadyExistsException if the file already exists
+   * @throws InvalidArgumentException   if an invalid argument is provided
+   * @throws InvalidPathException       if the path is invalid
+   * @throws DirectoryNotEmptyException if the directory is not empty
+   * @throws UnavailableException       if the service is unavailable
+   * @throws UnauthenticatedException   if authentication cannot be established
+   * @throws AlluxioException           if some other {@link AlluxioStatusException}
+   *                                    is thrown
    */
   private <R> R rpc(RpcCallable<FileSystemMasterClient, R> fn)
       throws IOException, AlluxioException {

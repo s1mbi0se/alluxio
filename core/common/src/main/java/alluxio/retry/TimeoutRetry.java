@@ -46,6 +46,21 @@ public class TimeoutRetry implements RetryPolicy {
     return mAttemptCount;
   }
 
+  /**
+   * Checks if a new attempt to execute a method can be made before the established timeout.
+   * <p>
+   * Sets {@link #mStartMs} to the current time if this is the first attempt
+   * and returns true right away.
+   * <p>
+   * Sleeps for the established time if {@link #mSleepMs} is a positive long.
+   * <p>
+   * Returns true if the time elapsed between now and the first attempt is
+   * smaller than or equal to the established {@link #mRetryTimeoutMs}.
+   * Returns false otherwise.
+   *
+   * @return  a boolean representing whether a new attempt can
+   *          be made according to this {@link RetryPolicy}
+   */
   @Override
   public boolean attempt() {
     if (mAttemptCount == 0) {

@@ -39,6 +39,22 @@ public class SimpleUserState extends BaseUserState {
    * Factory class to create the user state.
    */
   public static class Factory implements UserStateFactory {
+    /**
+     * Returns a new user state implementation for simple authentication schemes.
+     * <p>
+     * Creates a new object of type {@link AuthType} based on the provided
+     * {@link AlluxioConfiguration} and checks whether the authentication
+     * type is {@link AuthType#SIMPLE} or {@link AuthType#CUSTOM}, in which
+     * case a new object of type {@link SimpleUserState} is created with the
+     * provided {@link Subject} and configuration, and returned.
+     * <p>
+     * Returns null if the authentication type is unsupported.
+     *
+     * @param subject   the subject
+     * @param conf      the Alluxio configuration
+     * @param isServer  a boolean value indicating whether this is from a server process
+     * @return          the new simple user state if the authentication type is supported; otherwise, null
+     */
     @Override
     public UserState create(Subject subject, AlluxioConfiguration conf, boolean isServer) {
       AuthType authType = conf.getEnum(PropertyKey.SECURITY_AUTHENTICATION_TYPE, AuthType.class);
@@ -54,6 +70,30 @@ public class SimpleUserState extends BaseUserState {
     super(subject, conf);
   }
 
+  /**
+   * Logs in an Alluxio user.
+   * <p>
+   * Gets the {@link PropertyKey#SECURITY_LOGIN_USERNAME} from {@link #mConf} if
+   * key exists. Sets username to an empty string otherwise.
+   * <p>
+   * The username is used to create a new {@code LoginContext} with a {@link AuthType#SIMPLE}
+   * authentication type, the {@link #mSubject} of this instance, the {@link User} {@code ClassLoader},
+   * a new {@link LoginModuleConfiguration} instance, and a new object of type
+   * {@link AppLoginModule.AppCallbackHandler(String)} with the username String.
+   * <p>
+   * Attempts to login using the created {@code LoginContext}. Throws an exception if the login cannot
+   * be made.
+   * <p>
+   * Checks the number of Alluxio {@link User}s present in {@code mSubject}. Throws an
+   * exception if none or more than one are found.
+   * <p>
+   * Returns the {@code User} that was found.
+   *
+   * @return  the Alluxio {@code User} that was successfully logged in
+   * @throws  UnauthenticatedException  if a {@link LoginException} is thrown, no Alluxio {@code User}
+   *                                    is found in {@code mSubject} or multiple Alluxio {@code User}s
+   *                                    are found in {@code mSubject}.
+   */
   @Override
   public User login() throws UnauthenticatedException {
     String username = "";

@@ -54,6 +54,14 @@ public final class FileSystemMasterClientPool extends DynamicResourcePool<FileSy
         ctx.getClusterConf().getMs(PropertyKey.USER_FILE_MASTER_CLIENT_POOL_GC_THRESHOLD_MS);
   }
 
+  /**
+   * Closes the provided file system master client. After this, the resource should not be used.
+   *
+   * @param   client the object of type {@link FileSystemMasterClient}
+   *                 to be closed
+   * @throws  RuntimeException  if an {@link IOException} is thrown while
+   *                            trying to close the provided {@code client}.
+   */
   @Override
   protected void closeResource(FileSystemMasterClient client) {
     try {
@@ -63,6 +71,15 @@ public final class FileSystemMasterClientPool extends DynamicResourcePool<FileSy
     }
   }
 
+  /**
+   * Returns a new client to use for interacting with a file system master.
+   * <p>
+   * Creates and returns a new {@link FileSystemMasterClient} through
+   * {@link FileSystemMasterClient.Factory#create} and using the existing
+   * {@link FileSystemMasterClientPool#mMasterContext}.
+   *
+   * @return  a new resource for interacting with a file system master
+   */
   @Override
   protected FileSystemMasterClient createNewResource() {
     return FileSystemMasterClient.Factory.create(mMasterContext);

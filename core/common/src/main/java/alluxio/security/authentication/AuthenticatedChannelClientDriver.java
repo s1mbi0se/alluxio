@@ -82,14 +82,26 @@ public class AuthenticatedChannelClientDriver implements StreamObserver<SaslMess
   }
 
   /**
-   * Sets the server's Sasl stream.
+   * Sets the server's Simple Authentication and Security Layer stream.
+   * <p>
+   * Defines the {@link #mRequestObserver}.
    *
-   * @param requestObserver server Sasl stream
+   * @param requestObserver server SASL stream
    */
   public void setServerObserver(StreamObserver<SaslMessage> requestObserver) {
     mRequestObserver = requestObserver;
   }
 
+  /**
+   * Attempts to establish a connection to a channel.
+   * <p>
+   * Establishes a connection to the {@link alluxio.grpc.GrpcChannel}
+   * with the corresponding {@link GrpcChannelKey} using a handshake handler
+   * for the client, that is, {@link SaslClientHandler#handleMessage(SaslMessage)}.
+   *
+   * @param saslMessage Simple Authentication and Security Layer message
+   * @throws Exception  Any exception.
+   */
   @Override
   public void onNext(SaslMessage saslMessage) {
     try {
@@ -148,7 +160,9 @@ public class AuthenticatedChannelClientDriver implements StreamObserver<SaslMess
    * Starts authentication with the server and wait until completion.
    *
    * @param timeoutMs time to wait for authentication
-   * @throws UnauthenticatedException
+   * @throws UnauthenticatedException if an exception occurs while
+   *                                  trying to authenticate the
+   *                                  channel
    */
   public void startAuthenticatedChannel(long timeoutMs) throws AlluxioStatusException {
     try {
@@ -168,6 +182,23 @@ public class AuthenticatedChannelClientDriver implements StreamObserver<SaslMess
     }
   }
 
+  /**
+   * Builds and returns a SASL message.
+   * <p>
+   * Uses {@link SaslMessage.Builder#build()} to instantiate a new
+   * object of type SaslMessage. The client ID is set to a string of
+   * the ID found in {@link AuthenticatedChannelClientDriver#mChannelKey}
+   * through {@link GrpcChannelKey#getChannelId()}.
+   * <p>
+   * The channel ref is set to a short representation of the channel key through
+   * {@link GrpcChannelKey#toStringShort()}.
+   * <p>
+   * Returns an object of type SaslMessage.
+   *
+   * @return a message for Simple Authentication and Security Layer
+   * @throws SaslException  If the message cannot be generated for
+   *                        unexpected reasons.
+   */
   private SaslMessage generateInitialMessage() throws SaslException {
     SaslMessage.Builder initialMsg = mSaslClientHandler.handleMessage(null).toBuilder();
     initialMsg.setClientId(mChannelKey.getChannelId().toString());
@@ -175,6 +206,25 @@ public class AuthenticatedChannelClientDriver implements StreamObserver<SaslMess
     return initialMsg.build();
   }
 
+  /**
+   * Sets a time limit for the duration of the channel authentication and waits until completion or timeout.
+   * <p>
+   * Uses {@link AuthenticatedChannelClientDriver#mChannelAuthenticatedFuture} to implement a time limit to
+   * how long the authentication for this channel is allowed to take. For this purpose, sets
+   * {@link AuthenticatedChannelClientDriver#mChannelAuthenticated} to true.
+   *
+   * @param timeoutMs the max duration of the wait time for the channel
+   *                  authentication in milliseconds. Throws an exception
+   *                  if the authentication fails to complete until this point.
+   * @throws AlluxioStatusException   If this thread is interrupted.
+   * @throws UnauthenticatedException If the server does not provide
+   *                                  an authentication service.
+   * @throws UnavailableException     If a {@link TimeoutException}
+   *                                  is thrown, indicating that
+   *                                  the authentication service
+   *                                  took longer than the max
+   *                                  duration established.
+   */
   private void waitUntilChannelAuthenticated(long timeoutMs) throws AlluxioStatusException {
     try {
       // Wait until authentication status changes.
@@ -195,6 +245,20 @@ public class AuthenticatedChannelClientDriver implements StreamObserver<SaslMess
     }
   }
 
+  /**
+   * Closes the Simple Authentication and Security Layer (SASL) client handler.
+   * <p>
+   * Closes the {@link #mSaslClientHandler} and sets
+   * {@link #mChannelAuthenticated} to false, which
+   * indicates whether this channel is authenticated.
+   * <p>
+   * Attempts to notify {@link #mRequestObserver} that the
+   * stream was successfully completed if {@code signalServer}
+   * is set to true.
+   *
+   * @param signalServer  a boolean indicating whether
+   *                      the server should be signaled
+   */
   private void closeAuthenticatedChannel(boolean signalServer) {
     mSaslClientHandler.close();
     // Authentication failed either during or after handshake.

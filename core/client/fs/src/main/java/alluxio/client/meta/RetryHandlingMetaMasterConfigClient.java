@@ -55,6 +55,14 @@ public class RetryHandlingMetaMasterConfigClient extends AbstractMasterClient
     super(conf);
   }
 
+  /**
+   * Gets the type of remote service for the meta master configuration client.
+   * <p>
+   * Returns {@link ServiceType#META_MASTER_CONFIG_SERVICE},
+   * which is the service type for this {@link alluxio.Client}.
+   *
+   * @return  the type of remote service
+   */
   @Override
   protected ServiceType getRemoteServiceType() {
     return ServiceType.META_MASTER_CONFIG_SERVICE;

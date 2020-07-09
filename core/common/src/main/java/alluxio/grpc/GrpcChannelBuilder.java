@@ -69,9 +69,15 @@ public final class GrpcChannelBuilder {
 
   /**
    * Sets human readable name for the channel's client.
+   * <p>
+   * Invokes {@link GrpcChannelBuilder#mChannelKey#setClientType}
+   * to set the client type to the one corresponding to the string
+   * provided to represent the client type.
+   * <p>
+   * Returns this gRPC channel builder once it is updated.
    *
-   * @param clientType client type
-   * @return the updated {@link GrpcChannelBuilder} instance
+   * @param clientType  the client type
+   * @return            the updated {@link GrpcChannelBuilder} instance
    */
   public GrpcChannelBuilder setClientType(String clientType) {
     mChannelKey.setClientType(clientType);
@@ -79,10 +85,16 @@ public final class GrpcChannelBuilder {
   }
 
   /**
+   * Sets a given subject for authentication.
+   * <p>
+   * Sets the {@link #mParentSubject} of this gRPC channel builder
+   * to the provided {@code subject}. Updates and returns this
+   * instance of {@link GrpcChannelBuilder}.
+   * <p>
    * Sets {@link Subject} for authentication.
    *
    * @param subject the subject
-   * @return the updated {@link GrpcChannelBuilder} instance
+   * @return        the updated {@link GrpcChannelBuilder} instance
    */
   public GrpcChannelBuilder setSubject(Subject subject) {
     mParentSubject = subject;
@@ -91,8 +103,11 @@ public final class GrpcChannelBuilder {
 
   /**
    * Disables authentication with the server.
+   * <p>
+   * Sets {@link #mAuthenticateChannel} to false and returns
+   * this {@link GrpcChannelBuilder} updated.
    *
-   * @return the updated {@link GrpcChannelBuilder} instance
+   * @return the updated {@code GrpcChannelBuilder} instance
    */
   public GrpcChannelBuilder disableAuthentication() {
     mAuthenticateChannel = false;
@@ -111,9 +126,38 @@ public final class GrpcChannelBuilder {
   }
 
   /**
-   * Creates an authenticated channel of type {@link GrpcChannel}.
+   * Creates and returns a new gRPC channel.
+   * <p>
+   * Creates a new {@link GrpcConnection} using:
+   *          1) the {@link GrpcChannelBuilder#mChannelKey};
+   *          2) the {@link GrpcChannelBuilder#mConfiguration}.
+   * <p>
+   * Checks whether the {@link GrpcChannelBuilder#mAuthenticateChannel} is
+   * set to true, in which case the channel should be authenticated with the
+   * server. The authentication is made through an object of type
+   * {@link ChannelAuthenticator} instantiated using:
+   *          1) the object of type GrpcConnection that was created previously;
+   *          2) the {@link GrpcChannelBuilder#mParentSubject} indicating the javax
+   *          subject to use for authentication;
+   *          3) the {@link GrpcChannelBuilder#mAuthType} indicating the requested
+   *          authentication type.
+   *          4) the {@link GrpcChannelBuilder#mConfiguration} indicating the Alluxio
+   *          configuration.
+   * The new instance of ChannelAuthenticator invokes {@link ChannelAuthenticator#authenticate}
+   * in order to authenticate a new logical channel. An {@link AuthenticatedChannelClientDriver}
+   * is created using {@link ChannelAuthenticator#getAuthenticationDriver()} from the previously
+   * created channel authenticator.
+   * <p>
+   * If the channel should not be authenticated with the server, no channel authenticator is created
+   * and the authenticated channel client driver remains as null.
    *
-   * @return the built {@link GrpcChannel}
+   * Returns a wrapper over the logical channel.
+   *
+   * @return  a new gRPC channel
+   * @throws  RuntimeException        If the connection cannot be released.
+   * @throws  UnavailableException    If the target channel is unavailable.
+   * @throws  AlluxioStatusException  If any other unforeseen exception is caught while
+   *                                  trying to build a new gRPC channel.
    */
   public GrpcChannel build() throws AlluxioStatusException {
     // Acquire a connection from the pool.

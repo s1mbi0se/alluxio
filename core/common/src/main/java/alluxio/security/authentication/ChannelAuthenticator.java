@@ -75,9 +75,11 @@ public class ChannelAuthenticator {
   }
 
   /**
-   * It builds an authenticated channel.
+   * Builds an authenticated channel.
    *
-   * @throws AlluxioStatusException
+   * @throws  AlluxioStatusException  if an exception occurs while
+   *                                  trying to build the authenticated
+   *                                  channel.
    */
   public void authenticate() throws AlluxioStatusException {
     LOG.debug("Authenticating channel: {}. AuthType: {}", mChannelKey.toStringShort(), mAuthType);
@@ -123,19 +125,30 @@ public class ChannelAuthenticator {
   }
 
   /**
-   * @return the authentication driver
+   * Gets the object responsible for driving authentication traffic from client-side.
+   * <p>
+   * Returns the existing {@link #mAuthDriver}.
+   *
+   * @return the client-side authentication driver
    */
   public AuthenticatedChannelClientDriver getAuthenticationDriver() {
     return mAuthDriver;
   }
 
   /**
-   * Determines transport level authentication scheme for given subject.
+   * Determines and returns transport level authentication scheme for given subject.
+   * <p>
+   * Returns the authentication scheme for this channel based on an analysis of
+   * the provided {@link AuthType} and checks if it is supported by verifying
+   * whether its value equals     {@link ChannelAuthenticationScheme#NOSASL},
+   *                              {@link ChannelAuthenticationScheme#SIMPLE},
+   *                          or  {@link ChannelAuthenticationScheme#CUSTOM}.
    *
-   * @param subject the subject
+   * @param authType      the authentication type
+   * @param subject       the subject
    * @param serverAddress the target server address
-   * @return the channel authentication scheme to use
-   * @throws UnauthenticatedException if configured authentication type is not supported
+   * @return              the channel authentication scheme to use
+   * @throws UnauthenticatedException If configured authentication type is not supported.
    */
   private ChannelAuthenticationScheme getChannelAuthScheme(AuthType authType, Subject subject,
       SocketAddress serverAddress) throws UnauthenticatedException {
@@ -153,13 +166,20 @@ public class ChannelAuthenticator {
   }
 
   /**
-   * Create Sasl level handler for client.
+   * Create Simple Authentication and Security Layer-level handler for client.
+   * <p>
+   * Creates and returns a new {@link alluxio.security.authentication.plain.SaslClientHandlerPlain}
+   * with the existing {@link #mParentSubject} and {@link #mConfiguration} if the provided
+   * authentication scheme is supported.
    *
-   * @param serverAddress target server address
-   * @param authScheme authentication scheme to use
-   * @param subject the subject to use
-   * @return the created {@link SaslClientHandler} instance
-   * @throws UnauthenticatedException
+   * @param   serverAddress the target {@link GrpcServerAddress}
+   * @param   authScheme    the {@link ChannelAuthenticationScheme} to use
+   * @param   subject       the {@link Subject} to use
+   * @return  the created {@link SaslClientHandler} instance
+   * @throws UnauthenticatedException if the provided channel authentication
+   *                                  scheme is not supported. The only supported
+   *                                  schemes are {@link ChannelAuthenticationScheme#SIMPLE}
+   *                                  and {@link ChannelAuthenticationScheme#CUSTOM}.
    */
   private SaslClientHandler createSaslClientHandler(GrpcServerAddress serverAddress,
       ChannelAuthenticationScheme authScheme, Subject subject) throws UnauthenticatedException {

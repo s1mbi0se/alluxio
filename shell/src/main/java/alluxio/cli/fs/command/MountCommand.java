@@ -81,6 +81,34 @@ public final class MountCommand extends AbstractFileSystemCommand {
         .addOption(OPTION_OPTION);
   }
 
+  /**
+   * Executes the {@code mount} command.
+   * <p>
+   * Keeps all command line arguments stored in a collection. Checks
+   * if this collection is empty, in which case information about the
+   * mount table with all actively synchronized paths is printed and the
+   * exit code 0 is returned. If the collection is not empty, this step
+   * is skipped.
+   * <p>
+   * The first command line argument corresponds to the Alluxio path,
+   * and the second one corresponds to the under file storage path.
+   * <p>
+   * Implements {@link #READONLY_OPTION} and/or {@link #SHARED_OPTION}
+   * for the new mount point, if there are flags enabling these options
+   * in the command line. All options are saved to a
+   * {@link MountPOptions.Builder}.
+   * <p>
+   * Creates a new mount point to the {@link #mFileSystem} with
+   * {@link alluxio.client.file.FileSystem#mount(AlluxioURI, AlluxioURI, MountPOptions)},
+   * returning the exit code 0, which indicates the operation was executed successfully.
+   *
+   * @param   cl  the parsed command line for the arguments
+   * @return  the exit code 0 (zero) if the command runs successfully
+   * @throws  AlluxioException  if an exception occurs while trying to
+   *                            get information about the mount table.
+   * @throws  IOException       if the command returns a non-zero value, which
+   *                            means the command could run successfully
+   */
   @Override
   public int run(CommandLine cl) throws AlluxioException, IOException {
     String[] args = cl.getArgs();

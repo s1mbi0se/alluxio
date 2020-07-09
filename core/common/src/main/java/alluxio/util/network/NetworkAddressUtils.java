@@ -409,10 +409,18 @@ public final class NetworkAddressUtils {
 
   /**
    * Gets a local host name for the host this JVM is running on.
+   * <p>
+   * Checks whether {@link NetworkAddressUtils#sLocalHost} has already been
+   * set to something other than null, in which case it is returned.
+   * <p>
+   * Attempts to find the canonical name of the localhost. If successful, returns
+   * the name of the localhost. Otherwise, an exception is thrown.
    *
-   * @param timeoutMs Timeout in milliseconds to use for checking that a possible local host is
-   *        reachable
-   * @return the local host name, which is not based on a loopback ip address
+   * @param timeoutMs         the timeout in milliseconds to use for checking that a possible local host is
+   *                          reachable
+   * @return                  the local host name, which is not based on a loopback IP address
+   * @throws RuntimeException If an {@link UnknownHostException} is thrown, indicating that the
+   *                          IP address of the host could not be resolved.
    */
   public static synchronized String getLocalHostName(int timeoutMs) {
     if (sLocalHost != null) {
@@ -428,12 +436,16 @@ public final class NetworkAddressUtils {
   }
 
   /**
-   * Gets a local hostname for the host this JVM is running on with '.' replaced with '_' for
-   * metrics usage.
+   * Gets a local hostname for the host this JVM is currently running on.
    *
-   * @param timeoutMs Timeout in milliseconds to use for checking that a possible local host is
-   * reachable
-   * @return the metrics system friendly local host name
+   * Returns a String with the local hostname for the host this JVM is running on.
+   * Replaces '.' with '_' for metrics usage.
+   *
+   * @param   timeoutMs the timeout in milliseconds to use for checking whether a possible local
+   *                    host is reachable
+   * @return  the metrics system friendly local host name
+   * @throws  RuntimeException  if an {@link UnknownHostException} occurs while trying to
+   *                            get local host name.
    */
   public static synchronized String getLocalHostMetricName(int timeoutMs) {
     if (sLocalHostMetricName != null) {

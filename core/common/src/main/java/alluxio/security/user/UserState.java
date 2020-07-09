@@ -73,27 +73,62 @@ public interface UserState {
     private static final Logger LOG = LoggerFactory.getLogger(Factory.class);
 
     /**
-     * @param conf the configuration to use
-     * @return a new UserState instance
+     * Creates and returns a new user state with the provided configurations.
+     * <p>
+     * Instantiates a new object of type {@link UserState}, which handles logging
+     * in any client, maintains the state, and provides access to the {@link Subject}
+     * and the {@link User} for the client.
+     * <p>
+     * Returns {@link #create(AlluxioConfiguration, Subject)}. Uses the provided {@code conf}
+     * and instantiates a new {@code Subject} for this.
+     *
+     * @param   conf  the configuration to use
+     * @return  a new UserState instance
      */
     public static UserState create(AlluxioConfiguration conf) {
       return create(conf, new Subject());
     }
 
     /**
-     * @param conf the configuration to use
-     * @param subject the subject to use for the UserState
-     * @return a new UserState instance
+     * Creates and returns a new user state with the provided configurations.
+     * <p>
+     * Instantiates a new object of type {@link UserState}, which handles logging
+     * in any client, maintains the state, and provides access to the {@link Subject}
+     * and the {@link User} for the client.
+     * <p>
+     * Returns {@link #create(AlluxioConfiguration, Subject, CommonUtils.ProcessType)}.
+     * Uses the provided {@code conf} and {@code subject} and gets
+     * {@link CommonUtils#PROCESS_TYPE} for this.
+     *
+     * @param   conf    the configuration to use
+     * @param   subject the subject to use for the UserState
+     * @return  a new UserState instance
      */
     public static UserState create(AlluxioConfiguration conf, Subject subject) {
       return create(conf, subject, CommonUtils.PROCESS_TYPE.get());
     }
 
     /**
-     * @param conf the configuration to use
-     * @param subject the subject to use for the UserState
-     * @param processType the process type to create the UserState for
-     * @return a new UserState instance
+     * Creates and returns a new user state with the provided configurations.
+     * <p>
+     * Instantiates a new object of type {@link UserState}, which handles logging
+     * in any client, maintains the state, and provides access to the {@link Subject}
+     * and the {@link User} for the client.
+     * <p>
+     * Iterates through each {@link UserStateFactory} in {@link #FACTORIES} and creates
+     * a new {@code UserState} with the provided {@code subject} and {@code conf}, specifying
+     * whether this is from a server process. Returns the first non-null {@code Subject} instance.
+     * <p>
+     * Throws an exception if the iteration finishes and no {@code Subject} object was returned.
+     * Reaching this point means none of the aforementioned factories could create a {@link UserState}
+     * with the proper authentication type.
+     *
+     * @param   conf        the configuration to use
+     * @param   subject     the subject to use for the UserState
+     * @param   processType the process type to create the UserState for
+     * @return  a new {@code UserState} instance
+     * @throws  UnsupportedOperationException if a {code UserState} cannot be created
+     *                                        with the current {@link AuthType}
      */
     public static UserState create(AlluxioConfiguration conf, Subject subject,
         CommonUtils.ProcessType processType) {

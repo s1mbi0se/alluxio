@@ -46,10 +46,16 @@ public final class SecurityUtils {
   }
 
   /**
-   * Checks if authentication is enabled.
+   * Checks if authentication is enabled or not in the given configuration.
+   * <p>
+   * Checks whether the authentication type provided in the {@link AlluxioConfiguration}
+   * is {@link AuthType#NOSASL}, in which case authentication is disabled. If the
+   * authentication type is not NOSASL, authentication is enabled.
+   * <p>
+   * Returns true if authentication is enable or false if it is disabled.
    *
-   * @param conf Alluxio configuration
-   * @return true if authentication is enabled, false otherwise
+   * @param conf  the Alluxio configuration
+   * @return      a boolean value representing whether authentication is enabled
    */
   public static boolean isAuthenticationEnabled(AlluxioConfiguration conf) {
     return !conf.getEnum(PropertyKey.SECURITY_AUTHENTICATION_TYPE, AuthType.class)
@@ -126,15 +132,20 @@ public final class SecurityUtils {
   }
 
   /**
-   * Creates a new {@link LoginContext} with the correct class loader.
+   * Creates and returns a new LoginContext with the current class loader.
+   * <p>
+   * Instantiates and returns a new {@link LoginContext}, which describes
+   * the basic methods used to authenticate {@link Subject}s and provides
+   * a way to develop an application independent of the underlying
+   * authentication technology.
    *
-   * @param authType the {@link AuthType} to use
-   * @param subject the {@link Subject} to use
-   * @param classLoader the {@link ClassLoader} to use
-   * @param configuration the {@link javax.security.auth.login.Configuration} to use
+   * @param authType        the {@link AuthType} to use
+   * @param subject         the {@link Subject} to use
+   * @param classLoader     the {@link ClassLoader} to use
+   * @param configuration   the {@link javax.security.auth.login.Configuration} to use
    * @param callbackHandler the {@link CallbackHandler}
-   * @return the new {@link LoginContext} instance
-   * @throws LoginException if LoginContext cannot be created
+   * @return                the new {@link LoginContext} instance
+   * @throws LoginException if LoginContext cannot be created for any reason whatsoever
    */
   public static LoginContext createLoginContext(AuthType authType, Subject subject,
       ClassLoader classLoader, Configuration configuration, CallbackHandler callbackHandler)
