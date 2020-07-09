@@ -92,13 +92,17 @@ public final class FileSystemShellUtils {
   }
 
   /**
-   * Gets all the {@link AlluxioURI}s that match inputURI. If the path is a regular path, the
-   * returned list only contains the corresponding URI; Else if the path contains wildcards, the
-   * returned list contains all the matched URIs It supports any number of wildcards in inputURI
+   * Gets all Alluxio URIs that match the provided URI.
+   * <p>
+   * Gets all the {@link AlluxioURI}s that match {@code inputURI}. If the path is a regular path,
+   * the returned list only contains the corresponding URI. Otherwise, if the path contains wildcards,
+   * the returned list contains all matched URIs.
+   * <p>
+   * Supports any number of wildcards in {@code inputURI}.
    *
-   * @param alluxioClient the client used to fetch information of Alluxio files
-   * @param inputURI the input URI (could contain wildcards)
-   * @return a list of {@link AlluxioURI}s that matches the inputURI
+   * @param   alluxioClient the client used to fetch information of Alluxio files
+   * @param   inputURI      the input URI (could contain wildcards)
+   * @return  a list of {@link AlluxioURI}s that matches the inputURI
    */
   public static List<AlluxioURI> getAlluxioURIs(FileSystem alluxioClient, AlluxioURI inputURI)
       throws IOException {
