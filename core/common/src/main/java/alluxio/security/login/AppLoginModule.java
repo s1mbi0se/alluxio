@@ -67,11 +67,13 @@ public final class AppLoginModule implements LoginModule {
   }
 
   /**
+   * Authenticates the user.
+   * <p>
    * Retrieves the user name by querying the property of
    * {@link PropertyKey#SECURITY_LOGIN_USERNAME} through {@link AppCallbackHandler}.
    *
-   * @return true if user name provided by application is set and not empty
-   * @throws LoginException when the login fails
+   * @return  whether user name provided by application is set and not empty
+   * @throws  LoginException  if the login fails
    */
   @Override
   public boolean login() throws LoginException {
