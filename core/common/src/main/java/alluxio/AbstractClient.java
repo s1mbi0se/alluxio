@@ -191,8 +191,6 @@ public abstract class AbstractClient implements Client {
    * defaults.
    * <p>
    * Loads configuration from {@link #mConfAddress} if not yet loaded.
-   *
-   * @throws IOException
    */
   protected void beforeConnect()
       throws IOException {
