@@ -313,6 +313,7 @@ public final class AlluxioURI implements Comparable<AlluxioURI>, Serializable {
 
   /**
    * Gets the hash code for the {@link URI}.
+   *
    * @return  the hash code for the existing {@link #mUri}
    */
   @Override

@@ -123,8 +123,12 @@ public class CountingLatch {
   }
 
   /**
-   * Decreases the counter.
-   *
+   * Decreases the counter for this {@code CountingLatch}.
+   * <p>
+   * Decrements the counter for this {@link CountingLatch}.
+   * A thread can {@link #await()} until the counter reaches
+   * zero.
+   * <p>
    * Should only be called in pair with {@link #inc()}.
    * If counter will go below zero after this call, throws {@link Error}.
    * This method is never blocked.

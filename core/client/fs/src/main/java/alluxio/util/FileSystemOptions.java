@@ -290,8 +290,13 @@ public class FileSystemOptions {
   }
 
   /**
-   * @param conf Alluxio configuration
-   * @return options based on the configuration
+   * Returns unmount options based on the provided configuration
+   * <p>
+   * Builds and returns a new object of type {@link UnmountPOptions}
+   * with the provided {@link AlluxioConfiguration}.
+   *
+   * @param   conf  the Alluxio configuration
+   * @return  options based on the configuration
    */
   public static UnmountPOptions unmountDefaults(AlluxioConfiguration conf) {
     return UnmountPOptions.newBuilder()

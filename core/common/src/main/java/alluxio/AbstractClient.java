@@ -151,9 +151,19 @@ public abstract class AbstractClient implements Client {
   protected abstract long getServiceVersion();
 
   /**
-   * Checks that the service version is compatible with the client.
+   * Checks whether the service version is compatible with the client.
+   * <p>
+   * Checks whether the service version is compatible with this {@link Client}.
+   * Throws an exception if it is not. Does nothing otherwise.
+   * <p>
+   * Gets remote service version if {@link #mServiceVersion} is an
+   * {@link Constants#UNKNOWN_SERVICE_VERSION} and verifies if that
+   * corresponds to the provided {@code clientVersion}. Throws an
+   * exception if the versions diverge.
    *
-   * @param clientVersion the client version
+   * @param   clientVersion the client version
+   * @throws  IOException   if the {@link #mServiceVersion} is not the same as the
+   *                        provided {@code clientVersion}
    */
   protected void checkVersion(long clientVersion) throws IOException {
     if (mServiceVersion == Constants.UNKNOWN_SERVICE_VERSION) {
@@ -320,8 +330,17 @@ public abstract class AbstractClient implements Client {
   }
 
   /**
-   * Closes the connection with the Alluxio remote and does the necessary cleanup. It should be used
-   * if the client has not connected with the remote for a while, for example.
+   * Closes the connection with the Alluxio remote and does the necessary cleanup.
+   * <p>
+   * Checks whether {@link #mConnected} is {@code true}, in which case there is an
+   * active connection with the remote. Prepares for shut down with {@link #beforeDisconnect}
+   * and shuts down {@link #mChannel} if such connection exists. Does the necessary cleanup with
+   * {@link #afterDisconnect} after closing the connection.
+   * <p>
+   * Does nothing if {@code mConnected} is {@code false}, because there is no active connection.
+   * <p>
+   * This method should be used if the client has not connected with the remote for
+   * a while, for example.
    */
   public synchronized void disconnect() {
     if (mConnected) {
@@ -456,6 +475,32 @@ public abstract class AbstractClient implements Client {
     }
   }
 
+  /**
+   * Attempts to establish an RPC. Attempts to connect until:
+   *          1) a connection is successfully made; or
+   *          2) there are no more retries left from the {@link RetryPolicy}.
+   * Returns {@code rpc.call()} if a connection is successfully made.
+   * <p>
+   * Throws an {@link IOException} if the client is closed, a {@link RuntimeException}
+   * occurs, or the RPC connection fails.
+   * <p>
+   * Calls {@code onRetry.get()} and disconnects if the previous attempt to establish an RPC
+   * fails.
+   * <p>
+   * Throws an exception if the return of {@link RetryPolicy#getAttemptCount} is greater than
+   * the established maximum number of retries.
+   *
+   * @param   rpc     the RPC call to be executed
+   * @param   onRetry the action to take on a retry
+   * @param   <V>     the type of the task where the RPC happens
+   * @return  the RPC result; otherwise, an exception is thrown
+   * @throws  FailedPreconditionException if the client is closed
+   * @throws  AlluxioStatusException      if a {@link StatusRuntimeException}
+   *                                      is thrown
+   * @throws  UnavailableException        if the RPC connection fails multiple times
+   *                                      and disrespects the {@link RetryPolicy}
+   *                                      from the {@link #mRetryPolicySupplier}
+   */
   private synchronized <V> V retryRPCInternal(RpcCallable<V> rpc, Supplier<Void> onRetry)
       throws AlluxioStatusException {
     RetryPolicy retryPolicy = mRetryPolicySupplier.get();

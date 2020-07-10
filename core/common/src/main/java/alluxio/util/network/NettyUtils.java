@@ -152,6 +152,22 @@ public final class NettyUtils {
     return sNettyEpollAvailable;
   }
 
+  /**
+   * Checks whether EPOLL is available for Netty.
+   * <p>
+   * Checks if {@link Epoll#isAvailable}. Returns false
+   * if it is not. Otherwise, attempts to get the field
+   * {@code EPOLL_MODE} from the class {@link EpollChannelOption}.
+   * Returns true if EPOLL_MODE is found. Returns false otherwise.
+   * <p>
+   * EPOLL_MODE is not supported in Netty with version older than 4.0.26.
+   * <p>
+   * Switches to NIO if EPOLL is unavailable.
+   *
+   * @return  a boolean value representing
+   *          whether {@link Epoll} is
+   *          available
+   */
   private static boolean checkNettyEpollAvailable() {
     if (!Epoll.isAvailable()) {
       LOG.info("EPOLL is not available, will use NIO");
@@ -231,11 +247,15 @@ public final class NettyUtils {
   }
 
   /**
-   * Get the proper channel type. Always returns {@link ChannelType} NIO if EPOLL is not available.
+   * Gets the channel type.
+   * <p>
+   * Returns the proper channel type. Always returns {@link ChannelType#NIO}
+   * if {@link ChannelType#EPOLL} is not available. Otherwise, returns the channel
+   * type according to the provided {@link PropertyKey} and {@link AlluxioConfiguration}.
    *
-   * @param key the property key for looking up the configured channel type
-   * @param conf the Alluxio configuration
-   * @return the channel type to use
+   * @param   key   the property key for looking up the configured channel type
+   * @param   conf  the Alluxio configuration
+   * @return  the channel type to use
    */
   public static ChannelType getChannelType(PropertyKey key, AlluxioConfiguration conf) {
     if (!isNettyEpollAvailable()) {
