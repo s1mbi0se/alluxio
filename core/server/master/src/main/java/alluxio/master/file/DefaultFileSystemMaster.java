@@ -2903,6 +2903,11 @@ public final class DefaultFileSystemMaster extends CoreMaster
    * Deletes the Alluxio path with {@link #deleteInternal(RpcContext, LockedInodePath, DeleteContext)} )}.
    * The option {@link DeletePOptions.Builder#setRecursive(boolean)} is set to {@code true} and should
    * be enough to avoid an exception from trying to delete a non-empty directory.
+   * <p>
+   * This method does not delete blocks. Instead, it adds the inode path to the passed-in block deletion
+   * context so that the blocks can be deleted after the inode deletion journal entry has been
+   * written. We cannot delete blocks earlier because the inode deletion may fail, leaving us with
+   * inode containing deleted blocks.
    *
    * @param rpcContext  the {@link RpcContext} provided by {@link #unmount(AlluxioURI)}
    * @param inodePath   the Alluxio path to unmount, must be a mount point
