@@ -1645,7 +1645,7 @@ public final class DefaultFileSystemMaster extends CoreMaster
    *
    * @param rpcContext the rpc context
    * @param inodePath the file {@link LockedInodePath}
-   * @param deleteContext the method optitions
+   * @param deleteContext the method options
    */
   @VisibleForTesting
   public void deleteInternal(RpcContext rpcContext, LockedInodePath inodePath,
@@ -2890,14 +2890,28 @@ public final class DefaultFileSystemMaster extends CoreMaster
 
   /**
    * Unmounts a UFS path previously mounted onto an Alluxio path.
+   * <p>
+   * Checks whether the provided inode full path exists. Throws an exception if false.
+   * <p>
+   * Gets information about the provided mount point in the {@link #mMountTable}. Throws
+   * an exception if the {@code mountInfo} is {@code null}, which means the provided mount
+   * point does not exist.
+   * <p>
+   * Checks whether the Alluxio path can be deleted. An exception is thrown if the path is
+   * root, since it cannot be deleted.
+   * <p>
+   * Deletes the Alluxio path with {@link #deleteInternal(RpcContext, LockedInodePath, DeleteContext)} )}.
+   * The option {@link DeletePOptions.Builder#setRecursive(boolean)} is set to {@code true} and should
+   * be enough to avoid an exception from trying to delete a non-empty directory.
    *
-   * This method does not delete blocks. Instead, it adds the to the passed-in block deletion
-   * context so that the blocks can be deleted after the inode deletion journal entry has been
-   * written. We cannot delete blocks earlier because the inode deletion may fail, leaving us with
-   * inode containing deleted blocks.
-   *
-   * @param rpcContext the rpc context
-   * @param inodePath the Alluxio path to unmount, must be a mount point
+   * @param rpcContext  the {@link RpcContext} provided by {@link #unmount(AlluxioURI)}
+   * @param inodePath   the Alluxio path to unmount, must be a mount point
+   * @throws FileDoesNotExistException  if the full {@code inodePath} does not exist
+   * @throws InvalidPathException       if information about a mount point does not
+   *                                    exist or the path to be deleted is root
+   * @throws RuntimeException           if the operation fails because the directory is not empty.
+   *                                    This exception should never be thrown when the unmount is
+   *                                    recursive.
    */
   private void unmountInternal(RpcContext rpcContext, LockedInodePath inodePath)
       throws InvalidPathException, FileDoesNotExistException, IOException {
