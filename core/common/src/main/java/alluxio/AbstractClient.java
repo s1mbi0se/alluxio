@@ -322,6 +322,17 @@ public abstract class AbstractClient implements Client {
   /**
    * Closes the connection with the Alluxio remote and does the necessary cleanup. It should be used
    * if the client has not connected with the remote for a while, for example.
+   * Closes the connection with the Alluxio remote and does the necessary cleanup.
+   * <p>
+   * Checks whether {@link #mConnected} is {@code true}, in which case there is an
+   * active connection with the remote. Prepares for shut down with {@link #beforeDisconnect}
+   * and shuts down {@link #mChannel} if such connection exists. Does the necessary cleanup with
+   * {@link #afterDisconnect} after closing the connection.
+   * <p>
+   * Does nothing if {@code mConnected} is {@code false}, because there is no active connection.
+   * <p>
+   * This method should be used if the client has not connected with the remote for
+   * a while, for example.
    */
   public synchronized void disconnect() {
     if (mConnected) {
