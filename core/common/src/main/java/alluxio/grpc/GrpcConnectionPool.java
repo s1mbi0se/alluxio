@@ -289,6 +289,9 @@ public class GrpcConnectionPool {
    * Tries to gracefully shut down the managed channel.
    * Falls back to forceful shutdown if graceful shutdown
    * times out.
+   *
+   * @param managedChannel  the managed channel
+   * @param conf            the Alluxio configuration
    */
   private void shutdownManagedChannel(ManagedChannel managedChannel, AlluxioConfiguration conf) {
     // Close the gRPC managed-channel if not shut down already.
