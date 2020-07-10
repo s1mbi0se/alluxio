@@ -2846,6 +2846,26 @@ public final class DefaultFileSystemMaster extends CoreMaster
     }
   }
 
+  /**
+   * Unmounts an Alluxio path.
+   * <p>
+   * Attempts to create a new {@link RpcContext} to establish an RPC.
+   * <p>
+   * Creates a {@link LockedInodePath} by locking the parent of the provided
+   * {@code alluxioPath} in the {@link #mInodeTree#} with the {@link LockPattern#WRITE_EDGE}.
+   * <p>
+   * Executes {@link #unmountInternal(RpcContext, LockedInodePath)} with the created {@code inodePath}
+   * and {@code rpcContext}.
+   *
+   * @param alluxioPath the Alluxio path to unmount, must be a mount point
+   * @throws  FileDoesNotExistException if the provided {@code alluxioPath} does not exist
+   * @throws  InvalidPathException      if the provided {@code alluxioPath} is invalid and
+   *                                    information about the mount point cannot be found
+   * @throws  IOException               if an I/O-bound operation fails unexpectedly
+   * @throws  AccessControlException    if the parent lacks the necessary permissions
+   *                                    to carry out this operation or if permission
+   *                                    checking fails
+   */
   @Override
   public void unmount(AlluxioURI alluxioPath) throws FileDoesNotExistException,
       InvalidPathException, IOException, AccessControlException {
