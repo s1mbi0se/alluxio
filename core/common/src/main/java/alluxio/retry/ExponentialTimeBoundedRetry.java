@@ -97,7 +97,7 @@ public final class ExponentialTimeBoundedRetry extends TimeBoundedRetry {
     }
 
     /**
-     * Sets the max duration for this retry policy.
+     * Sets the maximum duration for this retry policy.
      * <p>
      * Sets {@link #mMaxDuration} to retry for.
      *
