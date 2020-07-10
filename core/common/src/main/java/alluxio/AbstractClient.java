@@ -330,8 +330,6 @@ public abstract class AbstractClient implements Client {
   }
 
   /**
-   * Closes the connection with the Alluxio remote and does the necessary cleanup. It should be used
-   * if the client has not connected with the remote for a while, for example.
    * Closes the connection with the Alluxio remote and does the necessary cleanup.
    * <p>
    * Checks whether {@link #mConnected} is {@code true}, in which case there is an
