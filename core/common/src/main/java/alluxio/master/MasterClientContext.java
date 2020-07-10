@@ -37,7 +37,12 @@ public class MasterClientContext extends ClientContext {
   }
 
   /**
-   * @return the master inquire client
+   * Gets the master inquire client of this master client context.
+   * <p>
+   * Returns the {@link #mMasterInquireClient}, used to determine
+   * the primary master.
+   *
+   * @return the {@link MasterInquireClient} for this {@link ClientContext}
    */
   public MasterInquireClient getMasterInquireClient() {
     return mMasterInquireClient;
