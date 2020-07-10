@@ -135,14 +135,9 @@ public final class NettyUtils {
 
   /**
    * Returns whether or not Netty epoll is available to the system.
-   * <p>
-   * Checks whether {@link #sNettyEpollAvailable} exists. Returns
-   * it if true; otherwise assigns the return value of
-   * {@link #checkNettyEpollAvailable()} to it, and returns
-   * that.
    *
    * @return  a boolean representing whether {@link Epoll} is
-   * available to the system
+   *          available to the system
    */
   public static synchronized boolean isNettyEpollAvailable() {
     if (sNettyEpollAvailable == null) {
@@ -155,10 +150,7 @@ public final class NettyUtils {
   /**
    * Checks whether EPOLL is available for Netty.
    * <p>
-   * Checks if {@link Epoll#isAvailable}. Returns false
-   * if it is not. Otherwise, attempts to get the field
-   * {@code EPOLL_MODE} from the class {@link EpollChannelOption}.
-   * Returns true if EPOLL_MODE is found. Returns false otherwise.
+   * Checks if {@link Epoll#isAvailable}.
    * <p>
    * EPOLL_MODE is not supported in Netty with version older than 4.0.26.
    * <p>

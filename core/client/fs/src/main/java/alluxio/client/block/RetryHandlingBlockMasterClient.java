@@ -59,14 +59,6 @@ public final class RetryHandlingBlockMasterClient extends AbstractMasterClient
     super(conf);
   }
 
-  /**
-   * Gets the type of remote service for the block master client.
-   * <p>
-   * Returns {@link ServiceType#BLOCK_MASTER_CLIENT_SERVICE},
-   * which is the service type for this {@link alluxio.Client}.
-   *
-   * @return  the type of remote service
-   */
   @Override
   protected ServiceType getRemoteServiceType() {
     return ServiceType.BLOCK_MASTER_CLIENT_SERVICE;

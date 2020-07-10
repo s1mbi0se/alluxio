@@ -39,13 +39,6 @@ public class JobMasterClientContext extends MasterClientContext {
     mConfMasterInquireClient = confMasterInquireClient;
   }
 
-  /**
-   * Gets the client to determine the primary job master.
-   * <p>
-   * Returns the existing {@link JobMasterClientContext#mConfMasterInquireClient}.
-   *
-   * @return  the {@link MasterInquireClient} for configuration.
-   */
   @Override
   public MasterInquireClient getConfMasterInquireClient() {
     return mConfMasterInquireClient;

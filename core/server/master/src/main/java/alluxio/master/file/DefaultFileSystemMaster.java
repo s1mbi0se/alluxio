@@ -2690,46 +2690,6 @@ public final class DefaultFileSystemMaster extends CoreMaster
     }
   }
 
-  /**
-   * Mounts an under storage path to an Alluxio path.
-   * <p>
-   * Links an under storage path to an Alluxio path,
-   * where files and folders created in Alluxio space
-   * under the path will be backed by a corresponding
-   * file or folder in the under storage path.
-   * <p>
-   * Increments {@link DefaultFileSystemMaster.Metrics#MOUNT_OPS},
-   * which keeps track of the number of mount operations made. Uses
-   * {@link LockingScheme} to determine that the path should be locked
-   * with the lock pattern {@link LockPattern#WRITE_EDGE}.
-   * <p>
-   * Attempts to instantiate {@link RpcContext} through {@link DefaultFileSystemMaster#createRpcContext()}
-   * and create an object of type {@link LockedInodePath} by locking all inodes inside of
-   * {@link DefaultFileSystemMaster#mInodeTree} with {@link InodeTree#lockInodePath}
-   * in order to avoid deadlocks.
-   * <p>
-   * Attempts to check whether the permission to {@link Mode.Bits#WRITE} is enabled.
-   * If it is not enabled, an exception in thrown and the UFS path is not mounted to
-   * Alluxio. Otherwise, checks whether the UFS should be synchronized, in which case
-   * {@link DefaultFileSystemMaster#syncMetadata} is invoked.
-   * <p>
-   * Mounts the UFS path internally using {@link DefaultFileSystemMaster#mountInternal}, providing:
-   *                    1) rpcContext, the RpcContext;
-   *                    2) inodePath, the LockedInodePath;
-   *                    3) ufsPath, the provided UFS path to mount to Alluxio;
-   *                    4) context, the provided object of type {@link MountContext},
-   *                    used to merge and wrap {@link MountPOptions}.
-   *
-   * @param alluxioPath the Alluxio path to mount to
-   * @param ufsPath     the UFS path to mount
-   * @param context     the mount context
-   * @throws FileAlreadyExistsException If an Alluxio path already exists.
-   * @throws FileDoesNotExistException  If the specified under storage path does not exist.
-   * @throws InvalidPathException       If the specified path is invalid.
-   * @throws IOException                If an unforeseen I/O-bound operation fails.
-   * @throws AccessControlException     If there is not enough permission for
-   *                                    the operation to be carried out by Alluxio.
-   */
   @Override
   public void mount(AlluxioURI alluxioPath, AlluxioURI ufsPath, MountContext context)
       throws FileAlreadyExistsException, FileDoesNotExistException, InvalidPathException,
@@ -2903,6 +2863,11 @@ public final class DefaultFileSystemMaster extends CoreMaster
    * Deletes the Alluxio path with {@link #deleteInternal(RpcContext, LockedInodePath, DeleteContext)} )}.
    * The option {@link DeletePOptions.Builder#setRecursive(boolean)} is set to {@code true} and should
    * be enough to avoid an exception from trying to delete a non-empty directory.
+   * <p>
+   * This method does not delete blocks. Instead, it adds the inode path to the passed-in block deletion
+   * context so that the blocks can be deleted after the inode deletion journal entry has been
+   * written. We cannot delete blocks earlier because the inode deletion may fail, leaving us with
+   * inode containing deleted blocks.
    *
    * @param rpcContext  the {@link RpcContext} provided by {@link #unmount(AlluxioURI)}
    * @param inodePath   the Alluxio path to unmount, must be a mount point

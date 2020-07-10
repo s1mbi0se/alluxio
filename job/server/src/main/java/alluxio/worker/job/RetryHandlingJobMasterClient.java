@@ -50,14 +50,6 @@ public final class RetryHandlingJobMasterClient extends AbstractMasterClient
     super(conf);
   }
 
-  /**
-   * Gets the type of remote service for the job master client.
-   * <p>
-   * Returns {@link ServiceType#JOB_MASTER_WORKER_SERVICE},
-   * which is the service type for this {@link alluxio.Client}.
-   *
-   * @return  the type of remote service
-   */
   @Override
   protected ServiceType getRemoteServiceType() {
     return ServiceType.JOB_MASTER_WORKER_SERVICE;

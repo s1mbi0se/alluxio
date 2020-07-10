@@ -35,22 +35,6 @@ public abstract class SleepingRetry implements RetryPolicy {
     return mAttemptCount;
   }
 
-  /**
-   * Checks if a new attempt to execute a method can be made. Sleeps between retries.
-   * <p>
-   * Checks if a new attempt to execute a method can be made by comparing the
-   * {@link #mAttemptCount} to the number of {@link #mMaxRetries}.
-   * Returns true right away if this is the first attempt and skips
-   * the following part.
-   * <p>
-   * Sleeps for {@link #getSleepTime}. Returns false if an
-   * {@link InterruptedException} is thrown. Returns true
-   * otherwise.
-   *
-   * @return  a boolean value representing whether a new
-   *          attempt can be made based on this
-   *          {@link RetryPolicy}
-   */
   @Override
   public boolean attempt() {
     if (mAttemptCount <= mMaxRetries) {

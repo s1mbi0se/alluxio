@@ -85,23 +85,6 @@ public final class GrpcChannel extends Channel {
 
   /**
    * Shuts down the gRPC channel.
-   * <p>
-   * Shutdown should be synchronized as it could be called concurrently due to:
-   *          1) Authentication long polling
-   *          2) gRPC messaging stream.
-   * <p>
-   * Checks whether the {@link GrpcChannel#mAuthDriver} is present, in which
-   * case it is closed and set to null.
-   * <p>
-   * Checks whether {@link GrpcChannel#mChannelReleased} is true or false.
-   * True would indicate this channel is release, and false would indicate
-   * it is not released. This information is used to avoid releasing the
-   * same channel more than once.
-   * <p>
-   * The {@link GrpcChannel#mConnection} is closed with {@link GrpcConnection#close()}
-   * if the channel is released. In case any exception occurs during this process, it
-   * is handled by a try-catch block and rethrown as a RuntimeException indicating that
-   * the connection could not be released.
    *
    * @throws RuntimeException If the connection cannot be released due to an unforeseen
    *                          problem.
@@ -170,18 +153,6 @@ public final class GrpcChannel extends Channel {
       return mChannelHealthy;
     }
 
-    /**
-     * Intercepts the gRPC channel call.
-     *
-     * @param   method      the description of a remote method used by
-     *                      {@link Channel} to initiate a call
-     * @param   callOptions the collection of runtime options for a new
-     *                      RPC call
-     * @param   next        the RPC channel
-     * @param   <ReqT>      type of message sent one or more times to the server
-     * @param   <RespT>     type of message received one or more times from the server
-     * @return  an object of type {@link ClientCall<ReqT, RespT>}
-     */
     @Override
     public <ReqT, RespT> ClientCall<ReqT, RespT> interceptCall(MethodDescriptor<ReqT, RespT> method,
         CallOptions callOptions, Channel next) {

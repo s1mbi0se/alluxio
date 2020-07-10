@@ -214,15 +214,6 @@ public final class Metric implements Serializable {
    * Returns the metric name with the provided tags.
    * The returned name is of the pattern
    * {@code name[.tagName:tagValue]*}.
-   * <p>
-   * Checks whether there is an even number of arguments
-   * in {@code tags}. Throws an exception if there is not.
-   * The reason for this is that the arguments should always
-   * consist of tag name and tag value pairs.
-   * <p>
-   * Creates a StringBuilder in order to create the final
-   * metric name with the addition of tags and returns its
-   * string value.
    *
    * @param   name  the metric name
    * @param   tags  the tag name and tag value pairs
