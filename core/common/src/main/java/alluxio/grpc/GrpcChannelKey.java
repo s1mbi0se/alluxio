@@ -121,8 +121,13 @@ public class GrpcChannelKey {
   }
 
   /**
-   * @param clientType the client type
-   * @return the modified {@link GrpcChannelKey}
+   * Sets the client type for this gRPC channel key.
+   * <p>
+   * Sets {@link #mClientType} to the provided {@code clientType}
+   * and returns this instance modified.
+   *
+   * @param   clientType the new client type
+   * @return  this instance of {@link GrpcChannelKey} updated
    */
   public GrpcChannelKey setClientType(String clientType) {
     mClientType = clientType;
