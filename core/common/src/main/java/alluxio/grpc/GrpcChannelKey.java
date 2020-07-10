@@ -181,7 +181,8 @@ public class GrpcChannelKey {
    * <p>
    * Returns a short representation of this channel key, following
    * this template:
-   * {@code GrpcChannelKey{ClientType=mClientType, ClientHostname=mLocalHostName, ChannelId=mChannelId}}
+   * {@code GrpcChannelKey{ClientType=mClientType, ClientHostname=mLocalHostName, ServerAddress=mServerAddress,
+   * ChannelId=mChannelId}}
    * <p>
    * Null values are omitted.
    *
