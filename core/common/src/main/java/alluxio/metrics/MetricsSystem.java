@@ -582,11 +582,14 @@ public final class MetricsSystem {
   }
 
   /**
-   * Get or add timer with the given name.
-   * The returned timer may be changed due to {@link #resetAllMetrics}
+   * Gets or registers timer with the given name.
+   * <p>
+   * Gets or adds timer with the provided name.
+   * The returned timer may be changed due to
+   * {@link #resetAllMetrics}.
    *
-   * @param name the name of the metric
-   * @return a timer object with the qualified metric name
+   * @param   name  the name of the metric
+   * @return  timer object with the qualified metric name
    */
   public static Timer timer(String name) {
     return METRIC_REGISTRY.timer(getMetricName(name));
