@@ -57,6 +57,9 @@ public final class GrpcChannelBuilder {
 
   /**
    * Create a channel builder for given address using the given configuration.
+   * <p>
+   * Returns a new {@link GrpcChannelBuilder} with the provided
+   * {@link GrpcServerAddress} and {@link AlluxioConfiguration}.
    *
    * @param address the host address
    * @param conf Alluxio configuration
