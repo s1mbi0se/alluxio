@@ -153,25 +153,6 @@ public final class GrpcChannel extends Channel {
       return mChannelHealthy;
     }
 
-<<<<<<< Updated upstream
-    /**
-     * Intercepts the gRPC channel call.
-     * <p>
-     * Returns a new {@link ForwardingClientCall.SimpleForwardingClientCall} with a
-     * {@link Channel#newCall(MethodDescriptor, CallOptions)} and the provided
-     * {@code channel}, {@code method}, and {@code callOptions}.
-     *
-     * @param   method      the description of a remote method used by
-     *                      {@link Channel} to initiate a call
-     * @param   callOptions the collection of runtime options for a new
-     *                      RPC call
-     * @param   next        the RPC channel
-     * @param   <ReqT>      type of message sent one or more times to the server
-     * @param   <RespT>     type of message received one or more times from the server
-     * @return  an object of type {@link ClientCall}, a call to a remote method
-     */
-=======
->>>>>>> Stashed changes
     @Override
     public <ReqT, RespT> ClientCall<ReqT, RespT> interceptCall(MethodDescriptor<ReqT, RespT> method,
         CallOptions callOptions, Channel next) {
