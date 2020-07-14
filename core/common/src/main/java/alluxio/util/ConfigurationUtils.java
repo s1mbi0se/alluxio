@@ -393,13 +393,6 @@ public final class ConfigurationUtils {
   /**
    * Returns the Alluxio configuration based on the provided defaults/values from "conf/alluxio-site.properties".
    * <p>
-   * Checks whether {@link ConfigurationUtils#sDefaultProperties} is already set, in which case only a copy of
-   * it is returned through {@link AlluxioProperties#copy}.
-   * <p>
-   * If the default properties are not yet set, another verification is made, this time within a synchronized block,
-   * to make sure that the properties are only reloaded when necessary and avoid multiple threads to reload these
-   * properties at the same time.
-   * <p>
    * Returns an instance of {@link AlluxioConfiguration} with the defaults and values from
    * alluxio-site properties.
    *
@@ -488,19 +481,6 @@ public final class ConfigurationUtils {
   /**
    * Loads and returns configuration from meta master in one RPC.
    * <p>
-   * Builds a gRPC channel with {@link GrpcChannelBuilder}, where:
-   *          1) the {@link GrpcServerAddress} is
-   *          {@link GrpcServerAddress#create(InetSocketAddress)} with
-   *          the provided socket address;
-   *          2) the {@link AlluxioConfiguration} is the alluxio configuration
-   *          provided as an argument;
-   * Sets the client type to {@code "ConfigurationUtils"}, disables authentication
-   * and builds the gRPC channel.
-   * <p>
-   * Creates a new ListenableFuture-style stub that supports unary calls on the service through
-   * {@link MetaMasterConfigurationServiceGrpc#newBlockingStub(Channel)} with the created gRPC
-   * channel.
-
    * Attempts to load and return configuration from meta master. Shuts down once finished.
    *
    * @param   address           the meta master address
@@ -508,7 +488,6 @@ public final class ConfigurationUtils {
    * @param   ignoreClusterConf do not load cluster configuration related information
    * @param   ignorePathConf    do not load path configuration related information
    * @return  the RPC response as {@link GetConfigurationPResponse}
-   * @throws  AlluxioStatusException  if an unforeseen exception occurs
    * @throws  UnavailableException    if a {@link io.grpc.StatusRuntimeException} occurs while
    *                                  attempting to handshake with master
    * @throws  RuntimeException        if an {@link UnauthenticatedException} occurs during
@@ -548,16 +527,11 @@ public final class ConfigurationUtils {
   /**
    * Filters and loads properties with a certain scope from the property list returned by gRPC.
    * <p>
-   * Iterates through each {@link ConfigProperty} from within the provided list. Validates whether
-   * the config property has a valid name and value. If a config property is valid and within the
-   * provided {@link Scope}, it is referenced by a HashTable of type {@link Properties}, where:
-   *        - the key is the {@link PropertyKey};
-   *        - the value is the return value of {@link ConfigProperty#getValue}.
-   * <p>
    * The given scope should only be {@link Scope#WORKER} or {@link Scope#CLIENT}.
    *
    * @param properties  the property list returned by gRPC
-   * @param scope       the scope to filter the received property list
+   * @param scope       the scope to filter the received property list, which should only be
+   *                    {@link Scope#WORKER} or {@link Scope#CLIENT}.
    * @param logMessage  a function with key and value as parameter and returns debug log message
    * @return            the loaded properties from the list of configuration properties
    */

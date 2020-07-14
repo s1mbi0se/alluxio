@@ -73,20 +73,6 @@ public class CountingLatch {
       }
     }
 
-    /**
-     * Returns whether or not this thread can be released.
-     * <p>
-     * Checks whether the current thread can be released or not.
-     * Returns true if it can be released; otherwise, returns false.
-     * <p>
-     * This information is useful for unlocking threads or keeping them
-     * locked using {@link AbstractQueuedSynchronizer#release}.
-     *
-     * @param arg The default release method needed for overriding
-     *            {@link AbstractQueuedSynchronizer#tryRelease)}.
-     * @return    A boolean informing whether the new state equals zero
-     *            which means this thread has been unlocked successfully.
-     */
     @Override
     protected boolean tryRelease(int arg) {
       while (true) {

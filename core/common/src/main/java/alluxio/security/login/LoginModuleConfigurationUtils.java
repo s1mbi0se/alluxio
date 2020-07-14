@@ -35,10 +35,6 @@ public final class LoginModuleConfigurationUtils {
   /**
    * Identifies and returns the login module and class according to the operating system.
    * <p>
-   * Checks the operating system informed by {@link OSUtils#IBM_JAVA}, {@link OSUtils#isWindows()},
-   * {@link OSUtils#isAIX()}, and {@link OSUtils#is64Bit()}. Uses this information to return
-   * a string with the module and class name needed in order to login.
-   * <p>
    * The return value changes according to the answer to these questions:
    *                    1)  Is the current Java vendor IBM Java?
    *                        If YES:

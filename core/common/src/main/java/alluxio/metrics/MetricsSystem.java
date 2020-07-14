@@ -176,17 +176,6 @@ public final class MetricsSystem {
    * Constructs and returns the source name of metrics in this metrics system.
    * <p>
    * Sets {@code sourceKey} according to the value of {@link CommonUtils#PROCESS_TYPE}.
-   * If its value is {@link CommonUtils.ProcessType#MASTER}, sets {@code sourceKey} to
-   * {@link PropertyKey#MASTER_HOSTNAME}. If its value is
-   * {@link CommonUtils.ProcessType#WORKER}, sets {@code sourceKey} to
-   * {@link PropertyKey#WORKER_HOSTNAME}. If its value is
-   * {@link CommonUtils.ProcessType#CLIENT}, sets {@code sourceKey} to
-   * {@link PropertyKey#USER_APP_ID}. If its value is
-   * {@link CommonUtils.ProcessType#JOB_MASTER}, sets {@code sourceKey}
-   * to {@link PropertyKey#JOB_MASTER_HOSTNAME}. If its value is
-   * {@link CommonUtils.ProcessType#JOB_WORKER}, sets {@code sourceKey}
-   * to {@link PropertyKey#JOB_WORKER_HOSTNAME}. If its value is none of
-   * the above, keeps {@code sourceKey} as null.
    * <p>
    * Returns the {@code sourceKey} if it exists and the
    * {@link AlluxioConfiguration} {@code conf} contains a
@@ -356,18 +345,9 @@ public final class MetricsSystem {
    * {@code instance.uniqueId.metricName}.
    * <p>
    * Checks whether the name is already in the {@link #CACHED_METRICS}.
-   * Returns the name from the cache if it is there.
-   * <p>
-   * Checks whether the name start with {@link InstanceType#MASTER} or
-   * {@link InstanceType#CLUSTER}. Returns the name and saves it
-   * in cache if true.
-   * <p>
-   * Checks whether the name starts with {@link InstanceType#WORKER}.
-   * Returns {@link #getWorkerMetricName} if true, and saves the result
-   * in the cached metrics.
-   * <p>
-   * Returns a new metric name with an unique ID if none of the verifications
-   * above result to true and saves it in cache.
+   * Returns the name from the cache if it is there. Returns a new metric
+   * name with an unique ID if none of the verifications saves it in cache
+   * otherwise.
    *
    * @param name the metric name
    * @return the metric registry name

@@ -199,10 +199,6 @@ public class FileSystemOptions {
 
   /**
    * Builds and returns a new set of options for the file system.
-   * <p>
-   * Utilizes {@link MountPOptions.Builder} in order to create
-   * these options, which are used to set default
-   * properties and permissions for the file system.
    *
    * @param conf  Alluxio configuration
    * @return      options based on the configuration

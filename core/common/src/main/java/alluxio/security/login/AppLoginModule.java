@@ -44,21 +44,6 @@ public final class AppLoginModule implements LoginModule {
    */
   public AppLoginModule() {}
 
-  /**
-   * Initialized the subject and callback handler for this login module.
-   * <p>
-   * Sets {@link #mSubject} to the provided {@code subject}.
-   * <p>
-   * Sets {@link #mCallbackHandler} to the provided {@code callbackHandler}.
-   *
-   * @param subject         the new {@link Subject} for this {@link AppLoginModule}
-   * @param callbackHandler the new {@link CallbackHandler} for this {@link LoginModule}.
-   *                        All other parameters are ignored.
-   * @param sharedState     the shared state. This parameter is ignored and
-   *                        is only required for overriding purposes.
-   * @param options         the options. This parameter is ignored and
-   *                        is only required for overriding purposes.
-   */
   @Override
   public void initialize(Subject subject, CallbackHandler callbackHandler,
       Map<String, ?> sharedState, Map<String, ?> options) {
@@ -66,15 +51,6 @@ public final class AppLoginModule implements LoginModule {
     mCallbackHandler = callbackHandler;
   }
 
-  /**
-   * Authenticates the user.
-   * <p>
-   * Retrieves the user name by querying the property of
-   * {@link PropertyKey#SECURITY_LOGIN_USERNAME} through {@link AppCallbackHandler}.
-   *
-   * @return  whether user name provided by application is set and not empty
-   * @throws  LoginException  if the login fails
-   */
   @Override
   public boolean login() throws LoginException {
     Callback[] callbacks = new Callback[1];
@@ -112,7 +88,6 @@ public final class AppLoginModule implements LoginModule {
 
   /**
    * Commits the authentication (second phase).
-   *
    * <p>
    * This method is called if the LoginContext's overall authentication succeeded. The
    * implementation first checks if there is already Alluxio user in the subject. If not, it adds

@@ -90,6 +90,8 @@ public class GrpcChannelKey {
   }
 
   /**
+   * Sets the server address for this gRPC channel key.
+   *
    * @param address destination address of the channel
    * @return the modified {@link GrpcChannelKey}
    */

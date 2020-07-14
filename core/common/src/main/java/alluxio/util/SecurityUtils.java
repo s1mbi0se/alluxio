@@ -145,7 +145,7 @@ public final class SecurityUtils {
    * @param configuration   the {@link javax.security.auth.login.Configuration} to use
    * @param callbackHandler the {@link CallbackHandler}
    * @return                the new {@link LoginContext} instance
-   * @throws LoginException if LoginContext cannot be created for any reason whatsoever
+   * @throws LoginException if {@code LoginContext} cannot be created for any reason whatsoever
    */
   public static LoginContext createLoginContext(AuthType authType, Subject subject,
       ClassLoader classLoader, Configuration configuration, CallbackHandler callbackHandler)
