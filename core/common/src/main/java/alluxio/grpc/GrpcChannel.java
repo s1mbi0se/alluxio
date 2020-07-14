@@ -153,6 +153,7 @@ public final class GrpcChannel extends Channel {
       return mChannelHealthy;
     }
 
+<<<<<<< Updated upstream
     /**
      * Intercepts the gRPC channel call.
      * <p>
@@ -169,6 +170,8 @@ public final class GrpcChannel extends Channel {
      * @param   <RespT>     type of message received one or more times from the server
      * @return  an object of type {@link ClientCall}, a call to a remote method
      */
+=======
+>>>>>>> Stashed changes
     @Override
     public <ReqT, RespT> ClientCall<ReqT, RespT> interceptCall(MethodDescriptor<ReqT, RespT> method,
         CallOptions callOptions, Channel next) {
