@@ -488,10 +488,10 @@ public final class ConfigurationUtils {
    * @param   ignoreClusterConf do not load cluster configuration related information
    * @param   ignorePathConf    do not load path configuration related information
    * @return  the RPC response as {@link GetConfigurationPResponse}
-   * @throws  UnavailableException    if a {@link io.grpc.StatusRuntimeException} occurs while
-   *                                  attempting to handshake with master
-   * @throws  RuntimeException        if an {@link UnauthenticatedException} occurs during
-   *                                  boot-strap connect with the provided host
+   * @throws  UnavailableException    If a {@link io.grpc.StatusRuntimeException} occurs while
+   *                                  attempting to handshake with master.
+   * @throws  RuntimeException        If an {@link UnauthenticatedException} occurs during
+   *                                  boot-strap connect with the provided host.
    */
   public static GetConfigurationPResponse loadConfiguration(InetSocketAddress address,
       AlluxioConfiguration conf, boolean ignoreClusterConf, boolean ignorePathConf)
@@ -531,7 +531,7 @@ public final class ConfigurationUtils {
    *
    * @param properties  the property list returned by gRPC
    * @param scope       the scope to filter the received property list, which should only be
-   *                    {@link Scope#WORKER} or {@link Scope#CLIENT}.
+   *                    {@link Scope#WORKER} or {@link Scope#CLIENT}
    * @param logMessage  a function with key and value as parameter and returns debug log message
    * @return            the loaded properties from the list of configuration properties
    */

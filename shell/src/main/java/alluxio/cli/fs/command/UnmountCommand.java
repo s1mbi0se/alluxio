@@ -67,8 +67,8 @@ public final class UnmountCommand extends AbstractFileSystemCommand {
    *
    * @param   cl  the parsed command line for the arguments
    * @return  the exit code 0 (zero) if the command runs successfully
-   * @throws  IOException       if the provided URI does not exist or if
-   *                            any other I/O-bound operation fails
+   * @throws  IOException       If the provided URI does not exist or if
+   *                            any other I/O-bound operation fails.
    */
   @Override
   public int run(CommandLine cl) throws AlluxioException, IOException {

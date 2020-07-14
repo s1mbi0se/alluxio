@@ -415,9 +415,9 @@ public interface FileSystemMaster extends Master {
    * of the Alluxio path.
    *
    * @param   alluxioPath the Alluxio path to unmount, must be a mount point
-   * @throws  FileDoesNotExistException  if the path to be mounted does not exist
-   * @throws  InvalidPathException       if the given path is not a mount point
-   * @throws  AccessControlException     if the permission check fails
+   * @throws  FileDoesNotExistException  If the path to be mounted does not exist.
+   * @throws  InvalidPathException       If the given path is not a mount point.
+   * @throws  AccessControlException     If the permission check fails.
    */
   void unmount(AlluxioURI alluxioPath) throws FileDoesNotExistException, InvalidPathException,
       IOException, AccessControlException;

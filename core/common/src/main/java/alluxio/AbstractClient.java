@@ -162,8 +162,8 @@ public abstract class AbstractClient implements Client {
    * exception if the versions diverge.
    *
    * @param   clientVersion the client version
-   * @throws  IOException   if the {@link #mServiceVersion} is not the same as the
-   *                        provided {@code clientVersion}
+   * @throws  IOException   If the {@link #mServiceVersion} is not the same as the
+   *                        provided {@code clientVersion}.
    */
   protected void checkVersion(long clientVersion) throws IOException {
     if (mServiceVersion == Constants.UNKNOWN_SERVICE_VERSION) {
@@ -474,12 +474,12 @@ public abstract class AbstractClient implements Client {
    * @param   onRetry the action to take on a retry
    * @param   <V>     the type of the task where the RPC happens
    * @return  the RPC result; otherwise, an exception is thrown
-   * @throws  FailedPreconditionException if the client is closed
-   * @throws  AlluxioStatusException      if a {@link StatusRuntimeException}
-   *                                      is thrown
-   * @throws  UnavailableException        if the RPC connection fails multiple times
+   * @throws  FailedPreconditionException If the client is closed.
+   * @throws  AlluxioStatusException      If a {@link StatusRuntimeException}
+   *                                      is thrown.
+   * @throws  UnavailableException        If the RPC connection fails multiple times
    *                                      and disrespects the {@link RetryPolicy}
-   *                                      from the {@link #mRetryPolicySupplier}
+   *                                      from the {@link #mRetryPolicySupplier}.
    */
   private synchronized <V> V retryRPCInternal(RpcCallable<V> rpc, Supplier<Void> onRetry)
       throws AlluxioStatusException {

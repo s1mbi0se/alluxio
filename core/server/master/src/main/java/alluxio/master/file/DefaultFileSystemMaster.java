@@ -2818,13 +2818,9 @@ public final class DefaultFileSystemMaster extends CoreMaster
    * and {@code rpcContext}.
    *
    * @param alluxioPath the Alluxio path to unmount, must be a mount point
-   * @throws  FileDoesNotExistException if the provided {@code alluxioPath} does not exist
-   * @throws  InvalidPathException      if the provided {@code alluxioPath} is invalid and
-   *                                    information about the mount point cannot be found
-   * @throws  IOException               if an I/O-bound operation fails unexpectedly
-   * @throws  AccessControlException    if the parent lacks the necessary permissions
+   * @throws  AccessControlException    If the parent lacks the necessary permissions
    *                                    to carry out this operation or if permission
-   *                                    checking fails
+   *                                    checking fails.
    */
   @Override
   public void unmount(AlluxioURI alluxioPath) throws FileDoesNotExistException,
@@ -2871,10 +2867,7 @@ public final class DefaultFileSystemMaster extends CoreMaster
    *
    * @param rpcContext  the {@link RpcContext} provided by {@link #unmount(AlluxioURI)}
    * @param inodePath   the Alluxio path to unmount, must be a mount point
-   * @throws FileDoesNotExistException  if the full {@code inodePath} does not exist
-   * @throws InvalidPathException       if information about a mount point does not
-   *                                    exist or the path to be deleted is root
-   * @throws RuntimeException           if the operation fails because the directory is not empty.
+   * @throws RuntimeException           If the operation fails because the directory is not empty.
    *                                    This exception should never be thrown when the unmount is
    *                                    recursive.
    */

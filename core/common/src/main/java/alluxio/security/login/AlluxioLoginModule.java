@@ -67,13 +67,12 @@ public final class AlluxioLoginModule implements LoginModule {
   /**
    * Commits the authentication (second phase).
    * <p>
-   * This method is called if the LoginContext's overall authentication succeeded. (login
-   * succeeded)
+   * This method is called if the LoginContext's overall authentication succeeded.
    * The implementation searches the Kerberos or OS user in the Subject. If existed,
    * convert it to an Alluxio user and add into the Subject.
    *
    * @return true in all cases
-   * @throws LoginException if the user extending a specific Principal is not found
+   * @throws LoginException If the user extending a specific Principal is not found.
    */
   @Override
   public boolean commit() throws LoginException {
