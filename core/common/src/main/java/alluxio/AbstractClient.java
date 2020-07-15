@@ -118,6 +118,8 @@ public abstract class AbstractClient implements Client {
   }
 
   /**
+   * Gets the remote service type for this client.
+   *
    * @return the type of remote service
    */
   protected abstract ServiceType getRemoteServiceType();
