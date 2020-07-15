@@ -86,6 +86,10 @@ public final class LockingScheme {
   }
 
   /**
+   * Gets the path for this locking scheme.
+   * <p>
+   * Returns the existing Alluxio {@link #mPath}.
+   *
    * @return the path for this locking scheme
    */
   public AlluxioURI getPath() {
