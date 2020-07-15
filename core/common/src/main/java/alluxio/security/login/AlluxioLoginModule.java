@@ -38,32 +38,12 @@ public final class AlluxioLoginModule implements LoginModule {
    */
   public AlluxioLoginModule() {}
 
-  /**
-   * Initializes the subject for this login module.
-   * <p>
-   * Sets {@link #mSubject} to the provided {@code subject}.
-   *
-   * @param subject         the new subject for this {@link AlluxioLoginModule}.
-   * @param callbackHandler the callback handler. This parameter is ignored and
-   *                        is only required for overriding purposes.
-   * @param sharedState     the shared state. This parameter is ignored and
-   *                        is only required for overriding purposes.
-   * @param options         the options. This parameter is ignored and
-   *                        is only required for overriding purposes.
-   */
   @Override
   public void initialize(Subject subject, CallbackHandler callbackHandler,
       Map<String, ?> sharedState, Map<String, ?> options) {
     mSubject = subject;
   }
 
-  /**
-   * Authenticates the user (first phase).
-   *
-   * The implementation does not really authenticate the user here. Always return true.
-   * @return true in all cases
-   * @throws LoginException when the login fails
-   */
   @Override
   public boolean login() throws LoginException {
     return true;
@@ -86,13 +66,13 @@ public final class AlluxioLoginModule implements LoginModule {
 
   /**
    * Commits the authentication (second phase).
-   *
-   * This method is called if the LoginContext's overall authentication succeeded. (login
-   * succeeded)
+   * <p>
+   * This method is called if the LoginContext's overall authentication succeeded.
    * The implementation searches the Kerberos or OS user in the Subject. If existed,
    * convert it to an Alluxio user and add into the Subject.
+   *
    * @return true in all cases
-   * @throws LoginException if the user extending a specific Principal is not found
+   * @throws LoginException If the user extending a specific Principal is not found.
    */
   @Override
   public boolean commit() throws LoginException {
@@ -138,12 +118,8 @@ public final class AlluxioLoginModule implements LoginModule {
    * Gets a principal user.
    * <p>
    * Attempts to load the class with the corresponding name. Throws an
-   * exception if the class cannot be determined.
-   * <p>
-   * Checks if there is at least one instance of {@code className} in
-   * the existing {@link #mSubject}. Returns null if there is none.
-   * Returns the corresponding principal user if there is one. Throws
-   * an exception if there are multiple matches.
+   * exception if the class cannot be determined, if multiple users are found,
+   * or if no user is found at all.
    *
    * @param   className the name of class extending {@link Principal}
    * @return  a user extending a specified Principal

@@ -53,14 +53,6 @@ public class RetryHandlingMetricsMasterClient extends AbstractMasterClient
     super(conf);
   }
 
-  /**
-   * Gets the type of remote service for the metrics master client.
-   * <p>
-   * Returns {@link ServiceType#METRICS_MASTER_CLIENT_SERVICE},
-   * which is the service type for this {@link alluxio.Client}.
-   *
-   * @return  the type of remote service
-   */
   @Override
   protected ServiceType getRemoteServiceType() {
     return ServiceType.METRICS_MASTER_CLIENT_SERVICE;

@@ -81,6 +81,8 @@ public class GrpcChannelKey {
   }
 
   /**
+   * Returns the destination address of the gRPC channel.
+   *
    * @return destination address of the channel
    */
   public GrpcServerAddress getServerAddress() {
@@ -88,6 +90,8 @@ public class GrpcChannelKey {
   }
 
   /**
+   * Sets the server address for this gRPC channel key.
+   *
    * @param address destination address of the channel
    * @return the modified {@link GrpcChannelKey}
    */
@@ -169,7 +173,16 @@ public class GrpcChannelKey {
   }
 
   /**
-   * @return short representation of this channel key
+   * Returns a short String representation of this gRPC channel key.
+   * <p>
+   * Returns a short representation of this channel key, following
+   * this template:
+   * {@code GrpcChannelKey{ClientType=mClientType, ClientHostname=mLocalHostName, ServerAddress=mServerAddress,
+   * ChannelId=mChannelId}}
+   * <p>
+   * Null values are omitted.
+   *
+   * @return short representation of this gRPC channel key
    */
   public String toStringShort() {
     return MoreObjects.toStringHelper(this)

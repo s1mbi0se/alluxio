@@ -20,6 +20,8 @@ import javax.security.auth.Subject;
  */
 public interface UserStateFactory {
   /**
+   * Returns a new user state
+   *
    * @param subject the subject
    * @param conf the configuration
    * @param isServer true if this is from a server process, false otherwise

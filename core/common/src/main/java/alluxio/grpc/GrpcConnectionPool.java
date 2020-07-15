@@ -170,11 +170,6 @@ public class GrpcConnectionPool {
   /**
    * Creates and returns a managed Netty channel by given pool key.
    * <p>
-   * Creates a {@link NettyChannelBuilder} with the {@link SocketAddress} from
-   * {@link GrpcChannelKey#getServerAddress()}. If the address is a
-   * {@link InetSocketAddress}, delays domain name system lookup in
-   * order to detect changes when instantiating the builder.
-   * <p>
    * Builds a new {@link ManagedChannel} and returns it.
    *
    * @param channelKey  the unique identifier for the {@link GrpcChannel}
@@ -289,6 +284,9 @@ public class GrpcConnectionPool {
    * Tries to gracefully shut down the managed channel.
    * Falls back to forceful shutdown if graceful shutdown
    * times out.
+   *
+   * @param managedChannel  the managed channel
+   * @param conf            the Alluxio configuration
    */
   private void shutdownManagedChannel(ManagedChannel managedChannel, AlluxioConfiguration conf) {
     // Close the gRPC managed-channel if not shut down already.
@@ -368,14 +366,6 @@ public class GrpcConnectionPool {
 
   /**
    * Attempts to release network event loop for a provided gRPC channel key.
-   * <p>
-   * Searches for the value {@link CountingReference<EventLoopGroup>} assigned to
-   * the key {@link GrpcChannelKey#getNetworkGroup()} in the ConcurrentMap
-   * {@link #mEventLoops}. Throws an exception if the value is null.
-   * <p>
-   * Checks whether the event loop group should be shutdown by comparing the return value
-   * of {@link CountingReference#dereference()} and comparing it to zero. Shuts down the server
-   * and sets its reference to null if true; otherwise keeps everything as is.
    *
    * @param channelKey             the gRPC channel key from which the network group
    *                               will be provided

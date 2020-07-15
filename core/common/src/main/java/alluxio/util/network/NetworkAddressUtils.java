@@ -437,7 +437,7 @@ public final class NetworkAddressUtils {
 
   /**
    * Gets a local hostname for the host this JVM is currently running on.
-   *
+   * <p>
    * Returns a String with the local hostname for the host this JVM is running on.
    * Replaces '.' with '_' for metrics usage.
    *

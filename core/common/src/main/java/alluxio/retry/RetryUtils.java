@@ -49,7 +49,7 @@ public final class RetryUtils {
   /**
    * Returns an exponential time-bounded retry policy configured with the provided parameters.
    * <p>
-   * Gives a ClientRetry based on the given parameters.
+   * Gives a {@code ClientRetry} based on the given parameters.
    *
    * @param   maxRetryDuration  the maximum total duration to retry for
    * @param   baseSleepMs       initial sleep time in milliseconds

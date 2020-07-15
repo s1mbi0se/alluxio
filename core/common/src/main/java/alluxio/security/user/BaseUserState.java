@@ -44,15 +44,6 @@ public abstract class BaseUserState implements UserState {
     mUser = getUserFromSubject();
   }
 
-  /**
-   *  Returns the subject representing the user.
-   *  <p>
-   *  Attempts to login with the user's credentials
-   *  and then returns the subject of the user.
-   *
-   * @return  {@link BaseUserState#mSubject}, an object of type
-   *          {@link Subject} representing the user to be logged in.
-   */
   @Override
   public Subject getSubject() {
     try {
@@ -67,15 +58,6 @@ public abstract class BaseUserState implements UserState {
     return mSubject;
   }
 
-  /**
-   * Attempts to get the user for this instance.
-   * <p>
-   * Attempts to login through {@link #tryLogin}
-   * and return the {@link User} for this instance.
-   *
-   * @return  the existing {@link #mUser}
-   * @throws  UnauthenticatedException if the login fails
-   */
   @Override
   public User getUser() throws UnauthenticatedException {
     tryLogin();

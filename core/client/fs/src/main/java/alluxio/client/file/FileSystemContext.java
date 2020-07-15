@@ -270,21 +270,6 @@ public class FileSystemContext implements Closeable {
    * Checks if this {@link FileSystemContext} is already closed
    * or has not yet been initialized, in which case nothing is done.
    * Otherwise, attempts to close this {@link Closeable}.
-   * <p>
-   * Closes the {@link #mFileSystemMasterClientPool} and
-   * the {@link #mBlockMasterClientPool}, setting both fields
-   * to null.
-   * <p>
-   * Iterates through each {@link BlockWorkerClientPool} in
-   * {@link #mBlockWorkerClientPoolMap} and closes each client
-   * pool. Clears {@code mBlockWorkerClientPoolMap} and sets it
-   * to null. Sets {@link #mLocalWorker} to null. Closing the
-   * worker group allows clean termination for open streams.
-   * <p>
-   * Removes subscription to the heartbeat service if {@link #mMetricsEnabled}.
-   *
-   * @throws IOException  if an I/O-bound operation fails
-   *                      unexpectedly
    */
   private synchronized void closeContext() throws IOException {
     if (!mClosed.get()) {
@@ -438,6 +423,7 @@ public class FileSystemContext implements Closeable {
    * Gets a specific path level configuration for
    * this {@link AlluxioURI}, returning a
    * {@link SpecificPathConfiguration}.
+   * <p>
    * If path level configuration has never been loaded
    * from meta master yet, it will be loaded.
    *

@@ -70,6 +70,8 @@ public class SingleMasterInquireClient implements MasterInquireClient {
     }
 
     /**
+     * Gets the INET socket address for this single master inquire client.
+     *
      * @return the address
      */
     public InetSocketAddress getAddress() {

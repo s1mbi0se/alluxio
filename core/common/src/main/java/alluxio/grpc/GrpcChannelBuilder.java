@@ -128,29 +128,6 @@ public final class GrpcChannelBuilder {
   /**
    * Creates and returns a new gRPC channel.
    * <p>
-   * Creates a new {@link GrpcConnection} using:
-   *          1) the {@link GrpcChannelBuilder#mChannelKey};
-   *          2) the {@link GrpcChannelBuilder#mConfiguration}.
-   * <p>
-   * Checks whether the {@link GrpcChannelBuilder#mAuthenticateChannel} is
-   * set to true, in which case the channel should be authenticated with the
-   * server. The authentication is made through an object of type
-   * {@link ChannelAuthenticator} instantiated using:
-   *          1) the object of type GrpcConnection that was created previously;
-   *          2) the {@link GrpcChannelBuilder#mParentSubject} indicating the javax
-   *          subject to use for authentication;
-   *          3) the {@link GrpcChannelBuilder#mAuthType} indicating the requested
-   *          authentication type.
-   *          4) the {@link GrpcChannelBuilder#mConfiguration} indicating the Alluxio
-   *          configuration.
-   * The new instance of ChannelAuthenticator invokes {@link ChannelAuthenticator#authenticate}
-   * in order to authenticate a new logical channel. An {@link AuthenticatedChannelClientDriver}
-   * is created using {@link ChannelAuthenticator#getAuthenticationDriver()} from the previously
-   * created channel authenticator.
-   * <p>
-   * If the channel should not be authenticated with the server, no channel authenticator is created
-   * and the authenticated channel client driver remains as null.
-   *
    * Returns a wrapper over the logical channel.
    *
    * @return  a new gRPC channel

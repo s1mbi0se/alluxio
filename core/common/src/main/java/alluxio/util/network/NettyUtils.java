@@ -135,14 +135,9 @@ public final class NettyUtils {
 
   /**
    * Returns whether or not Netty epoll is available to the system.
-   * <p>
-   * Checks whether {@link #sNettyEpollAvailable} exists. Returns
-   * it if true; otherwise assigns the return value of
-   * {@link #checkNettyEpollAvailable()} to it, and returns
-   * that.
    *
    * @return  a boolean representing whether {@link Epoll} is
-   * available to the system
+   *          available to the system
    */
   public static synchronized boolean isNettyEpollAvailable() {
     if (sNettyEpollAvailable == null) {
@@ -152,6 +147,19 @@ public final class NettyUtils {
     return sNettyEpollAvailable;
   }
 
+  /**
+   * Checks whether EPOLL is available for Netty.
+   * <p>
+   * Checks if {@link Epoll#isAvailable}.
+   * <p>
+   * EPOLL_MODE is not supported in Netty with version older than 4.0.26.
+   * <p>
+   * Switches to NIO if EPOLL is unavailable.
+   *
+   * @return  a boolean value representing
+   *          whether {@link Epoll} is
+   *          available
+   */
   private static boolean checkNettyEpollAvailable() {
     if (!Epoll.isAvailable()) {
       LOG.info("EPOLL is not available, will use NIO");
@@ -231,11 +239,15 @@ public final class NettyUtils {
   }
 
   /**
-   * Get the proper channel type. Always returns {@link ChannelType} NIO if EPOLL is not available.
+   * Gets the channel type.
+   * <p>
+   * Returns the proper channel type. Always returns {@link ChannelType#NIO}
+   * if {@link ChannelType#EPOLL} is not available. Otherwise, returns the channel
+   * type according to the provided {@link PropertyKey} and {@link AlluxioConfiguration}.
    *
-   * @param key the property key for looking up the configured channel type
-   * @param conf the Alluxio configuration
-   * @return the channel type to use
+   * @param   key   the property key for looking up the configured channel type
+   * @param   conf  the Alluxio configuration
+   * @return  the channel type to use
    */
   public static ChannelType getChannelType(PropertyKey key, AlluxioConfiguration conf) {
     if (!isNettyEpollAvailable()) {

@@ -78,9 +78,6 @@ public interface UserState {
      * Instantiates a new object of type {@link UserState}, which handles logging
      * in any client, maintains the state, and provides access to the {@link Subject}
      * and the {@link User} for the client.
-     * <p>
-     * Returns {@link #create(AlluxioConfiguration, Subject)}. Uses the provided {@code conf}
-     * and instantiates a new {@code Subject} for this.
      *
      * @param   conf  the configuration to use
      * @return  a new UserState instance
@@ -92,13 +89,9 @@ public interface UserState {
     /**
      * Creates and returns a new user state with the provided configurations.
      * <p>
-     * Instantiates a new object of type {@link UserState}, which handles logging
-     * in any client, maintains the state, and provides access to the {@link Subject}
+     * Instantiates and returns a new object of type {@link UserState}, which handles
+     * logging in any client, maintains the state, and provides access to the {@link Subject}
      * and the {@link User} for the client.
-     * <p>
-     * Returns {@link #create(AlluxioConfiguration, Subject, CommonUtils.ProcessType)}.
-     * Uses the provided {@code conf} and {@code subject} and gets
-     * {@link CommonUtils#PROCESS_TYPE} for this.
      *
      * @param   conf    the configuration to use
      * @param   subject the subject to use for the UserState

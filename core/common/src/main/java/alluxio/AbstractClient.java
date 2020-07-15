@@ -151,9 +151,19 @@ public abstract class AbstractClient implements Client {
   protected abstract long getServiceVersion();
 
   /**
-   * Checks that the service version is compatible with the client.
+   * Checks whether the service version is compatible with the client.
+   * <p>
+   * Checks whether the service version is compatible with this {@link Client}.
+   * Throws an exception if it is not. Does nothing otherwise.
+   * <p>
+   * Gets remote service version if {@link #mServiceVersion} is an
+   * {@link Constants#UNKNOWN_SERVICE_VERSION} and verifies if that
+   * corresponds to the provided {@code clientVersion}. Throws an
+   * exception if the versions diverge.
    *
-   * @param clientVersion the client version
+   * @param   clientVersion the client version
+   * @throws  IOException   If the {@link #mServiceVersion} is not the same as the
+   *                        provided {@code clientVersion}.
    */
   protected void checkVersion(long clientVersion) throws IOException {
     if (mServiceVersion == Constants.UNKNOWN_SERVICE_VERSION) {
@@ -180,11 +190,7 @@ public abstract class AbstractClient implements Client {
    * additional operations that may need to occur before the connection is made loading the cluster
    * defaults.
    * <p>
-   * Checks whether {@link AbstractClient#isConnected} returns true. If it does, loads configurations
-   * from {@link AbstractClient#mConfAddress} if they were not loaded yet by invoking
-   * {@link ClientContext#loadConfIfNotLoaded} from {@link AbstractClient#mContext}.
-   *
-   * @throws IOException  If an unforeseen I/O-bound operation fails.
+   * Loads configuration from {@link #mConfAddress} if not yet loaded.
    */
   protected void beforeConnect()
       throws IOException {
@@ -218,12 +224,12 @@ public abstract class AbstractClient implements Client {
    * Verifies whether or not a connection has already been
    * established, in which case it halts its execution. Otherwise,
    * checks whether or not this client is closed. If it happens
-   * to be closed, no further attempts at a connection will be made.
+   * to be closed, no further attempts to connect will be made.
    * <p>
    * Attempts to connect to this client multiple times while also
    * counting the number of attempts to a connection. If all attempts
    * fail continuously, the exception caused by the last attempt is
-   * thrown again and no more attempts at a connection are made.
+   * thrown again and no more attempts to establish a connection are made.
    *
    * @throws FailedPreconditionException  If the client is already closed, in which case
    *                                      the connection cannot be established.
@@ -320,8 +326,10 @@ public abstract class AbstractClient implements Client {
   }
 
   /**
-   * Closes the connection with the Alluxio remote and does the necessary cleanup. It should be used
-   * if the client has not connected with the remote for a while, for example.
+   * Closes the connection with the Alluxio remote and does the necessary cleanup.
+   * <p>
+   * This method should be used if the client has not connected with the remote for
+   * a while, for example.
    */
   public synchronized void disconnect() {
     if (mConnected) {
@@ -374,16 +382,6 @@ public abstract class AbstractClient implements Client {
     return mAddress;
   }
 
-  /**
-   * Gets the address from which to load the configuration for this client.
-   * <p>
-   * Checks whether {@link #mConfAddress} is null. If {@code mConfAddress}
-   * is null, the address should be found in {@link #mAddress}, and that is
-   * returned. Otherwise, {@code mConfAddress} is returned.
-   *
-   * @return the socket address to load configuration
-   * @throws UnavailableException if the address cannot be reached
-   */
   @Override
   public synchronized InetSocketAddress getConfAddress() throws UnavailableException {
     if (mConfAddress != null) {
@@ -423,7 +421,6 @@ public abstract class AbstractClient implements Client {
    * @param description the format string of the description, used for logging
    * @param args        the arguments for the description
    * @return            the return value of the RPC call
-   * @throws AlluxioStatusException If an unforeseen exception is thrown.
    */
   protected synchronized <V> V retryRPC(RpcCallable<V> rpc, Logger logger, String rpcName,
       String description, Object... args) throws AlluxioStatusException {
@@ -456,6 +453,34 @@ public abstract class AbstractClient implements Client {
     }
   }
 
+  /**
+   * Retries to establish an RPC.
+   * <p>
+   * Attempts to establish an RPC. Attempts to connect until:
+   *          1) a connection is successfully made; or
+   *          2) there are no more retries left from the {@link RetryPolicy}.
+   * Returns {@code rpc.call()} if a connection is successfully made.
+   * <p>
+   * Throws an {@link IOException} if the client is closed, a {@link RuntimeException}
+   * occurs, or the RPC connection fails.
+   * <p>
+   * Calls {@code onRetry.get()} and disconnects if the previous attempt to establish an RPC
+   * fails.
+   * <p>
+   * Throws an exception if the return of {@link RetryPolicy#getAttemptCount} is greater than
+   * the established maximum number of retries.
+   *
+   * @param   rpc     the RPC call to be executed
+   * @param   onRetry the action to take on a retry
+   * @param   <V>     the type of the task where the RPC happens
+   * @return  the RPC result; otherwise, an exception is thrown
+   * @throws  FailedPreconditionException If the client is closed.
+   * @throws  AlluxioStatusException      If a {@link StatusRuntimeException}
+   *                                      is thrown.
+   * @throws  UnavailableException        If the RPC connection fails multiple times
+   *                                      and disrespects the {@link RetryPolicy}
+   *                                      from the {@link #mRetryPolicySupplier}.
+   */
   private synchronized <V> V retryRPCInternal(RpcCallable<V> rpc, Supplier<Void> onRetry)
       throws AlluxioStatusException {
     RetryPolicy retryPolicy = mRetryPolicySupplier.get();

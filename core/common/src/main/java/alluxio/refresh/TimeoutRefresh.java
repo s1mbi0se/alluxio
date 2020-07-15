@@ -37,19 +37,6 @@ public class TimeoutRefresh implements RefreshPolicy {
     mRefreshPeriodMs = refreshPeriodMs;
   }
 
-  /**
-   * Checks if it is time to attempt a refresh after a specified timeout is reached.
-   * <p>
-   * Checks whether the answer to one of these two questions is "yes", in which case
-   * the return is true:
-   *          1) Is this the {@link #mFirstAttempt}?
-   *          2) Would refreshing right now respect the established
-   *          {@link #mRefreshPeriodMs}?
-   * If the answer to both of these questions is "no", the return is false.
-   *
-   * @return  a boolean value representing whether it is time to attempt a refresh
-   *          based on this {@link RefreshPolicy}.
-   */
   @Override
   public boolean attempt() {
     if (mFirstAttempt || (CommonUtils.getCurrentMs() - mLastAttempTimeMs) > mRefreshPeriodMs) {

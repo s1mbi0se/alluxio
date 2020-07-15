@@ -1645,7 +1645,7 @@ public final class DefaultFileSystemMaster extends CoreMaster
    *
    * @param rpcContext the rpc context
    * @param inodePath the file {@link LockedInodePath}
-   * @param deleteContext the method optitions
+   * @param deleteContext the method options
    */
   @VisibleForTesting
   public void deleteInternal(RpcContext rpcContext, LockedInodePath inodePath,
@@ -2846,6 +2846,22 @@ public final class DefaultFileSystemMaster extends CoreMaster
     }
   }
 
+  /**
+   * Unmounts an Alluxio path.
+   * <p>
+   * Attempts to create a new {@link RpcContext} to establish an RPC.
+   * <p>
+   * Creates a {@link LockedInodePath} by locking the parent of the provided
+   * {@code alluxioPath} in the {@link #mInodeTree#} with the {@link LockPattern#WRITE_EDGE}.
+   * <p>
+   * Executes {@link #unmountInternal(RpcContext, LockedInodePath)} with the created {@code inodePath}
+   * and {@code rpcContext}.
+   *
+   * @param alluxioPath the Alluxio path to unmount, must be a mount point
+   * @throws  AccessControlException    If the parent lacks the necessary permissions
+   *                                    to carry out this operation or if permission
+   *                                    checking fails.
+   */
   @Override
   public void unmount(AlluxioURI alluxioPath) throws FileDoesNotExistException,
       InvalidPathException, IOException, AccessControlException {
@@ -2870,14 +2886,30 @@ public final class DefaultFileSystemMaster extends CoreMaster
 
   /**
    * Unmounts a UFS path previously mounted onto an Alluxio path.
-   *
-   * This method does not delete blocks. Instead, it adds the to the passed-in block deletion
+   * <p>
+   * Checks whether the provided inode full path exists. Throws an exception if false.
+   * <p>
+   * Gets information about the provided mount point in the {@link #mMountTable}. Throws
+   * an exception if the {@code mountInfo} is {@code null}, which means the provided mount
+   * point does not exist.
+   * <p>
+   * Checks whether the Alluxio path can be deleted. An exception is thrown if the path is
+   * root, since it cannot be deleted.
+   * <p>
+   * Deletes the Alluxio path with {@link #deleteInternal(RpcContext, LockedInodePath, DeleteContext)} )}.
+   * The option {@link DeletePOptions.Builder#setRecursive(boolean)} is set to {@code true} and should
+   * be enough to avoid an exception from trying to delete a non-empty directory.
+   * <p>
+   * This method does not delete blocks. Instead, it adds the inode path to the passed-in block deletion
    * context so that the blocks can be deleted after the inode deletion journal entry has been
    * written. We cannot delete blocks earlier because the inode deletion may fail, leaving us with
    * inode containing deleted blocks.
    *
-   * @param rpcContext the rpc context
-   * @param inodePath the Alluxio path to unmount, must be a mount point
+   * @param rpcContext  the {@link RpcContext} provided by {@link #unmount(AlluxioURI)}
+   * @param inodePath   the Alluxio path to unmount, must be a mount point
+   * @throws RuntimeException           If the operation fails because the directory is not empty.
+   *                                    This exception should never be thrown when the unmount is
+   *                                    recursive.
    */
   private void unmountInternal(RpcContext rpcContext, LockedInodePath inodePath)
       throws InvalidPathException, FileDoesNotExistException, IOException {

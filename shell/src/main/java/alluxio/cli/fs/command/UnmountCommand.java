@@ -55,6 +55,21 @@ public final class UnmountCommand extends AbstractFileSystemCommand {
     System.out.println("Unmounted " + inputPath);
   }
 
+  /**
+   * Executes the {@code unmount} command.
+   * <p>
+   * Keeps all command line arguments stored in a collection.
+   * The first argument should always correspond to the {@link AlluxioURI}
+   * of the Alluxio path to be deleted.
+   * <p>
+   * Returns the exit code 0 if the operation is completed successfully.
+   * Throws an exception otherwise.
+   *
+   * @param   cl  the parsed command line for the arguments
+   * @return  the exit code 0 (zero) if the command runs successfully
+   * @throws  IOException       If the provided URI does not exist or if
+   *                            any other I/O-bound operation fails.
+   */
   @Override
   public int run(CommandLine cl) throws AlluxioException, IOException {
     String[] args = cl.getArgs();

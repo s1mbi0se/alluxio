@@ -248,13 +248,9 @@ public class AuthenticatedChannelClientDriver implements StreamObserver<SaslMess
   /**
    * Closes the Simple Authentication and Security Layer (SASL) client handler.
    * <p>
-   * Closes the {@link #mSaslClientHandler} and sets
-   * {@link #mChannelAuthenticated} to false, which
-   * indicates whether this channel is authenticated.
-   * <p>
-   * Attempts to notify {@link #mRequestObserver} that the
-   * stream was successfully completed if {@code signalServer}
-   * is set to true.
+   * Closes the {@link #mSaslClientHandler} and attempts to notify the
+   * {@link #mRequestObserver} that the stream was successfully completed (if
+   * {@code signalServer} is set to {@code true}.)
    *
    * @param signalServer  a boolean indicating whether
    *                      the server should be signaled
