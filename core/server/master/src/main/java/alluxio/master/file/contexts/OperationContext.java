@@ -48,6 +48,11 @@ public class OperationContext<T extends com.google.protobuf.GeneratedMessageV3.B
   }
 
   /**
+   * Returns the underlying proto message instance.
+   * <p>
+   * Returns the existing {@link #mOptionsBuilder}
+   * in this wrapper.
+   *
    * @return underlying proto message instance
    */
   public T getOptions() {
