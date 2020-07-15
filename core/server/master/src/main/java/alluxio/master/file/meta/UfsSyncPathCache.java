@@ -66,18 +66,22 @@ public final class UfsSyncPathCache {
   }
 
   /**
-   * The logic of shouldSyncPath need to consider the difference between file and directory,
-   * with the variable isGetFileInfo we just process getFileInfo specially.
-   *
+   * Checks whether a UFS path should be synced.
+   * <p>
+   * The logic of this method needs to consider the difference between file and directory,
+   * with the variable {@code isGetFileInfo} we just process {@code getFileInfo} specially.
+   * <p>
    * There are three cases needed to address:
-   * 1. the ancestor directories
-   * 2. the direct parent directory
-   * 3. the difference with file and directory
+   *          1. the ancestor directories;
+   *          2. the direct parent directory;
+   *          3. the difference between file and directory.
    *
-   * @param path the path to check
-   * @param intervalMs the sync interval, in ms
-   * @param isGetFileInfo the operate is from getFileInfo or not
-   * @return true if a sync should occur for the path and interval setting, false otherwise
+   * @param   path          the path to check
+   * @param   intervalMs    the sync interval in milliseconds
+   * @param   isGetFileInfo a boolean value representing whether the operate is from
+   *                        {@code getFileInfo}
+   * @return  a boolean representing whether a sync should occur for the path and
+   *          interval setting
    */
   public boolean shouldSyncPath(String path, long intervalMs, boolean isGetFileInfo) {
     if (intervalMs < 0) {
