@@ -215,7 +215,11 @@ public class ClientContext {
   }
 
   /**
-   * @return the UserState for this context
+   * Gets the user state for this context.
+   * <p>
+   * Returns the existing {@link #mUserState}.
+   *
+   * @return the {@link UserState} for this context
    */
   public UserState getUserState() {
     return mUserState;
