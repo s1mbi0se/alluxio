@@ -4376,7 +4376,12 @@ public final class DefaultFileSystemMaster extends CoreMaster
   }
 
   /**
-   * @return a context for executing an RPC
+   * Creates and returns a new RPC context for establishing an RPC.
+   * <p>
+   * Instantiates and returns a new {@link RpcContext} with the appropriate
+   * {@link BlockDeletionContext} and {@link JournalContext}.
+   *
+   * @return  a context for executing an RPC
    */
   @VisibleForTesting
   public RpcContext createRpcContext() throws UnavailableException {
