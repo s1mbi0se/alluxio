@@ -658,9 +658,9 @@ public final class ConfigurationUtils {
   /**
    * Returns the input string as a list, splitting on a specified delimiter.
    *
-   * @param value the value to split
-   * @param delimiter the delimiter to split the values
-   * @return the list of values for input string
+   * @param   value     the value to split
+   * @param   delimiter the delimiter to split the values
+   * @return  the list of values for input string
    */
   public static List<String> parseAsList(String value, String delimiter) {
     return Lists.newArrayList(Splitter.on(delimiter).trimResults().omitEmptyStrings()
