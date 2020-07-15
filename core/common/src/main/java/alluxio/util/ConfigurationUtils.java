@@ -585,12 +585,13 @@ public final class ConfigurationUtils {
    * Gets the cluster-level configuration from the provided response.
    * <p>
    * Loads the cluster level configuration from the get configuration response,
-   * filters out the configuration for certain scope, and merges it with the existing configuration.
+   * filters out the configuration for certain scope, and merges it with the existing
+   * configuration.
    *
-   * @param response the get configuration RPC response
-   * @param conf the existing configuration
-   * @param scope the target scope
-   * @return the updated configuration
+   * @param   response  the get configuration RPC response
+   * @param   conf      the existing configuration
+   * @param   scope     the target scope
+   * @return  the updated configuration
    */
   public static AlluxioConfiguration getClusterConf(GetConfigurationPResponse response,
       AlluxioConfiguration conf, Scope scope) {
@@ -666,9 +667,9 @@ public final class ConfigurationUtils {
   /**
    * Returns the input string as a list, splitting on a specified delimiter.
    *
-   * @param value the value to split
-   * @param delimiter the delimiter to split the values
-   * @return the list of values for input string
+   * @param   value     the value to split
+   * @param   delimiter the delimiter to split the values
+   * @return  the list of values for input string
    */
   public static List<String> parseAsList(String value, String delimiter) {
     return Lists.newArrayList(Splitter.on(delimiter).trimResults().omitEmptyStrings()

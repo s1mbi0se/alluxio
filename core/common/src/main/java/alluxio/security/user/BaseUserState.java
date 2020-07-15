@@ -118,6 +118,11 @@ public abstract class BaseUserState implements UserState {
   }
 
   /**
+   * Gets user from the existing subject.
+   * <p>
+   * Returns the {@link User} for the existing {@link #mSubject}
+   * if one is found. Returns {@code null} otherwise.
+   *
    * @return the {@link User} found in the subject, or null if the subject does not contain one
    */
   private User getUserFromSubject() {
