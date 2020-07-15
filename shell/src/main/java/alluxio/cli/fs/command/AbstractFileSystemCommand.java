@@ -67,7 +67,8 @@ public abstract class AbstractFileSystemCommand implements Command {
    * Our input path may contain wildcard
    * but we only want to print the header for once.
    *
-   * @param cl object containing the original {@link CommandLine}
+   * @param cl object containing the original {@link CommandLine}.
+   *           This contains the command to be run by Alluxio.
    */
   protected void processHeader(CommandLine cl) throws IOException {
   }
