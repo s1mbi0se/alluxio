@@ -38,6 +38,10 @@ public class ReadOption {
   }
 
   /**
+   * Returns the singleton instance of the default read option, with no cache skip.
+   * <p>
+   * Returns the default {@link ReadOption} with {@link #mSkipCache} set to {@code false}.
+   *
    * @return the singleton instance of the default option
    */
   public static ReadOption defaults() {
