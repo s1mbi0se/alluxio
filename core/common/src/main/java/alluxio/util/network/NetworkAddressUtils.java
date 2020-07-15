@@ -410,6 +410,9 @@ public final class NetworkAddressUtils {
   /**
    * Gets a local host name for the host this JVM is running on.
    * <p>
+   * Checks whether {@link NetworkAddressUtils#sLocalHost} has already been
+   * set to something other than null, in which case it is returned.
+   * <p>
    * Attempts to find the canonical name of the localhost. If successful, returns
    * the name of the localhost. Otherwise, an exception is thrown.
    *

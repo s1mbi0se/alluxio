@@ -29,6 +29,11 @@ public final class ThreadFactoryUtils {
   /**
    * Creates a thread factory that spawns off threads.
    * <p>
+   * Creates a new {@link ThreadFactoryBuilder}. Invokes {@link ThreadFactoryBuilder#setDaemon}
+   * in order to determine whether this new thread factory should create daemon threads. Invokes
+   * {@link ThreadFactoryBuilder#setNameFormat} to determine the naming format the thread factory
+   * should use when naming threads.
+   * <p>
    * Returns a new object of type {@link ThreadFactory} using {@link ThreadFactoryBuilder#build()}.
    *
    * @param nameFormat  the name pattern for each thread. should contain '%d' to distinguish between

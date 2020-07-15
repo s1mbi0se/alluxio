@@ -92,6 +92,16 @@ public class AuthenticatedChannelClientDriver implements StreamObserver<SaslMess
     mRequestObserver = requestObserver;
   }
 
+  /**
+   * Attempts to establish a connection to a channel.
+   * <p>
+   * Establishes a connection to the {@link alluxio.grpc.GrpcChannel}
+   * with the corresponding {@link GrpcChannelKey} using a handshake handler
+   * for the client, that is, {@link SaslClientHandler#handleMessage(SaslMessage)}.
+   *
+   * @param saslMessage Simple Authentication and Security Layer message
+   * @throws Exception  Any exception.
+   */
   @Override
   public void onNext(SaslMessage saslMessage) {
     try {
@@ -175,6 +185,14 @@ public class AuthenticatedChannelClientDriver implements StreamObserver<SaslMess
   /**
    * Builds and returns a SASL message.
    * <p>
+   * Uses {@link SaslMessage.Builder#build()} to instantiate a new
+   * object of type SaslMessage. The client ID is set to a string of
+   * the ID found in {@link AuthenticatedChannelClientDriver#mChannelKey}
+   * through {@link GrpcChannelKey#getChannelId()}.
+   * <p>
+   * The channel ref is set to a short representation of the channel key through
+   * {@link GrpcChannelKey#toStringShort()}.
+   * <p>
    * Returns an object of type SaslMessage.
    *
    * @return a message for Simple Authentication and Security Layer
@@ -190,6 +208,10 @@ public class AuthenticatedChannelClientDriver implements StreamObserver<SaslMess
 
   /**
    * Sets a time limit for the duration of the channel authentication and waits until completion or timeout.
+   * <p>
+   * Uses {@link AuthenticatedChannelClientDriver#mChannelAuthenticatedFuture} to implement a time limit to
+   * how long the authentication for this channel is allowed to take. For this purpose, sets
+   * {@link AuthenticatedChannelClientDriver#mChannelAuthenticated} to true.
    *
    * @param timeoutMs the max duration of the wait time for the channel
    *                  authentication in milliseconds. Throws an exception

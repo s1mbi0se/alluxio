@@ -393,6 +393,13 @@ public final class ConfigurationUtils {
   /**
    * Returns the Alluxio configuration based on the provided defaults/values from "conf/alluxio-site.properties".
    * <p>
+   * Checks whether {@link ConfigurationUtils#sDefaultProperties} is already set, in which case only a copy of
+   * it is returned through {@link AlluxioProperties#copy}.
+   * <p>
+   * If the default properties are not yet set, another verification is made, this time within a synchronized block,
+   * to make sure that the properties are only reloaded when necessary and avoid multiple threads to reload these
+   * properties at the same time.
+   * <p>
    * Returns an instance of {@link AlluxioConfiguration} with the defaults and values from
    * alluxio-site properties.
    *
@@ -532,6 +539,16 @@ public final class ConfigurationUtils {
    * @param properties  the property list returned by gRPC
    * @param scope       the scope to filter the received property list, which should only be
    *                    {@link Scope#WORKER} or {@link Scope#CLIENT}
+   * Iterates through each {@link ConfigProperty} from within the provided list. Validates whether
+   * the config property has a valid name and value. If a config property is valid and within the
+   * provided {@link Scope}, it is referenced by a HashTable of type {@link Properties}, where:
+   *        - the key is the {@link PropertyKey};
+   *        - the value is the return value of {@link ConfigProperty#getValue}.
+   * <p>
+   * The given scope should only be {@link Scope#WORKER} or {@link Scope#CLIENT}.
+   *
+   * @param properties  the property list returned by gRPC
+   * @param scope       the scope to filter the received property list
    * @param logMessage  a function with key and value as parameter and returns debug log message
    * @return            the loaded properties from the list of configuration properties
    */
