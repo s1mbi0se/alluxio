@@ -189,18 +189,16 @@ public abstract class Inode implements InodeView {
   }
 
   /**
-   * Casts the inode as an {@link InodeDirectory} if it is one, otherwise throws an
-   * exception.
+   * Attempts tp cast the inode as an inode directory.
+   * <p>
+   * Casts the {@link Inode} as an {@link InodeDirectory}
+   * if it is one; otherwise throws an exception.
+   * <p>
+   * This gives convenience in method chaining, such as
+   * {@code inode.asDirectory().getChildren()} instead of
+   * {@code ((InodeDirectory) inode).getChildren()}.
    *
-   * This gives convenience in method chaining, e.g.
-   *
-   * inode.asDirectory().getChildren()
-   *
-   * instead of
-   *
-   * ((InodeDirectory) inode).getChildren()
-   *
-   * @return the inode as an inode directory
+   * @return  the inode as an inode directory
    */
   public InodeDirectory asDirectory() {
     if (!isDirectory()) {
