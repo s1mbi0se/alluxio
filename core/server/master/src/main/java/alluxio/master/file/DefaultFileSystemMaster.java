@@ -4375,6 +4375,20 @@ public final class DefaultFileSystemMaster extends CoreMaster
     return new RpcContext(createBlockDeletionContext(), createJournalContext());
   }
 
+  /**
+   * Creates and returns a new locking scheme.
+   * <p>
+   * Instantiates and returns a new object of type {@link LockingScheme}
+   * with the provided {@code path}, {@code options} and {@code desiredLockMode}.
+   *
+   * @param   path            the {@link AlluxioURI} for the locking scheme
+   * @param   options         the {@link FileSystemMasterCommonPOptions}
+   * @param   desiredLockMode the {@link LockPattern} to be followed,
+   *                          which can be {@link LockPattern#READ},
+   *                          {@link LockPattern#WRITE_INODE}, or
+   *                          {@link LockPattern#WRITE_EDGE}.
+   * @return  a new locking scheme with the provided information
+   */
   private LockingScheme createLockingScheme(AlluxioURI path, FileSystemMasterCommonPOptions options,
       LockPattern desiredLockMode) {
     return new LockingScheme(path, desiredLockMode, options, mUfsSyncPathCache, false);
