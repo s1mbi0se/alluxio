@@ -62,10 +62,12 @@ public abstract class AbstractFileSystemCommand implements Command {
   }
 
   /**
-   * Processes the header of the command. Our input path may contain wildcard
+   * Processes the header of the command.
+   * <p>
+   * Our input path may contain wildcard
    * but we only want to print the header for once.
    *
-   * @param cl object containing the original commandLine
+   * @param cl object containing the original {@link CommandLine}
    */
   protected void processHeader(CommandLine cl) throws IOException {
   }
