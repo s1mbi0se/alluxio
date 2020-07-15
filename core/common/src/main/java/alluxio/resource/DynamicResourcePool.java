@@ -498,7 +498,9 @@ public abstract class DynamicResourcePool<T> implements Pool<T> {
   protected abstract boolean isHealthy(T resource);
 
   /**
-   * Closes the resource. After this, the resource should not be used. It is not guaranteed that
+   * Closes the resource.
+   * <p>
+   * After this, the resource should not be used. It is not guaranteed that
    * the resource is closed after the function returns.
    *
    * @param resource the resource to close
