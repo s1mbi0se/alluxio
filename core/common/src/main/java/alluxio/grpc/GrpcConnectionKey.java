@@ -38,6 +38,10 @@ public class GrpcConnectionKey {
   }
 
   /**
+   * Gets the owner channel key.
+   * <p>
+   * Returns the existing {@link #mChannelKey}.
+   *
    * @return the owner channel key
    */
   public GrpcChannelKey getChannelKey() {
