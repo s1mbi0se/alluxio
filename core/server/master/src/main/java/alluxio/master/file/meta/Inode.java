@@ -222,11 +222,14 @@ public abstract class Inode implements InodeView {
   }
 
   /**
-   * Wraps an InodeView, providing read-only access. Modifications to the underlying inode will
-   * affect the created read-only inode.
+   * Wraps an inode view, providing read-only access.
+   * <p>
+   * Wraps an {@link InodeView} and provides read-only access.
+   * Modifications to the underlying {@link Inode} will affect
+   * the created read-only inode.
    *
-   * @param delegate the delegate to wrap
-   * @return the created read-only inode
+   * @param   delegate  the {@link InodeView} to wrap
+   * @return  the created read-only inode
    */
   public static Inode wrap(InodeView delegate) {
     if (delegate instanceof Inode) {
