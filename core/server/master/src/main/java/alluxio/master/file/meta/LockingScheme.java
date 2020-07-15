@@ -75,7 +75,13 @@ public final class LockingScheme {
   }
 
   /**
-   * @return the mode that should be used to lock the path, considering if ufs sync should occur
+   * Gets the lock pattern for this locking scheme.
+   * <p>
+   * Returns {@link LockPattern#WRITE_EDGE} if UFS sync needs to occur.
+   * Returns the existing {@link #mDesiredLockPattern} otherwise.
+   *
+   * @return  the mode that should be used to lock the path,
+   *          considering whether UFS sync should occur
    */
   public LockPattern getPattern() {
     if (mShouldSync) {
