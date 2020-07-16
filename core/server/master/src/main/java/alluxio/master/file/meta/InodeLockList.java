@@ -44,11 +44,14 @@ import javax.annotation.concurrent.NotThreadSafe;
 @NotThreadSafe
 public interface InodeLockList extends AutoCloseable {
   /**
-   * Locks the root edge in the specified mode.
+   * Locks the root edge using the specified lock mode.
+   * <p>
+   * Implementations should consider the lock list
+   * must be empty to call this method.
    *
-   * The lock list must be empty to call this method.
-   *
-   * @param mode the mode to lock in
+   * @param mode  the {@link LockMode} to use in order to
+   *              lock the root edge. Available options are
+   *              {@link LockMode#READ} and {@link LockMode#WRITE}
    */
   void lockRootEdge(LockMode mode);
 
