@@ -114,7 +114,7 @@ public interface InodeView extends JournalEntryRepresentable, Comparable<InodeVi
    * Checks whether the inode is a file.
    *
    * @return  a boolean representing whether the {@link Inode}
-   * implementing this {@link InodeView} is a file.
+   *          implementing this {@link InodeView} is a file
    */
   boolean isFile();
 
