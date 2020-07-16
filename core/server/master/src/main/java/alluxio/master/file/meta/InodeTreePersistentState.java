@@ -120,6 +120,8 @@ public class InodeTreePersistentState implements Journaled {
   }
 
   /**
+   * Gets the root of the inode tree.
+   *
    * @return the root of the inode tree
    */
   public InodeDirectory getRoot() {
