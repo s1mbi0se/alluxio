@@ -248,6 +248,17 @@ public class LockPool<K> implements Closeable {
     return mPool.getOrDefault(key, new Resource(new ReentrantReadWriteLock())).mLock;
   }
 
+  /**
+   * Gets the resource corresponding to the given key.
+   * <p>
+   * Returns the {@link Resource} linked to the given {@code key}
+   * in {@link #mPool}. Creates and returns a new {@code Resource}
+   * with the {@link #mDefaultLoader} if none is found.
+   *
+   * @param   key the key with which to find the corresonding
+   *              {@code Resource}
+   * @return  the {@code Resource} for the given {@code key}
+   */
   private Resource getResource(K key) {
     Preconditions.checkNotNull(key, "key can not be null");
     Resource resource = mPool.compute(key, (k, v) -> {
