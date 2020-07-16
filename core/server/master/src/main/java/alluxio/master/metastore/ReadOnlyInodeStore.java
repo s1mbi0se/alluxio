@@ -33,7 +33,8 @@ public interface ReadOnlyInodeStore extends Closeable {
    *
    * @param   id      the inode identifier
    * @param   option  the {@link ReadOption} for the inode
-   * @return  the inode with the given id, if it exists
+   * @return  the inode with the given id if it exists,
+   *          empty otherwise
    */
   Optional<Inode> get(long id, ReadOption option);
 

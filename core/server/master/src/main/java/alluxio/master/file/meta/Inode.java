@@ -222,7 +222,8 @@ public abstract class Inode implements InodeView {
   /**
    * Wraps an inode view, providing read-only access.
    * <p>
-   * Wraps an {@link InodeView} and provides read-only access.
+   * Wraps an {@link InodeView} to an {@link InodeFile} or
+   * and {@link InodeDirectory}, providing read-only access.
    * Modifications to the underlying {@link Inode} will affect
    * the created read-only inode.
    *
