@@ -141,14 +141,17 @@ public class InodeLockManager implements Closeable {
   }
 
   /**
-   * Acquires an inode lock.
+   * Acquires an inode lock, returning the corresponding lock resource.
+   * <p>
+   * This method returns a {@link LockResource} for the provided {@code inode} using
+   * the desired {@link LockMode} in order to lock it.
    *
    * @param inode the inode to lock
    * @param mode the mode to lock in
-   * @param useTryLock whether to acquire with {@link Lock#tryLock()} or {@link Lock#lock()}. This
-   *                   method differs from {@link #tryLockInode(Long, LockMode)} because it will
+   * @param useTryLock whether to acquire the lock with {@link Lock#tryLock()} or {@link Lock#lock()}.
+   *                   This method differs from {@link #tryLockInode(Long, LockMode)} because it will
    *                   block until the inode has been successfully locked.
-   * @return a lock resource which must be closed to release the lock
+   * @return an {@link RWLockResource} which must be closed to release the lock
    * @see #tryLockInode(Long, LockMode)
    */
   public RWLockResource lockInode(InodeView inode, LockMode mode, boolean useTryLock) {
