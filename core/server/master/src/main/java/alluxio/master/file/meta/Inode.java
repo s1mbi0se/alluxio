@@ -192,7 +192,7 @@ public abstract class Inode implements InodeView {
    * Attempts to cast the inode as an inode directory.
    * <p>
    * Casts the {@link Inode} as an {@link InodeDirectory}
-   * if it is one; otherwise throws an exception.
+   * if it is one, otherwise throws an exception.
    * <p>
    * This gives convenience in method chaining, such as
    * {@code inode.asDirectory().getChildren()} instead of
@@ -222,7 +222,8 @@ public abstract class Inode implements InodeView {
   /**
    * Wraps an inode view, providing read-only access.
    * <p>
-   * Wraps an {@link InodeView} and provides read-only access.
+   * Wraps an {@link InodeView} to an {@link InodeFile} or
+   * and {@link InodeDirectory}, providing read-only access.
    * Modifications to the underlying {@link Inode} will affect
    * the created read-only inode.
    *

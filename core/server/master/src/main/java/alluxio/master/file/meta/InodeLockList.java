@@ -172,10 +172,12 @@ public interface InodeLockList extends AutoCloseable {
   boolean endsInInode();
 
   /**
-   * Checks whether the lock list is empty.
+   * Checks whether the lock list is empty. Returns {@code true} if it is, {@code false} otherwise.
    *
    * @return  a boolean value representing whether this
-   *          {@link InodeLockList} is empty
+   *          {@link InodeLockList} is empty. Returns
+   *          {@code true} if it is empty, {@code false}
+   *          otherwise.
    */
   boolean isEmpty();
 

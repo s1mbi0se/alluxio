@@ -30,10 +30,14 @@ import java.util.Set;
 public interface ReadOnlyInodeStore extends Closeable {
   /**
    * Gets the inode if it exists.
+   * <p>
+   * Implementations should get and return the {@link Inode}
+   * with the provided {@code id} and {@link ReadOption}.
    *
    * @param   id      the inode identifier
    * @param   option  the {@link ReadOption} for the inode
-   * @return  the inode with the given id, if it exists
+   * @return  the inode with the given id if it exists,
+   *          empty otherwise
    */
   Optional<Inode> get(long id, ReadOption option);
 

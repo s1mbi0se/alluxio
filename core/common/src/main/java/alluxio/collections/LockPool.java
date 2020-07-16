@@ -255,8 +255,7 @@ public class LockPool<K> implements Closeable {
    * in {@link #mPool}. Creates and returns a new {@code Resource}
    * with the {@link #mDefaultLoader} if none is found.
    *
-   * @param   key the key with which to find the corresonding
-   *              {@code Resource}
+   * @param   key the key to find the corresponding {@code Resource}
    * @return  the {@code Resource} for the given {@code key}
    */
   private Resource getResource(K key) {
