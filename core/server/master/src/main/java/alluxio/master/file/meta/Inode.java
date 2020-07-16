@@ -189,7 +189,7 @@ public abstract class Inode implements InodeView {
   }
 
   /**
-   * Attempts tp cast the inode as an inode directory.
+   * Attempts to cast the inode as an inode directory.
    * <p>
    * Casts the {@link Inode} as an {@link InodeDirectory}
    * if it is one; otherwise throws an exception.
