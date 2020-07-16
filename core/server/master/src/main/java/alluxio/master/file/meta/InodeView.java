@@ -42,7 +42,12 @@ public interface InodeView extends JournalEntryRepresentable, Comparable<InodeVi
   String getGroup();
 
   /**
-   * @return the id of the inode
+   * Gets and returns the ID of the inode.
+   * <p>
+   * Implementations should return a long value corresponding
+   * to the ID of the {@link Inode}.
+   *
+   * @return  the id corresponding to the {@link Inode}
    */
   long getId();
 
