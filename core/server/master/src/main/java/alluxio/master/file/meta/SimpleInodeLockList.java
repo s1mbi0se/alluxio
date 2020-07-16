@@ -221,6 +221,21 @@ public class SimpleInodeLockList implements InodeLockList {
     mLocks.add(lock);
   }
 
+  /**
+   * Adds a new lock to the list of locks.
+   * <p>
+   * Adds the provided {@code inode} to the list of {@link #mInodes},
+   * setting {@link #mLastEdge} to {@code null}, since there is no {@link Edge}.
+   * <p>
+   * Adds the provided {@code lock} to the list of {@link #mLocks} with the
+   * corresponding lock {@code mode}.
+   *
+   * @param inode the inode to add to the list of {@link #mInodes}
+   * @param mode  the {@link LockMode} to lock the resource with
+   * @param lock  the {@link RWLockResource}. This object is used
+   *              to add a new lock along with the provided lock
+   *              {@code mode}
+   */
   private void addInodeLock(Inode inode, LockMode mode, RWLockResource lock) {
     mInodes.add(inode);
     mLastEdge = null;
