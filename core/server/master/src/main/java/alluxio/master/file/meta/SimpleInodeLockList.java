@@ -200,8 +200,13 @@ public class SimpleInodeLockList implements InodeLockList {
    * Adds the provided {@link RWLockResource} to
    * the list of {@link #mLocks}.
    *
-   * @param lock
-   * @param mode
+   * @param lock  the {@link RWLockResource} to be added
+   *              to the list of locks
+   * @param mode  the {@link LockMode} for the {@code lock}
+   *              that will be added. This information is
+   *              used to check whether the lock mode for
+   *              this {@code lock} is {@link LockMode#WRITE}
+   *              in order to update the {@link #mFirstWriteLockIndex}.
    */
   private void addLock(RWLockResource lock, LockMode mode) {
     if (!endsInWriteLock() && mode == LockMode.WRITE) {

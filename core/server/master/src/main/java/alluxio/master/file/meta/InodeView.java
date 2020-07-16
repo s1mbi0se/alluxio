@@ -103,7 +103,7 @@ public interface InodeView extends JournalEntryRepresentable, Comparable<InodeVi
   boolean isDeleted();
 
   /**
-   * Checks whether the inode is a directory or not.
+   * Checks whether the inode is a directory returning a boolean value indicating if it's or not.
    *
    * @return  a boolean value representing whether the inode
    *          is a directory. Returns {@code true} if it is
@@ -112,7 +112,7 @@ public interface InodeView extends JournalEntryRepresentable, Comparable<InodeVi
   boolean isDirectory();
 
   /**
-   * Checks whether the inode is a file.
+   * Checks whether the inode is a file returning a boolean value indicating if it is one or not.
    *
    * @return  a boolean representing whether the {@link Inode}
    *          implementing this {@link InodeView} is a file.

@@ -75,7 +75,7 @@ public final class LockingScheme {
   }
 
   /**
-   * Gets the lock pattern for this locking scheme.
+   * Gets the lock pattern for this locking scheme and returns it.
    * <p>
    * Returns {@link LockPattern#WRITE_EDGE} if UFS sync needs to occur.
    * Returns the existing {@link #mDesiredLockPattern} otherwise.
@@ -92,7 +92,7 @@ public final class LockingScheme {
   }
 
   /**
-   * Gets the path for this locking scheme.
+   * Gets the path for this locking scheme and returns it.
    * <p>
    * Returns the existing Alluxio {@link #mPath}.
    *
