@@ -296,7 +296,15 @@ public class SimpleInodeLockList implements InodeLockList {
   }
 
   /**
-   * @return whether this lock list ends in a write lock
+   * Checks whether this lock list ends in a write lock, returning boolean value.
+   * <p>
+   * Checks whether {@link #mFirstWriteLockIndex} has a value different from -1. Because
+   * this variable indicates the index to the first write lock in this {@link InodeLockList},
+   * -1 would indicate there is no write lock in the last position.
+   *
+   * @return  a boolean representing whether this {@link InodeLockList}
+   *          ends in a write lock. Returns {@code true} if it does, and
+   *          {@code false} otherwise.
    */
   private boolean endsInWriteLock() {
     return mFirstWriteLockIndex != NO_WRITE_LOCK_INDEX;
