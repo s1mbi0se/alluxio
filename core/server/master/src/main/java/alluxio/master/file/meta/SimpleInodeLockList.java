@@ -194,6 +194,15 @@ public class SimpleInodeLockList implements InodeLockList {
     return endsInWriteLock() ? LockMode.WRITE : mode;
   }
 
+  /**
+   * Adds a new lock to the list of locks.
+   * <p>
+   * Adds the provided {@link RWLockResource} to
+   * the list of {@link #mLocks}.
+   *
+   * @param lock
+   * @param mode
+   */
   private void addLock(RWLockResource lock, LockMode mode) {
     if (!endsInWriteLock() && mode == LockMode.WRITE) {
       mFirstWriteLockIndex = mLocks.size();
