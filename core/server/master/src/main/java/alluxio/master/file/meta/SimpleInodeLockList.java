@@ -250,6 +250,13 @@ public class SimpleInodeLockList implements InodeLockList {
     addLock(lock, mode);
   }
 
+  /**
+   * Adds a new edge lock for the inode tree after locking it.
+   *
+   * @param edge  the provided last edge for the {@link InodeTree}
+   * @param mode  the desired {@link LockMode} for this lock,
+   *              which can be {@link LockMode#WRITE} or {@link LockMode#READ}
+   */
   private void lockAndAddEdge(Edge edge, LockMode mode) {
     addEdgeLock(edge, mode, mInodeLockManager.lockEdge(edge, mode, mUseTryLock));
   }
