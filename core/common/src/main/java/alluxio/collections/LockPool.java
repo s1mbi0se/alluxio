@@ -186,13 +186,15 @@ public class LockPool<K> implements Closeable {
   /**
    * Locks the specified key in the specified mode, returning the corresponding lock resource.
    * <p>
-   * Locks the {@code key} using the desired {@link LockMode}. Because {@code useTryLock} here
-   * defaults to {@code false}, this method does not use {@link Lock#tryLock()} to acquire the
+   * Locks the {@code key} using the desired read/write {@link LockMode}). Because {@code useTryLock} here
+   * defaults to {@code false}, this method does not use Java's default {@link Lock#tryLock()} to acquire the
    * lock, thus using {@link Lock#lock()} instead.
    *
-   * @param   key   the key to lock
-   * @param   mode  the mode to lock in
-   * @return  a lock resource which must be closed to unlock the key
+   * @param   key   the key to lock. The key corresponds to any object of type {@code K} and is
+   *                always linked to a {@link Resource} in the resource {@link #mPool}.
+   * @param   mode  the {@link LockMode} to use for locking the {@code key}. The available
+   *                {@code mode}s are {@link LockMode#READ} and {@link LockMode#WRITE}.
+   * @return  a {@link LockResource} which must be closed to unlock the key
    */
   public LockResource get(K key, LockMode mode) {
     return get(key, mode, false);
