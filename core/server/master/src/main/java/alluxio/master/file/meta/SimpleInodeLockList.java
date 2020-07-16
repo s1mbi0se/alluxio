@@ -69,10 +69,21 @@ public class SimpleInodeLockList implements InodeLockList {
   private final boolean mUseTryLock;
 
   /**
-   * Creates a new empty lock list.
+   * Creates a new empty lock list for future usage.
+   * <p>
+   * Clears the existing list of {@link #mInodes} and {@link #mLocks}.
+   * Sets the {@link #mInodeLockManager} to the provided {@code inodeLockManager},
+   * and clears register of the {@link #mFirstWriteLockIndex}.
+   * <p>
+   * Sets {@link #mUseTryLock} to the provided {@code useTryLock}, a boolean value
+   * representing whether to use {@link Lock#tryLock()} (if {@code true}) or
+   * {@link Lock#lock()} (if {@code false}).
    *
-   * @param inodeLockManager manager for inode locks
-   * @param useTryLock whether or not use {@link Lock#tryLock()} or {@link Lock#lock()}
+   * @param inodeLockManager  the manager for inode locks
+   * @param useTryLock        a boolean value representing whether to use
+   *                          {@link Lock#tryLock()} or {@link Lock#lock()}.
+   *                          {@code true} leads to the first option, while
+   *                          {@code false} leads to the latter.
    */
   public SimpleInodeLockList(InodeLockManager inodeLockManager, boolean useTryLock) {
     mInodeLockManager = inodeLockManager;
