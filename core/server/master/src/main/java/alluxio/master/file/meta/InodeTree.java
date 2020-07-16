@@ -635,7 +635,10 @@ public class InodeTree implements DelegatingJournaled {
   }
 
   /**
-   * @return the root inode
+   * Returns the root inode.
+   *
+   * @return  the {@link InodeDirectory} for
+   *          the root inode
    */
   public InodeDirectory getRoot() {
     return mState.getRoot();
