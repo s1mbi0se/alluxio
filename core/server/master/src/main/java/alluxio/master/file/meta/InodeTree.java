@@ -635,7 +635,7 @@ public class InodeTree implements DelegatingJournaled {
   }
 
   /**
-   * Returns the root inode of the inode tree.
+   * Returns the root of the inode tree.
    * <p>
    * Gets the root from {@link #mState}.
    *
