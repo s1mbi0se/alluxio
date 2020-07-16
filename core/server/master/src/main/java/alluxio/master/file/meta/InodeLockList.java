@@ -170,7 +170,14 @@ public interface InodeLockList extends AutoCloseable {
   int numInodes();
 
   /**
-   * @return whether this lock list ends in an inode (as opposed to an edge)
+   * Checks whether this lock list ends in an inode, returning a boolean value representing this information.
+   * <p>
+   * An {@link InodeLockList} can either end in an {@link Inode} or an {@link Edge}. This method checks whether
+   * this particular list ends in an {@code Inode}, returning {@code true} if it does, and {@code false} if it
+   * does not. If the return is {@code false}, one can intuitively conclude that this list returns in an {@link Edge}.
+   *
+   * @return  a boolean value representing whether this lock list ends in an inode (as opposed to an edge).
+   *          Returns {@code true} if it does, {@code false} otherwise.
    */
   boolean endsInInode();
 
