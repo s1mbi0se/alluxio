@@ -136,8 +136,8 @@ public class FileSystemOptions {
    * <p>
    * Returns the new {@code FileSystemMasterCommonPOptions} built.
    *
-   * @param   conf  Alluxio configuration
-   * @return  options based on the configuration
+   * @param conf Alluxio configuration
+   * @return options based on the configuration
    */
   public static FileSystemMasterCommonPOptions commonDefaults(
       AlluxioConfiguration conf) {
