@@ -198,6 +198,12 @@ public interface ReadOnlyInodeStore extends Closeable {
   }
 
   /**
+   * Gets the child of the inode with the given ID and name.
+   * <p>
+   * Returns the child of the {@link Inode} with the provided {@code inodeId} and
+   * {@code name}. Implementations should use the provided {@code option} to
+   * determine the {@link ReadOption} for this operation.
+   *
    * @param inodeId an inode id
    * @param name an inode name
    * @param option the options
