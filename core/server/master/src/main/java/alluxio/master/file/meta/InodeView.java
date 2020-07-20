@@ -57,7 +57,12 @@ public interface InodeView extends JournalEntryRepresentable, Comparable<InodeVi
   long getTtl();
 
   /**
-   * @return the {@link TtlAction}
+   * Gets the time-to-live (TTL) action.
+   * <p>
+   * Implementations should return the {@link TtlAction} for
+   * this {@link InodeView}.
+   *
+   * @return the {@code TtlAction} for this {@code InodeView}
    */
   TtlAction getTtlAction();
 
