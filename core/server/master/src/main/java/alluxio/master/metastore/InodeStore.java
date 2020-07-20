@@ -51,8 +51,15 @@ public interface InodeStore extends ReadOnlyInodeStore, Checkpointed, Closeable 
   Optional<MutableInode<?>> getMutable(long id, ReadOption option);
 
   /**
-   * @param id an inode id
-   * @return the result of {@link #getMutable(long, ReadOption)} with default option
+   * Gets the mutable inode with the provided ID if it exists using the default read option.
+   * <p>
+   * Returns the {@link MutableInode} with the provided {@code id} if it exists, otherwise
+   * returns an empty {@link Optional}. The {@link ReadOption} for this operation is set to
+   * {@code DEFAULT}.
+   *
+   * @param id the {@link InodeView} ID
+   * @return the mutable inode for the provided {@code id}, if it exists. Returns empty
+   *         otherwise.
    */
   default Optional<MutableInode<?>> getMutable(long id) {
     return getMutable(id, ReadOption.defaults());
@@ -147,7 +154,7 @@ public interface InodeStore extends ReadOnlyInodeStore, Checkpointed, Closeable 
    * Makes an inode the child of another inode.
    * <p>
    * Implementations should make the inode with the provided
-   * {@code childId} and {@code childName} the child of the inode
+   * {@code childId}, {@code childName} and the child of the inode
    * with the provided {@code parentId}.
    * <p>
    * This method requires an {@link InodeLockManager} read or write locks
