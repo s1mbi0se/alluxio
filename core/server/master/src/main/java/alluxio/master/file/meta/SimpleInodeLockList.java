@@ -346,6 +346,11 @@ public class SimpleInodeLockList implements InodeLockList {
   }
 
   /**
+   * Gets the last inode in the list.
+   * <p>
+   * Returns the last {@link Inode} of the list of
+   * {@link #mInodes}
+   *
    * @return the last inode
    */
   private Inode lastInode() {

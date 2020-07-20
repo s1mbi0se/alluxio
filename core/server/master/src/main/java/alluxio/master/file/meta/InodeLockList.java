@@ -164,7 +164,7 @@ public interface InodeLockList extends AutoCloseable {
    * Returns the {@link Inode} in the specified {@code index}
    * position on this {@link InodeLockList}.
    *
-   * @param   index the index of the list to get the desired
+   * @param   index the position on the list to get the desired
    *                inode lock from
    * @return  the inode at the specified index position on this
    *          list of inode locks
@@ -184,7 +184,7 @@ public interface InodeLockList extends AutoCloseable {
    * <p>
    * An {@link InodeLockList} can either end in an {@link Inode} or an {@link Edge}. This method checks whether
    * this particular list ends in an {@code Inode}, returning {@code true} if it does, and {@code false} if it
-   * does not. If the return is {@code false}, one can intuitively conclude that this list returns in an {@link Edge}.
+   * does not. If the return is {@code false}, one can intuitively conclude that this list ends in an {@link Edge}.
    *
    * @return  a boolean value representing whether this lock list ends in an inode (as opposed to an edge).
    *          Returns {@code true} if it does, {@code false} otherwise.
