@@ -159,8 +159,15 @@ public interface InodeLockList extends AutoCloseable {
   }
 
   /**
-   * @param index the index of the list
-   * @return the inode at the specified index
+   * Gets the inode at the specified index.
+   * <p>
+   * Returns the {@link Inode} in the specified {@code index}
+   * position on this {@link InodeLockList}.
+   *
+   * @param   index the index of the list to get the desired
+   *                inode lock from
+   * @return  the inode at the specified index position on this
+   *          list of inode locks
    */
   Inode get(int index);
 
