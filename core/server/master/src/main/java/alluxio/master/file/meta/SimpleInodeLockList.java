@@ -247,6 +247,18 @@ public class SimpleInodeLockList implements InodeLockList {
     addLock(lock, mode);
   }
 
+  /**
+   * Creates a new inode lock and adds it to the list of locks.
+   * <p>
+   * Locks the provided {@link Inode} based on the provided
+   * {@link LockMode}. The created inode lock is added to the
+   * list of {@link #mLocks} in this {@link InodeLockList}.
+   *
+   * @param inode the inode to add to the list of {@link #mInodes}
+   * @param mode  the {@link LockMode} to lock the resource with.
+   *              Available {@code mode}s are {@link LockMode#READ}
+   *              and {@link LockMode#WRITE}.
+   */
   private void lockAndAddInode(Inode inode, LockMode mode) {
     addInodeLock(inode, mode, mInodeLockManager.lockInode(inode, mode, mUseTryLock));
   }
