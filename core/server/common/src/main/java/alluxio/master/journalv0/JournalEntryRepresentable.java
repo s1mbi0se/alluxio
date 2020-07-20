@@ -18,7 +18,13 @@ import alluxio.proto.journal.Journal.JournalEntry;
  */
 public interface JournalEntryRepresentable {
   /**
-   * @return the {@link JournalEntry} representing this object
+   * Returns the journal entry representation of this object.
+   * <p>
+   * Implementations should return an object of type {@link JournalEntry}
+   * to represent the instance of the class that implements this
+   * {@link JournalEntryRepresentable} interface.
+   *
+   * @return the {@code JournalEntry} representing this object
    */
   JournalEntry toJournalEntry();
 }
