@@ -208,6 +208,11 @@ public class LockedInodePath implements Closeable {
   }
 
   /**
+   * Gets a copy of the list of existing inodes from the root.
+   * <p>
+   * Returns a copy of the existing {@link #mLockList} with the
+   * existing {@link InodeView}s from the root {@link Inode}.
+   *
    * @return a copy of the list of existing inodes, from the root
    */
   public List<InodeView> getInodeViewList() {
