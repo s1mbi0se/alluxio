@@ -159,6 +159,8 @@ public interface ReadOnlyInodeStore extends Closeable {
   }
 
   /**
+   * Gets the ID for the child of the inode with the provided ID.
+   *
    * @param inodeId an inode id
    * @param name an inode name
    * @param option the options
