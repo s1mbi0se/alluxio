@@ -298,18 +298,16 @@ public interface FileSystemMaster extends Master {
   List<AlluxioURI> getInMemoryFiles() throws UnavailableException;
 
   /**
-   * Creates a directory for a given path.
+   * Creates a directory for the provided path.
+   * <p>
+   * Creates a new directory with the provided {@code path}. Implementations may or may not
+   * use the provided {@link CreateDirectoryContext} for implementation-specific operations.
    * <p>
    * This operation requires the client user to have WRITE permission on the parent of the path.
    *
    * @param path the path of the directory
    * @param context method context
    * @return the id of the created directory
-   * @throws InvalidPathException when the path is invalid
-   * @throws FileAlreadyExistsException when there is already a file at path
-   * @throws AccessControlException if permission checking fails
-   * @throws FileDoesNotExistException if the parent of the path does not exist and the recursive
-   *         option is false
    */
   long createDirectory(AlluxioURI path, CreateDirectoryContext context)
       throws InvalidPathException, FileAlreadyExistsException, IOException, AccessControlException,
