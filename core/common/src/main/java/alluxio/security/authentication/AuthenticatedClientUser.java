@@ -108,12 +108,15 @@ public final class AuthenticatedClientUser {
   }
 
   /**
-   * Gets the user name from the {@link ThreadLocal} variable.
+   * Gets the user name.
+   * <p>
+   * Gets the user name from the {@link #sUserThreadLocal} based on
+   * the provided configuration.
    *
-   * @param conf Alluxio configuration
-   * @return the client user in string
-   * @throws AccessControlException there is no authenticated user for this thread or
-   *         the authentication is not enabled
+   * @param   conf  Alluxio configuration
+   * @return  the client user in string
+   * @throws  AccessControlException If there is no authenticated user for this thread or
+   *                                 authentication is disabled
    */
   public static String getClientUser(AlluxioConfiguration conf) throws AccessControlException {
     try {
