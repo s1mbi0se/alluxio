@@ -111,6 +111,8 @@ public final class CommonUtils {
   }
 
   /**
+   * Gets the current time in milliseconds.
+   *
    * @return current time in milliseconds
    */
   public static long getCurrentMs() {
