@@ -165,7 +165,10 @@ public interface InodeLockList extends AutoCloseable {
   Inode get(int index);
 
   /**
-   * @return the size of the list in terms of locked inodes
+   * Gets the number of locked inodes in this inode lock list.
+   *
+   * @return  the size of this {@link InodeLockList} in terms of
+   *          locked inodes
    */
   int numInodes();
 
