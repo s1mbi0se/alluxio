@@ -170,15 +170,20 @@ public class InodeLockManager implements Closeable {
   }
 
   /**
-   * Acquires an edge lock.
+   * Acquires an edge lock resource.
+   * <p>
+   * This method differs from {@link #tryLockEdge(Edge, LockMode)} because it will block until
+   * the edge has been successfully locked.
    *
-   * @param edge the edge to lock
-   * @param mode the mode to lock in
-   * @param useTryLock whether to acquire with {@link Lock#tryLock()} or {@link Lock#lock()}. This
-   *                   method differs from {@link #tryLockEdge(Edge, LockMode)} because it will
-   *                   block until the edge has been successfully locked.
-   * @return a lock resource which must be closed to release the lock
-   * @see #tryLockEdge(Edge, LockMode)
+   * @param   edge  the {@link Edge} to lock and create a {@link LockResource} from
+   * @param   mode  the mode to lock the provided {@code edge} with, which can be
+   *                {@link LockMode#READ} or {@link LockMode#WRITE}
+   * @param   useTryLock  a boolean representing whether to acquire the lock with
+   *                      {@link Lock#tryLock()} or {@link Lock#lock()}. If {@code true}, the lock
+   *                      will be acquired with the former, and if {@code false} it will be acquired
+   *                      with the latter.
+   * @return  a lock resource which must be closed to release the lock
+   * @see     #tryLockEdge(Edge, LockMode)
    */
   public RWLockResource lockEdge(Edge edge, LockMode mode, boolean useTryLock) {
     return mEdgeLocks.get(edge, mode, useTryLock);
