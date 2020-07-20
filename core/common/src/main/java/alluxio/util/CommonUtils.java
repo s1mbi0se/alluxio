@@ -377,8 +377,8 @@ public final class CommonUtils {
   /**
    * Gets the primary group name of a user.
    *
-   * @param userName Alluxio user name
-   * @param conf Alluxio configuration
+   * @param userName the Alluxio user name
+   * @param conf the Alluxio configuration
    * @return primary group name
    */
   public static String getPrimaryGroupName(String userName, AlluxioConfiguration conf)
