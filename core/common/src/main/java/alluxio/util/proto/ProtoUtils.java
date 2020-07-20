@@ -87,8 +87,10 @@ public final class ProtoUtils {
   }
 
   /**
-   * @param acl {@link AccessControlList}
-   * @return protobuf representation
+   * Returns a protobuf representation.
+   *
+   * @param acl the {@link AccessControlList}
+   * @return the protobuf representation
    */
   public static Acl.AccessControlList toProto(AccessControlList acl) {
     Acl.AccessControlList.Builder builder = Acl.AccessControlList.newBuilder();
