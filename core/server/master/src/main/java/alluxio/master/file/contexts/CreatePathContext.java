@@ -281,7 +281,14 @@ public abstract class CreatePathContext<T extends GeneratedMessageV3.Builder<?>,
   }
 
   /**
-   * @return the metadataLoad flag; if true, the create path is a result of a metadata load
+   * Checks whether this context is a result of a metadata load.
+   * <p>
+   * Returns {@link #mMetadataLoad}, which defines whether this
+   * context is a result of a metadata load. Returns {@code true}
+   * if it is, and {@code false} if it is not.
+   *
+   * @return a boolean representing whether the create path is a result
+   *         of a metadata load
    */
   public boolean isMetadataLoad() {
     return mMetadataLoad;
