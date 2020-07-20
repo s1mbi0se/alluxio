@@ -227,8 +227,16 @@ public class LockedInodePath implements Closeable {
   }
 
   /**
-   * @return true if the entire path of inodes exists, false otherwise. This could be out of date if
-   *         the current thread has added or deleted inodes since the last call to traverse()
+   * Checks whether the entire path of inodes exist.
+   * <p>
+   * Checks if the number of locked {@link Inode}s in the {@link #mLockList}
+   * is equal to the length of the {@link #mPathComponents} of this instance
+   * of {@link LockedInodePath}.
+   *
+   * @return  a boolean value representing whether the entire path of locked inodes exist.
+   *          Returns true if the entire path of inodes exists, false otherwise. This could
+   *          be out of date if the current thread has added or deleted inodes since the last
+   *          call to {@link #traverse()}.
    */
   public boolean fullPathExists() {
     return mLockList.numInodes() == mPathComponents.length;
