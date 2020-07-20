@@ -4386,6 +4386,13 @@ public final class DefaultFileSystemMaster extends CoreMaster
         blocks -> blocks.forEach(mUfsBlockLocationCache::invalidate));
   }
 
+  /**
+   * Removes the provided blocks from the block master.
+   *
+   * @param blocks the list of blocks to be removed from the
+   *               {@link alluxio.worker.Worker}s by the
+   *               {@link #mBlockMaster}
+   */
   private void removeBlocks(List<Long> blocks) throws IOException {
     if (blocks.isEmpty()) {
       return;
