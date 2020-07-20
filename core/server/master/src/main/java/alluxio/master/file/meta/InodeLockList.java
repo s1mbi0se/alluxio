@@ -147,6 +147,11 @@ public interface InodeLockList extends AutoCloseable {
   LockMode getLockMode();
 
   /**
+   * Returns a copy of all locked inodes.
+   * <p>
+   * Implementations should copy and return the list of
+   * existing locked {@link Inode}s in this {@link InodeLockList}.
+   *
    * @return a copy of all locked inodes
    */
   List<Inode> getLockedInodes();
