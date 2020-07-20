@@ -144,13 +144,18 @@ public interface InodeStore extends ReadOnlyInodeStore, Checkpointed, Closeable 
   void clear();
 
   /**
-   * Makes an inode the child of the specified parent.
+   * Makes an inode the child of another inode.
+   * <p>
+   * Implementations should make the inode with the provided
+   * {@code childId} and {@code childName} the child of the inode
+   * with the provided {@code parentId}.
+   * <p>
+   * This method requires an {@link InodeLockManager} read or write locks
+   * on the added {@link alluxio.master.file.meta.Edge}.
    *
-   * This method requires an inode lock manager read or write locks on the added edge.
-   *
-   * @param parentId the parent id
-   * @param childName the child name
-   * @param childId the child inode id
+   * @param parentId the parent inode ID
+   * @param childName the child inode name
+   * @param childId the child inode ID
    */
   void addChild(long parentId, String childName, Long childId);
 
