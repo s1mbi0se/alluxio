@@ -30,6 +30,11 @@ public final class Edge {
   }
 
   /**
+   * Gets the ID of the parent inode.
+   * <p>
+   * Returns the {@link #mId} of this
+   * {@link Edge}.
+   *
    * @return the parent inode id
    */
   public long getId() {
