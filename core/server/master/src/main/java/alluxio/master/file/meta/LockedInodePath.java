@@ -442,6 +442,15 @@ public class LockedInodePath implements Closeable {
     }
   }
 
+  /**
+   * Locks the root edge and inode.
+   * <p>
+   * Locks the root {@link Edge} and {@link Inode} based on the default
+   * {@link #mLockPattern}, which can be {@link LockPattern#READ},
+   * {@link LockPattern#WRITE_INODE}, or {@link LockPattern#WRITE_EDGE}.
+   * This information is used to set the {@link LockMode} for the root
+   * edge and inode locks.
+   */
   private void bootstrapTraversal() {
     if (!mLockList.isEmpty()) {
       return;
