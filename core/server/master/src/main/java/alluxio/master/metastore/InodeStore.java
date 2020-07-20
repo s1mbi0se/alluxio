@@ -97,12 +97,12 @@ public interface InodeStore extends ReadOnlyInodeStore, Checkpointed, Closeable 
 
   /**
    * Adds the given inode, or overwrites it if it already exists.
-   *
+   * <p>
    * If it is known that the inode is new, prefer {@link #writeNewInode(MutableInode)}.
+   * <p>
+   * This method requires an {@link InodeLockManager} read or write lock on the written inode.
    *
-   * This method requires an inode lock manager read or write lock on the written inode.
-   *
-   * @param inode the inode to write
+   * @param inode the {@link MutableInode} to write to this {@link InodeStore}
    */
   void writeInode(MutableInode<?> inode);
 
