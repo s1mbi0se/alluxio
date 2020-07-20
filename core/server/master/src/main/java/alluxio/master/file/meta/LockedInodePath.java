@@ -388,11 +388,12 @@ public class LockedInodePath implements Closeable {
   }
 
   /**
-   * Traverses the inode path according to its lock pattern. If the inode path is already partially
-   * traversed, this method will pick up where the previous traversal left off.
-   *
-   * On return, all existing inodes in the path are added to mExistingInodes and the inodes are
-   * locked according to {@link LockPattern}.
+   * Traverses the inode path according to its lock pattern.
+   * <p>
+   * If the inode path is already partially traversed, this method
+   * will pick up where the previous traversal left off.
+   * <p>
+   * On return, all inodes are locked according to the {@link LockPattern}.
    */
   public void traverse() throws InvalidPathException {
     // This locks the root edge and inode.
