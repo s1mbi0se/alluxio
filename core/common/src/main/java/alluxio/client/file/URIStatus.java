@@ -87,7 +87,9 @@ public class URIStatus {
   }
 
   /**
-   * @return the epoch time the entity referenced by this uri was created, immutable
+   * Gets the time the entity referenced by this URI was created, in milliseconds.
+   *
+   * @return the epoch time the entity referenced by this URI was created, immutable
    */
   public long getCreationTimeMs() {
     return mInfo.getCreationTimeMs();
@@ -133,7 +135,7 @@ public class URIStatus {
   /**
    * Gets the time the entity referenced by this URI was last modified.
    *
-   * @return  the epoch time the entity referenced by this uri was last modified, mutable
+   * @return  the epoch time the entity referenced by this URI was last modified, mutable
    */
   public long getLastModificationTimeMs() {
     return mInfo.getLastModificationTimeMs();
