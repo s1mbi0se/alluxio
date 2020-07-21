@@ -249,7 +249,9 @@ public final class MountTable implements DelegatingJournaled {
   }
 
   /**
-   * Returns a copy of the current mount table, the mount table is a map from Alluxio file system
+   * Gets a copy of the current mount table.
+   * <p>
+   * Returns a copy of the current mount table, which is a map from Alluxio file system
    * URIs to the corresponding mount point information.
    *
    * @return a copy of the current mount table
