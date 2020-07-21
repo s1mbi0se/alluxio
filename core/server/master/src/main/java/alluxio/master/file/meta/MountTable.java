@@ -387,12 +387,13 @@ public final class MountTable implements DelegatingJournaled {
   }
 
   /**
+   * Checks whether a write operation is allowed for the specified Alluxio path.
+   * <p>
    * Checks to see if a write operation is allowed for the specified Alluxio path, by determining
    * if it is under a readonly mount point.
    *
    * @param alluxioUri an Alluxio path URI
-   * @throws InvalidPathException if the Alluxio path is invalid
-   * @throws AccessControlException if the Alluxio path is under a readonly mount point
+   * @throws AccessControlException If the Alluxio path is under a readonly mount point
    */
   public void checkUnderWritableMountPoint(AlluxioURI alluxioUri)
       throws InvalidPathException, AccessControlException {
