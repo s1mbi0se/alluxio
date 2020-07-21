@@ -70,6 +70,10 @@ public final class BlockId {
   }
 
   /**
+   * Gets the maximum possible sequence number for block IDs.
+   * <p>
+   * Returns the {@link #SEQUENCE_NUMBER_MASK}.
+   *
    * @return the maximum possible sequence number for block IDs
    */
   public static long getMaxSequenceNumber() {
