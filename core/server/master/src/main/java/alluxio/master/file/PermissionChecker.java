@@ -21,15 +21,16 @@ import alluxio.security.authorization.Mode;
  */
 public interface PermissionChecker {
   /**
-   * Checks whether a user has permission to perform a specific action on the parent of the given
-   * path; if parent directory does not exist, treats the closest ancestor directory of the path as
-   * its parent and checks permission on it. This check will pass if the path is invalid, or path
-   * has no parent (e.g., root).
+   * Checks whether a user has permission to perform an action on the parent of the given path.
+   *
+   * Implementations should check whether a user has permission to perform a specific action on the parent
+   * of the given {@link LockedInodePath}. If parent directory does not exist, should treat the closest ancestor
+   * directory of the path as its parent and check permission on it. This check should pass if the path is invalid,
+   * or path has no parent, such as root.
    *
    * @param bits bits that capture the action {@link Mode.Bits} by user
    * @param inodePath the path to check permission on
    * @throws AccessControlException if permission checking fails
-   * @throws InvalidPathException if the path is invalid
    */
   void checkParentPermission(Mode.Bits bits, LockedInodePath inodePath)
       throws AccessControlException, InvalidPathException;
