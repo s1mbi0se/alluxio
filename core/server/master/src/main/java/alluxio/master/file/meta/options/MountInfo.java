@@ -66,6 +66,11 @@ public class MountInfo {
   }
 
   /**
+   * Gets the mount options for the mount point.
+   * <p>
+   * Returns the existing {@link #mOptions} for the
+   * mount point.
+   *
    * @return the {@link MountPOptions} for the mount point
    */
   public MountPOptions getOptions() {
