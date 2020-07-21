@@ -131,7 +131,9 @@ public class URIStatus {
   }
 
   /**
-   * @return the epoch time the entity referenced by this uri was last modified, mutable
+   * Gets the time the entity referenced by this URI was last modified.
+   *
+   * @return  the epoch time the entity referenced by this uri was last modified, mutable
    */
   public long getLastModificationTimeMs() {
     return mInfo.getLastModificationTimeMs();
