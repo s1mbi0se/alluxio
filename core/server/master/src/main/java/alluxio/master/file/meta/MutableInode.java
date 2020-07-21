@@ -627,7 +627,12 @@ public abstract class MutableInode<T extends MutableInode> implements InodeView 
   }
 
   /**
-   * @param path path of the inode
+   * Returns the journal entry representation of this inode.
+   * <p>
+   * Returns an object of type {@link alluxio.master.journal.Journal.JournalEntry}
+   * representing this {@link InodeView}.
+   *
+   * @param path the path of the inode
    * @return the journal entry representing the inode
    */
   public abstract Journal.JournalEntry toJournalEntry(String path);
