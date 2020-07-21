@@ -157,7 +157,15 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @return whether the file is pinned
+   * Checks whether the file is pinned.
+   * <p>
+   * Returns a boolean representing whether the
+   * file is {@link #mPinned}. Returning {@code true}
+   * means the file is pinned, and {@code false} means
+   * it is not.
+   *
+   * @return a boolean representing whether the file is pinned,
+   *         {@code true} if it is, and {@code false} if it is not
    */
   public boolean isPinned() {
     return mPinned;
