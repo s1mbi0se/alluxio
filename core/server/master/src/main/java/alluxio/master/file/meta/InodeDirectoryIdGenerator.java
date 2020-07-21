@@ -78,9 +78,11 @@ public class InodeDirectoryIdGenerator implements Journaled {
   }
 
   /**
+   * Returns a journal entry for the given container ID and sequence number.
+   *
    * @param containerId a container ID
    * @param sequenceNumber a sequence number
-   * @return a journal entry for the given container ID and sequence number
+   * @return a {@link JournalEntry} for the given container ID and sequence number
    */
   private static JournalEntry toEntry(long containerId, long sequenceNumber) {
     return JournalEntry.newBuilder().setInodeDirectoryIdGenerator(
