@@ -377,13 +377,15 @@ public class InodeTree implements DelegatingJournaled {
   }
 
   /**
-   * Locks existing inodes on the specified path, in the specified {@link LockPattern}. The target
-   * inode is not required to exist.
+   * Locks existing inodes on the specified path, in the specified lock pattern.
+   * <p>
+   * Locks all {@link Inode}s on the provided {@code uri} using the specified {@code lockPattern}.
+   * <p>
+   * The target inode is not required to exist.
    *
-   * @param uri the uri to lock
+   * @param uri the {@link AlluxioURI} to lock
    * @param lockPattern the {@link LockPattern} to lock the inodes with
    * @return the {@link LockedInodePath} representing the locked path of inodes
-   * @throws InvalidPathException if the path is invalid
    */
   public LockedInodePath lockInodePath(AlluxioURI uri, LockPattern lockPattern)
       throws InvalidPathException {
