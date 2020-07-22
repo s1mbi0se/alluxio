@@ -136,7 +136,10 @@ public class LockedInodePath implements Closeable {
   }
 
   /**
-   * @return the target inode, or null if it does not exist
+   * Gets the inode if it exists, otherwise returns null.
+   *
+   * @return the target {@link Inode} if its path exists,
+   *         {@code null} otherwise
    */
   @Nullable
   public Inode getInodeOrNull() {

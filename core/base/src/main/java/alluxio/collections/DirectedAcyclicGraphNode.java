@@ -90,9 +90,10 @@ public class DirectedAcyclicGraphNode<T> {
   }
 
   /**
-   * Adds a child node to the node.
+   * Adds a child node to this graph node.
    *
-   * @param child the node to be added as a child
+   * @param child the node to be added as a child for
+   *        this parent {@link DirectedAcyclicGraphNode}
    */
   public void addChild(DirectedAcyclicGraphNode<T> child) {
     mChildren.add(child);
