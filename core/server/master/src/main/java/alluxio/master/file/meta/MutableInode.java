@@ -442,9 +442,10 @@ public abstract class MutableInode<T extends MutableInode> implements InodeView 
 
   /**
    * Sets ACL entries into the internal ACL.
+   * <p>
    * The entries will overwrite any existing correspondent entries in the internal ACL.
    *
-   * @param entries the ACL entries
+   * @param entries the ACL entries to set into the internal ACL
    * @return the updated object
    */
   public T setAcl(List<AclEntry> entries) {
