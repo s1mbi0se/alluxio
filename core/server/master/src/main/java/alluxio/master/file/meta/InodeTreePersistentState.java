@@ -543,6 +543,13 @@ public class InodeTreePersistentState implements Journaled {
   // Helper methods
   ////
 
+  /**
+   * Writes a new inode to the inode store.
+   * <ṕ>
+   * Adds the provided {@code inode} to the {@link #mInodeStore}.
+   *
+   * @param inode the {@link MutableInode} to be added to the {@code mInodeStore}
+   */
   private void applyCreateInode(MutableInode<?> inode) {
     if (inode.isDirectory() && inode.getName().equals(InodeTree.ROOT_INODE_NAME)) {
       // This is the root inode. Clear all the state, and set the root.
