@@ -189,8 +189,10 @@ public abstract class CreatePathContext<T extends GeneratedMessageV3.Builder<?>,
   }
 
   /**
-   * @param mountPoint the mount point flag to use; it specifies whether the object to create is a
-   *        mount point
+   * Defines whether or not the object to create is a mount point.
+   *
+   * @param mountPoint the mount point flag to use, which specifies whether the object to create is a
+   *        mount point ({@code true}) or not {@code false}
    * @return the updated context
    */
   public K setMountPoint(boolean mountPoint) {
