@@ -390,6 +390,8 @@ public final class CommonUtils {
   }
 
   /**
+   * Gets the group list of a user.
+   * <p>
    * Using {@link CachedGroupMapping} to get the group list of a user.
    *
    * @param userName Alluxio user name
