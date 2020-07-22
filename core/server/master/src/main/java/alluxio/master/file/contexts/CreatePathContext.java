@@ -182,6 +182,8 @@ public abstract class CreatePathContext<T extends GeneratedMessageV3.Builder<?>,
   }
 
   /**
+   * Gets an immutable list of ACL entries.
+   *
    * @return an immutable list of ACL entries
    */
   public List<AclEntry> getAcl() {
@@ -192,7 +194,7 @@ public abstract class CreatePathContext<T extends GeneratedMessageV3.Builder<?>,
    * Defines whether or not the object to create is a mount point.
    *
    * @param mountPoint the mount point flag to use, which specifies whether the object to create is a
-   *        mount point ({@code true}) or not {@code false}
+   *        mount point ({@code true}) or not ({@code false})
    * @return the updated context
    */
   public K setMountPoint(boolean mountPoint) {
