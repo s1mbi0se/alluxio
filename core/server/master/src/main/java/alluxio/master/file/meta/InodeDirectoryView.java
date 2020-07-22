@@ -21,7 +21,10 @@ public interface InodeDirectoryView extends InodeView {
   boolean isMountPoint();
 
   /**
-   * @return true if we have loaded all the direct children's metadata once
+   * Checks whether all direct children's metadata has been loaded once.
+   *
+   * @return a boolean representing whether we have loaded all the direct
+   *         children's metadata once {@code true} or {@code false}
    */
   boolean isDirectChildrenLoaded();
 
