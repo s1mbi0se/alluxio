@@ -124,8 +124,9 @@ public class LockedInodePath implements Closeable {
   }
 
   /**
-   * @return the target inode
-   * @throws FileDoesNotExistException if the target inode does not exist
+   * Returns the inode if its full path exists, throws an exception otherwise.
+   *
+   * @return the target inode if it is found within {@link #mLockList}
    */
   public Inode getInode() throws FileDoesNotExistException {
     Inode inode = getInodeOrNull();
