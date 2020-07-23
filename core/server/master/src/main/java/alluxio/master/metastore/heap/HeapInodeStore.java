@@ -122,6 +122,15 @@ public class HeapInodeStore implements InodeStore {
     mEdges.clear();
   }
 
+  /**
+   * Gets all children for the provided edge IDs.
+   * <p>
+   * Returns a map with all children mapped to the provided edge {@code id}.
+   * If no child is found, returns an {@link Collections#emptyMap}.
+   *
+   * @param id the edge ID the children map that will be returned are mapped to
+   * @return the children for the provided edge {@code id}
+   */
   private Map<String, Long> children(long id) {
     return mEdges.getOrDefault(id, Collections.emptyMap());
   }
