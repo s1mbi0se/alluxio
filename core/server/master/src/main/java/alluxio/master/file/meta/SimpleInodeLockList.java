@@ -194,12 +194,15 @@ public class SimpleInodeLockList implements InodeLockList {
   }
 
   /**
-   * If mode is read but the lock list is write locked, returns LockMode.WRITE.
-   *
+   * Returns the next lock mode for this simple inode lock list.
+   * <p>
+   * If mode is read but the lock list is write locked, returns {@link LockMode#WRITE}.
+   * <p>
    * This helps us preserve the invariant that there is never a READ lock following a WRITE lock.
    *
-   * @param mode a lock mode
-   * @return the mode
+   * @param mode the lock mode to be returned if this {@link InodeLockList} does not end in a
+   *             WRITE lock
+   * @return either the provided lock {@code mode} or WRITE mode (if this list ends in a write lock)
    */
   private LockMode nextLockMode(LockMode mode) {
     return endsInWriteLock() ? LockMode.WRITE : mode;
