@@ -360,8 +360,11 @@ public abstract class MutableInode<T extends MutableInode> implements InodeView 
   }
 
   /**
-   * @param name the name to use
-   * @return the updated object
+   * Sets the name for this mutable inode.
+   *
+   * @param name the name to use for this {@link InodeView}
+   * @return the updated object of type {@code T} extending
+   *         {@link MutableInode}
    */
   public T setName(String name) {
     mName = name;
