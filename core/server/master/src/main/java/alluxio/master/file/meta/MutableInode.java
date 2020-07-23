@@ -297,8 +297,10 @@ public abstract class MutableInode<T extends MutableInode> implements InodeView 
   }
 
   /**
-   * @param group the group of the inode
-   * @return the updated object
+   * Sets the owning group for the access control list (ACL) in this inode.
+   *
+   * @param group the group of the inode to set the {@link #mAcl} to
+   * @return the updated object of type {@link MutableInode}
    */
   public T setGroup(String group) {
     mAcl.setOwningGroup(group);
