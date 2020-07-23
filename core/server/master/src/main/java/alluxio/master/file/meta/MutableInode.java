@@ -297,8 +297,10 @@ public abstract class MutableInode<T extends MutableInode> implements InodeView 
   }
 
   /**
-   * @param group the group of the inode
-   * @return the updated object
+   * Sets the owning group for the access control list (ACL) in this inode.
+   *
+   * @param group the group of the inode to set the {@link #mAcl} to
+   * @return the updated object of type {@link MutableInode}
    */
   public T setGroup(String group) {
     mAcl.setOwningGroup(group);
@@ -358,8 +360,11 @@ public abstract class MutableInode<T extends MutableInode> implements InodeView 
   }
 
   /**
-   * @param name the name to use
-   * @return the updated object
+   * Sets the name for this mutable inode.
+   *
+   * @param name the name to use for this {@link InodeView}
+   * @return the updated object of type {@code T} extending
+   *         {@link MutableInode}
    */
   public T setName(String name) {
     mName = name;
@@ -367,8 +372,11 @@ public abstract class MutableInode<T extends MutableInode> implements InodeView 
   }
 
   /**
-   * @param parentId the parent id to use
-   * @return the updated object
+   * Defines the ID for the parent of this mutable inode.
+   *
+   * @param parentId the parent ID to use
+   * @return the updated object of type {@code T}
+   *         extending {@link MutableInode}
    */
   public T setParentId(long parentId) {
     mParentId = parentId;

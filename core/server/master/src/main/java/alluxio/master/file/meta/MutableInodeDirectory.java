@@ -79,8 +79,12 @@ public final class MutableInodeDirectory extends MutableInode<MutableInodeDirect
   }
 
   /**
-   * @param mountPoint the mount point flag value to use
-   * @return the updated object
+   * Determines whether this mutable inode directory is a mount point.
+   *
+   * @param mountPoint the mount point flag value to use, a boolean value
+   *                   representing whether this {@link InodeView} is a
+   *                   mount point ({@code true}) or not ({@code false})
+   * @return this {@link MutableInodeDirectory} updated
    */
   public MutableInodeDirectory setMountPoint(boolean mountPoint) {
     mMountPoint = mountPoint;

@@ -47,7 +47,10 @@ public interface GroupMappingService {
     }
 
     /**
-     * Gets the cached groups mapping service being used to map user-to-groups.
+     * Gets the cached groups mapping service being used to map users to groups.
+     * <p>
+     * Returns the {@link #sCachedGroupMapping} for this {@link GroupMappingService},
+     * which is used to map users to groups.
      *
      * @return the groups mapping service being used to map user-to-groups
      */

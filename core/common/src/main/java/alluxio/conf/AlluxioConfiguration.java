@@ -35,12 +35,15 @@ public interface AlluxioConfiguration {
   String get(PropertyKey key);
 
   /**
-   * Gets the value for the given key in the {@link Properties}; if this key is not found, a
-   * RuntimeException is thrown.
+   * Gets the value for the given key in the properties of this configuration.
+   * <p>
+   * Implementations should return the value mapped to the provided {@code key}
+   * with the desired configuration value {@code options}.
    *
-   * @param key the key to get the value for
-   * @param options options for getting configuration value
-   * @return the value for the given key
+   * @param key the {@link PropertyKey} to get the value from
+   * @param options the {@link ConfigurationValueOptions} for getting the
+   *                configuration value from the {@code key}
+   * @return the value for the given {@code key} with the provided {@code options}
    */
   String get(PropertyKey key, ConfigurationValueOptions options);
 

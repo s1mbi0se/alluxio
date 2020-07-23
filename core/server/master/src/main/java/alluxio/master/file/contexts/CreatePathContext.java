@@ -155,6 +155,12 @@ public abstract class CreatePathContext<T extends GeneratedMessageV3.Builder<?>,
   protected abstract K getThis();
 
   /**
+   * Sets the operation time.
+   * <p>
+   * Defines a new value for the {@link #mOperationTimeMs}
+   * and returns the {@code K} representation for this context
+   * updated.
+   *
    * @param operationTimeMs the operation time to use
    * @return the updated context
    */
@@ -226,8 +232,10 @@ public abstract class CreatePathContext<T extends GeneratedMessageV3.Builder<?>,
   }
 
   /**
+   * Sets the group for this path creation context.
+   *
    * @param group the group to use
-   * @return the updated context
+   * @return the {@code K} representation of this updated context
    */
   public K setGroup(String group) {
     mGroup = group;
