@@ -4302,7 +4302,12 @@ public final class DefaultFileSystemMaster extends CoreMaster
   }
 
   /**
-   * Creates a {@link FileSystemMasterAuditContext} instance.
+   * Creates an audit context for file system master.
+   * <p>
+   * Instantiates and returns a new {@link FileSystemMasterAuditContext}
+   * with the {@code commmand} to be logged, the {@code srcPath} of this
+   * command, the {@code dstPath} of this command, and the {@code srcInode}
+   * of this command.
    *
    * @param command the command to be logged by this {@link AuditContext}
    * @param srcPath the source path of this command
