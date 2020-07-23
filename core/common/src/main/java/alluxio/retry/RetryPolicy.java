@@ -29,11 +29,14 @@ public interface RetryPolicy {
   int getAttemptCount();
 
   /**
-   * Waits until it is time to perform the next retry, then returns. Returns false if no further
-   * retries should be performed. The first call to this method should never delay the caller, this
-   * allow users of the policy to use it in the context of a while-loop.
+   * Waits until it is time to perform the next retry and returns if further retries should occur.
+   * <p>
+   * Returns false if no further retries should be performed. The first call to this method should
+   * never delay the caller, this allows users of the policy to use it in the context of a
+   * while-loop.
    *
-   * @return whether another retry should be performed
+   * @return a boolean value representing whether another retry should be performed ({@code true})
+   *         or not ({@code false})
    */
   boolean attempt();
 }
