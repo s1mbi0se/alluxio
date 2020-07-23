@@ -369,8 +369,11 @@ public abstract class MutableInode<T extends MutableInode> implements InodeView 
   }
 
   /**
-   * @param parentId the parent id to use
-   * @return the updated object
+   * Defines the ID for the parent of this mutable inode.
+   *
+   * @param parentId the parent ID to use
+   * @return the updated object of type {@code T}
+   *         extending {@link MutableInode}
    */
   public T setParentId(long parentId) {
     mParentId = parentId;
