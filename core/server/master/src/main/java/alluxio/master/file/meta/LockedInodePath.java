@@ -272,10 +272,12 @@ public class LockedInodePath implements Closeable {
   }
 
   /**
-   * Adds the next inode to the path. This tries to reduce the scope of locking by moving the write
-   * lock forward to the new final edge, downgrading the previous write lock to a read lock.
+   * Adds the next inode to the path.
+   * <p>
+   * Adds the provided {@code inode} to the path. This tries to reduce the scope of locking by moving
+   * the write lock forward to the new final edge, downgrading the previous write lock to a read lock.
    *
-   * @param inode the inode to add
+   * @param inode the inode to add to the {@link #mLockList}
    */
   public void addNextInode(Inode inode) {
     Preconditions.checkState(mLockPattern == LockPattern.WRITE_EDGE);
