@@ -101,8 +101,11 @@ public final class MutableInodeDirectory extends MutableInode<MutableInodeDirect
   }
 
   /**
-   * @param childCount the child count to set
-   * @return the updated object
+   * Updates the child count for this mutable inode directory to the provided value.
+   *
+   * @param childCount the new child count for this {@link MutableInode}
+   * @return this {@link MutableInodeDirectory} with an
+   *         updated {@link #mChildCount}
    */
   public MutableInodeDirectory setChildCount(long childCount) {
     mChildCount = childCount;
