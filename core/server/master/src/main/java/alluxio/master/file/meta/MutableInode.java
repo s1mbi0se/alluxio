@@ -393,6 +393,8 @@ public abstract class MutableInode<T extends MutableInode> implements InodeView 
   }
 
   /**
+   * Sets the time-to-live action for this mutable inode.
+   *
    * @param ttlAction the {@link TtlAction} to use
    * @return the updated options object
    */
