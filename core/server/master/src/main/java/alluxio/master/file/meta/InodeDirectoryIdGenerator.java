@@ -25,6 +25,7 @@ import alluxio.util.CommonUtils;
 import com.google.common.base.Preconditions;
 
 import java.util.Iterator;
+import java.util.function.Supplier;
 
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -70,6 +71,11 @@ public class InodeDirectoryIdGenerator implements Journaled {
     return directoryId;
   }
 
+  /**
+   * Applies and journals a journal entry if it has not yet been initialized.
+   *
+   * @param context the journal context required to call {@link #applyAndJournal}
+   */
   private void initialize(JournalContext context) throws UnavailableException {
     if (!mInitialized) {
       applyAndJournal(context, toEntry(mContainerIdGenerator.getNewContainerId(), 0));
