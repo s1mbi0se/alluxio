@@ -193,17 +193,20 @@ public class DefaultPermissionChecker implements PermissionChecker {
   }
 
   /**
-   * This method provides basic permission checking logic on a list of inodes. The input includes
-   * user and its group, requested action and inode list (by traversing the path). Then user,
-   * group, and the requested action will be evaluated on each of the inodes. It will return if
-   * check passed, and throw exception if check failed.
+   * Provides basic permission checking logic on a list of inodes.
+   * <p>
+   * This method provides basic permission checking logic on a list of {@link InodeView}s.
+   * The input includes the {@code user} and its {@code group}, requested action and inode list
+   * (by traversing the {@code path}). Then user, group, and the requested action will be evaluated
+   * on each of the inodes. It will return if check passes, or throw an exception if check fails.
    *
-   * @param user who requests access permission
-   * @param groups in which user belongs to
-   * @param bits bits that capture the action {@link Mode.Bits} by user
-   * @param path the path to check permission on
-   * @param inodeList file info list of all the inodes retrieved by traversing the path
-   * @param checkIsOwner indicates whether to check the user is the owner of the path
+   * @param user the user who requests access permission
+   * @param groups the groups the {@code user} belongs to
+   * @param bits bits that capture the action {@link Mode.Bits} by {@code user}
+   * @param path the path to check permissions from
+   * @param inodeList file info list of all the inodes retrieved by traversing the {@code path}
+   * @param checkIsOwner a boolean that indicates whether to check if the user is the owner of the
+   *                     path ({@code true}) or not ({@code false})
    * @throws AccessControlException if permission checking fails
    */
   protected void checkInodeList(String user, List<String> groups, Mode.Bits bits, String path,
