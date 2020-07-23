@@ -40,7 +40,7 @@ public final class AlluxioFuseOptions {
   }
 
   /**
-   * @return The path to where the FS should be mounted
+   * @return the path the file system should be mounted to
    */
   public String getMountPoint() {
     return mMountPoint;
