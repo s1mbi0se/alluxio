@@ -19,6 +19,8 @@ public final class ConfigurationValueOptions {
   private boolean mUseRawValue = false;
 
   /**
+   * Creates default configuration value options, providing a default instantiation.
+   *
    * @return the default {@link ConfigurationValueOptions}
    */
   public static ConfigurationValueOptions defaults() {
