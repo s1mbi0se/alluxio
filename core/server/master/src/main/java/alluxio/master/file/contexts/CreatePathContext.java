@@ -226,8 +226,10 @@ public abstract class CreatePathContext<T extends GeneratedMessageV3.Builder<?>,
   }
 
   /**
+   * Sets the group for this path creation context.
+   *
    * @param group the group to use
-   * @return the updated context
+   * @return the {@code K} representation of this updated context
    */
   public K setGroup(String group) {
     mGroup = group;
