@@ -493,7 +493,13 @@ public abstract class MutableInode<T extends MutableInode> implements InodeView 
   }
 
   /**
-   * @param xAttr The new set of extended attributes
+   * Sets extended attributes for this mutable inode.
+   * <p>
+   * Updates the extended {@link #mXAttr}ibutes of this {@link MutableInode}
+   * to the provided {@code xAttr}ibutes and returns the {@code T} representation
+   * of this object once updated.
+   *
+   * @param xAttr the new set of extended attributes
    * @return the updated object
    */
   public T setXAttr(Map<String, byte[]> xAttr) {
