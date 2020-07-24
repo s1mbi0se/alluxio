@@ -1,47 +1,28 @@
 package alluxio.logging.scope.base;
 
-import br.com.simbiose.debug_log.BaseAspect;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
+import alluxio.logging.base.FlowLoggingAspect;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+/**
+ * This class represents every logging aspect for Alluxio scopes (processes),
+ * such as Master, Job Master, Worker, Job Worker, and Proxy.
+ * <p>
+ * This class is used to avoid breaking the D.R.Y. principle - all other logging
+ * aspect classes extending this share the same {@link #WHITE_AND_BLACK_LIST} and
+ * {@link #FINISH_METHOD}.
+ */
+public abstract class ScopeFlowLoggingAspect extends FlowLoggingAspect {
+    /*
+    A string representing a list used to determine which methods from
+    within a given range should be logged or not
+     */
+    protected static final String WHITE_AND_BLACK_LIST = "execution(* alluxio..*(..)) && "
+            + "!within(alluxio.logging..*) && "
+            + "!within(br.com.simbiose..*) && "
+            + "!within(java..*)";
 
-@Aspect
-public abstract class ScopeFlowLoggingAspect extends BaseAspect {
-    private static final String WHITE_AND_BLACK_LIST = "";
-    private static final String FINISH_METHOD = "";
-
-    protected final Map<Long, Integer> threadIdToStep = new ConcurrentHashMap<>();
-    protected final Map<Long, Long> threadIdToDebugLogId = new ConcurrentHashMap<>();
-
-    @Around(WHITE_AND_BLACK_LIST)
-    public Object around(final ProceedingJoinPoint point) throws Throwable {
-        final long threadId = Thread.currentThread().getId();
-
-        return printDebugLogForMethod(point, threadId);
-    }
-
-    @Around(FINISH_METHOD)
-    public Object finishFlux(final ProceedingJoinPoint point) throws Throwable {
-        final long threadId = Thread.currentThread().getId();
-
-        final Object resultFromMethod = printDebugLogForMethod(point, threadId);
-
-        threadIdToStep.remove(threadId);
-        threadIdToDebugLogId.remove(threadId);
-
-        return resultFromMethod;
-    }
-
-    @Override
-    protected Map<Long, Integer> getThreadIdToStep() {
-        return this.threadIdToStep;
-    }
-
-    @Override
-    protected Map<Long, Long> getThreadIdToDebugLogId() {
-        return this.threadIdToDebugLogId;
-    }
+    /*
+    A string representing the condition/method that needs to be called for this logging
+    aspect to halt its execution
+     */
+    protected static final String FINISH_METHOD = "execution(* java.lang.System.exit(..))";
 }
