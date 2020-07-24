@@ -162,6 +162,10 @@
     <update.check.host>https://diagnostics.alluxio.io</update.check.host>
     <findbugs.skip>false</findbugs.skip>
     <b2.version>3.1.0</b2.version>
+    <!-- AspectJ fine-grained logging -->
+    <aspectj.runtime.version>1.9.5</aspectj.runtime.version>
+    <aspectj.plugin.version>1.11</aspectj.plugin.version>
+    <simbiose.debug.version>0.0.1</simbiose.debug.version>
   </properties>
 
   <modules>
@@ -1468,6 +1472,66 @@
                 </configuration>
               </execution>
             </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>aspectj-logging</id>
+      <!-- This profile enables fine-grained AspectJ logging. -->
+      <modules>
+        <module>logging</module>
+      </modules>
+      <dependencies>
+        <dependency>
+          <groupId>org.aspectj</groupId>
+          <artifactId>aspectjrt</artifactId>
+          <version>${aspectj.runtime.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>br.com.simbiose</groupId>
+          <artifactId>debug_log</artifactId>
+          <version>${simbiose.debug.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.alluxio</groupId>
+          <artifactId>logging</artifactId>
+          <version>2.2.1</version>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>aspectj-maven-plugin</artifactId>
+            <version>${aspectj.plugin.version}</version>
+            <configuration>
+              <complianceLevel>${java.version}</complianceLevel>
+              <source>${java.version}</source>
+              <target>${java.version}</target>
+
+              <weaveDependencies>
+                <weaveDependency>
+                  <groupId>org.alluxio</groupId>
+                  <artifactId>logging</artifactId>
+                </weaveDependency>
+              </weaveDependencies>
+
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>compile</goal>
+                </goals>
+              </execution>
+            </executions>
+            <dependencies>
+              <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjtools</artifactId>
+                <version>${aspectj.runtime.version}</version>
+              </dependency>
+            </dependencies>
           </plugin>
         </plugins>
       </build>
