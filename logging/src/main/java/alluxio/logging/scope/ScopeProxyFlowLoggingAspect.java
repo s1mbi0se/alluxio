@@ -5,40 +5,33 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 
-import java.util.UUID;
-
+/**
+ * This class represents a {@link alluxio.logging.base.FlowLoggingAspect} for the
+ * Alluxio Proxy, logging and keeping track of all method calls it executes at any
+ * given moment.
+ */
 @Aspect
-public class ScopeMasterFlowLoggingAspect extends ScopeFlowLoggingAspect {
+public final class ScopeProxyFlowLoggingAspect extends ScopeFlowLoggingAspect {
 
-    private static final String FLOW_NAME = "ScopeMasterFlow";
-    private static final String START_METHOD = "execution(* alluxio.master.AlluxioMaster.main(..))";
+    private static final String FLOW_NAME = "ScopeProxyFlow";
+    private static final String START_METHOD = "execution(* alluxio.proxy.AlluxioProxy.main(..))";
 
     @Around(START_METHOD)
-    public Object startFlux(final ProceedingJoinPoint point) throws Throwable {
-        final long threadId = artificialThreadId;
-
-        threadIdToStep.put(threadId, 0);
-        threadIdToDebugLogId.compute(
-                threadId, (key, value) -> UUID.randomUUID().getMostSignificantBits());
-
-        return printDebugLogForMethod(point, threadId);
+    @Override
+    public Object startFlow(final ProceedingJoinPoint point) throws Throwable {
+        return super.startFlow(point);
     }
 
     @Around(WHITE_AND_BLACK_LIST)
+    @Override
     public Object around(final ProceedingJoinPoint point) throws Throwable {
-
-        return printDebugLogForMethod(point, artificialThreadId);
+        return super.around(point);
     }
 
     @Around(FINISH_METHOD)
-    public Object finishFlux(final ProceedingJoinPoint point) throws Throwable {
-
-        final Object resultFromMethod = printDebugLogForMethod(point, artificialThreadId);
-
-        threadIdToStep.remove(artificialThreadId);
-        threadIdToDebugLogId.remove(artificialThreadId);
-
-        return resultFromMethod;
+    @Override
+    public Object finishFlow(final ProceedingJoinPoint point) throws Throwable {
+        return super.finishFlow(point);
     }
 
     @Override
