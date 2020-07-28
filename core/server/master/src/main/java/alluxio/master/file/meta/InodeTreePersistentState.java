@@ -400,9 +400,9 @@ public class InodeTreePersistentState implements Journaled {
    * {@link PersistenceState#TO_BE_PERSISTED}.
    *
    * @param entry the {@link UpdateInodeEntry} to apply to the
-   *              inode
+   *        inode
    * @throws IllegalStateException If the update inode entry ID does not
-   *                               lead to an existing {@link InodeView}
+   *         lead to an existing {@link InodeView}
    */
   private void applyUpdateInode(UpdateInodeEntry entry) {
     Optional<MutableInode<?>> inodeOpt = mInodeStore.getMutable(entry.getId());
