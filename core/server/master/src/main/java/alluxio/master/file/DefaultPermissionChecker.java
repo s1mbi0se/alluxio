@@ -206,7 +206,7 @@ public class DefaultPermissionChecker implements PermissionChecker {
    * @param path the path to check permissions from
    * @param inodeList file info list of all the inodes retrieved by traversing the {@code path}
    * @param checkIsOwner a boolean that indicates whether to check if the user is the owner of the
-   *                     path ({@code true}) or not ({@code false})
+   *        path ({@code true}) or not ({@code false})
    * @throws AccessControlException if permission checking fails
    */
   protected void checkInodeList(String user, List<String> groups, Mode.Bits bits, String path,
