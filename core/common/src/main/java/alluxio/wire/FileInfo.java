@@ -647,7 +647,7 @@ public final class FileInfo implements Serializable {
 
   /**
    * @param fileBlockInfos the file block descriptors to use
-   * @return the file information
+   * @return this {@link FileInfo} with new file block information
    */
   public FileInfo setFileBlockInfos(List<FileBlockInfo> fileBlockInfos) {
     mFileBlockInfoList = new ArrayList<>(fileBlockInfos);
