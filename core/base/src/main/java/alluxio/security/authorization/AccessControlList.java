@@ -86,6 +86,9 @@ public class AccessControlList implements Serializable {
 
   /**
    * Clears out all entries (does not modify the owner name and owning group).
+   * <p>
+   * Sets the ACL {@link #mMode} to {@code 0} and the {@link #mExtendedEntries}
+   * to {@code null}.
    */
   public void clearEntries() {
     mMode = 0;
