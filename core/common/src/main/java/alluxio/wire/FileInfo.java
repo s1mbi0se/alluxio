@@ -358,8 +358,11 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param fileId the file id to use
-   * @return the file information
+   * Sets the ID for this file information.
+   *
+   * @param fileId the file ID to use
+   * @return this {@link FileInfo} updated
+   *         with a new {@link #mFileId}
    */
   public FileInfo setFileId(long fileId) {
     mFileId = fileId;
