@@ -420,8 +420,11 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param length the file length to use
-   * @return the file information
+   * Sets the length of the file.
+   *
+   * @param length the new file length to use for
+   *        this file information
+   * @return this file information with an updated length
    */
   public FileInfo setLength(long length) {
     mLength = length;
