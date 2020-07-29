@@ -637,7 +637,7 @@ public final class FileInfo implements Serializable {
    * @param mountPoint the mount point flag value to use,
    *        which indicates whether the file is a mount point
    *        ({@code true}) or not ({@code false})
-   * @return this {@link FileInfo} updated with information of
+   * @return this file information updated with information of
    *         whether or not the file is a mount point
    */
   public FileInfo setMountPoint(boolean mountPoint) {
