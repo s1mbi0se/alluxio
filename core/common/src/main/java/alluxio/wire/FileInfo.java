@@ -432,8 +432,11 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param blockSizeBytes the file block size (in bytes) to use
-   * @return the file information
+   * Sets the file block size in bytes.
+   *
+   * @param blockSizeBytes the file block size (in bytes) to use for this file
+   *        information
+   * @return this file information with updated block size
    */
   public FileInfo setBlockSizeBytes(long blockSizeBytes) {
     mBlockSizeBytes = blockSizeBytes;
