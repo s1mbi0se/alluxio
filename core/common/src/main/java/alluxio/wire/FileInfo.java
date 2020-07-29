@@ -457,7 +457,9 @@ public final class FileInfo implements Serializable {
 
   /**
    * @param completed the completed flag value to use
-   * @return the file information
+   *        for this file information
+   * @return this file information updated with information
+   *         of whether or not the file is marked as completed
    */
   public FileInfo setCompleted(boolean completed) {
     mCompleted = completed;
