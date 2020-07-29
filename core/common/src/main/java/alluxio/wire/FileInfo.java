@@ -379,8 +379,11 @@ public final class FileInfo implements Serializable {
   }
 
   /**
+   * Sets the name for this file information.
+   *
    * @param name the file name to use
-   * @return the file information
+   * @return this {@link FileInfo} object updated
+   *         with a new {@link #mName}
    */
   public FileInfo setName(String name) {
     Preconditions.checkNotNull(name, "name");
