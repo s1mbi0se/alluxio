@@ -647,7 +647,7 @@ public final class FileInfo implements Serializable {
 
   /**
    * @param fileBlockInfos the file block descriptors to use
-   * @return this {@link FileInfo} with new file block information
+   * @return this file information with new file block information
    */
   public FileInfo setFileBlockInfos(List<FileBlockInfo> fileBlockInfos) {
     mFileBlockInfoList = new ArrayList<>(fileBlockInfos);
@@ -695,8 +695,8 @@ public final class FileInfo implements Serializable {
 
   /**
    * @param acl the access-control list (ACL) entries to use
-   * @return this {@link FileInfo} with an updated access-control
-   *         list ({@link #mAcl})
+   * @return this file information with an updated access-control
+   *         list
    */
   public FileInfo setAcl(AccessControlList acl) {
     mAcl = acl;
@@ -704,8 +704,8 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param defaultAcl the ACL entries to use
-   * @return the file information
+   * @param defaultAcl the new default access-control list (ACL) entries to use
+   * @return this file information with the updated default ACL
    */
   public FileInfo setDefaultAcl(DefaultAccessControlList defaultAcl) {
     mDefaultAcl = defaultAcl;
