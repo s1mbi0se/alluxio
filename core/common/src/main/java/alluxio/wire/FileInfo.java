@@ -694,8 +694,9 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param acl the ACL entries to use
-   * @return the file information
+   * @param acl the access-control list (ACL) entries to use
+   * @return this {@link FileInfo} with an updated access-control
+   *         list ({@link #mAcl})
    */
   public FileInfo setAcl(AccessControlList acl) {
     mAcl = acl;
@@ -722,7 +723,8 @@ public final class FileInfo implements Serializable {
 
   /**
    * @param xAttr the extended attributes to use
-   * @return the updated {@link FileInfo}
+   * @return this file information with the updated
+   *         extended attributes
    */
   public FileInfo setXAttr(Map<String, byte[]> xAttr) {
     mXAttr = xAttr;
