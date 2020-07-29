@@ -547,8 +547,10 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param lastModificationTimeMs the last modification time (in milliseconds) to use
-   * @return the file information
+   * @param lastModificationTimeMs the last modification
+   *        time in milliseconds to use for the file
+   * @return this file information with last modification
+   *         time updated
    */
   public FileInfo setLastModificationTimeMs(long lastModificationTimeMs) {
     mLastModificationTimeMs = lastModificationTimeMs;
