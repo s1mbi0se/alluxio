@@ -601,8 +601,8 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param group the file group
-   * @return the file information
+   * @param group the file group to use
+   * @return this file information with its group updated
    */
   public FileInfo setGroup(String group) {
     Preconditions.checkNotNull(group, "group");
