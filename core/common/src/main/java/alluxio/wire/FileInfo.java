@@ -506,8 +506,12 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param persisted the persisted flag value to use
-   * @return the file information
+   * @param persisted the persisted flag value to use,
+   *        which indicates whether the file
+   *        should be persisted ({@code true}) or not
+   *        ({@code false})
+   * @return this file information updated with information
+   *         about whether or not the file should be persisted
    */
   public FileInfo setPersisted(boolean persisted) {
     mPersisted = persisted;
