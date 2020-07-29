@@ -467,8 +467,12 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param folder the folder flag value to use
-   * @return the file information
+   * @param folder the folder flag value to use,
+   *        indicating whether the file is
+   *        a folder ({@code true}) or not ({@code false})
+   * @return this file information updated with
+   *         information of whether or not the
+   *         file is a folder
    */
   public FileInfo setFolder(boolean folder) {
     mFolder = folder;
