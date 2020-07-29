@@ -559,7 +559,8 @@ public final class FileInfo implements Serializable {
 
   /**
    * @param lastAccessTimeMs the last access time (in milliseconds) to use
-   * @return the file information
+   *        for the file
+   * @return this file information with last access time updated
    */
   public FileInfo setLastAccessTimeMs(long lastAccessTimeMs) {
     mLastAccessTimeMs = lastAccessTimeMs;
