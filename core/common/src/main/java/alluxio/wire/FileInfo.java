@@ -258,7 +258,7 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @return the file persistence state
+   * @return the file {@link #mPersistenceState}
    */
   public String getPersistenceState() {
     return mPersistenceState;
@@ -622,7 +622,10 @@ public final class FileInfo implements Serializable {
 
   /**
    * @param persistenceState the file persistence state to use
-   * @return the file information
+   * @return this file information updated with the provided
+   *         {@code persistenceState}, which should be one of the
+   *         following: NOT_PERSISTED, TO_BE_PERSISTED, PERSISTED,
+   *         or LOST.
    */
   public FileInfo setPersistenceState(String persistenceState) {
     Preconditions.checkNotNull(persistenceState, "persistenceState");
