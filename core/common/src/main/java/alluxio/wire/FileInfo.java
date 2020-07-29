@@ -568,7 +568,7 @@ public final class FileInfo implements Serializable {
 
   /**
    * @param ttl the file time-to-live (in seconds) to use
-   * @return the file information
+   * @return this file information with an updated TTL
    */
   public FileInfo setTtl(long ttl) {
     mTtl = ttl;
