@@ -480,8 +480,12 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param pinned the pinned flag value to use
-   * @return the file information
+   * @param pinned the pinned flag value to use,
+   *        indicating whether the file is pinned
+   *        ({@code true}) or not ({@code false})
+   * @return this file information updated with
+   *         information of whether or not the
+   *         file is pinned
    */
   public FileInfo setPinned(boolean pinned) {
     mPinned = pinned;
