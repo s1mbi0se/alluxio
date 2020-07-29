@@ -221,7 +221,7 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @return the file time-to-live (in seconds)
+   * @return the file TTL (time-to-live) in seconds
    */
   public long getTtl() {
     return mTtl;
