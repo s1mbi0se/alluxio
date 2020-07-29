@@ -392,8 +392,13 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param path the file path to use
-   * @return the file information
+   * Sets the path for this file information.
+   *
+   * @param path the new file path to use for the
+   *        file this object holds information
+   *        from
+   * @return this {@link FileInfo} object updated
+   *         with a new {@link #mPath}
    */
   public FileInfo setPath(String path) {
     Preconditions.checkNotNull(path, "path");
