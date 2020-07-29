@@ -590,8 +590,9 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param owner the file owner
-   * @return the file information
+   * @param owner the new file owner to use
+   * @return this file information updated
+   *         with a new owner
    */
   public FileInfo setOwner(String owner) {
     Preconditions.checkNotNull(owner, "owner");
