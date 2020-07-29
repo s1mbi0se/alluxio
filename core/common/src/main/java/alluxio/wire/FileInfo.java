@@ -444,8 +444,11 @@ public final class FileInfo implements Serializable {
   }
 
   /**
+   * Sets the creation time for the file.
+   *
    * @param creationTimeMs the file creation time (in milliseconds) to use
-   * @return the file information
+   *        for this file information
+   * @return this file informatin with updated creation time
    */
   public FileInfo setCreationTimeMs(long creationTimeMs) {
     mCreationTimeMs = creationTimeMs;
