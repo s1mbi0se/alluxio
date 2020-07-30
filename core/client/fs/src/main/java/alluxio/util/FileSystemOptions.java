@@ -173,8 +173,10 @@ public class FileSystemOptions {
   }
 
   /**
+   * Returns the default list status options for the provided configuration.
+   *
    * @param conf Alluxio configuration
-   * @return options based on the configuration
+   * @return default options based on the configuration
    */
   public static ListStatusPOptions listStatusDefaults(AlluxioConfiguration conf) {
     return ListStatusPOptions.newBuilder()

@@ -150,8 +150,10 @@ public interface FileSystemMasterClient extends Client {
   List<SyncPointInfo> getSyncPathList() throws AlluxioStatusException;
 
   /**
-   * @param path the path to list
-   * @param options the listStatus options
+   * Returns a list with the URI status for the provided path and options.
+   *
+   * @param path the path to list status from
+   * @param options the list status options
    * @return the list of file information for the given path
    * @throws NotFoundException if the path does not exist
    */

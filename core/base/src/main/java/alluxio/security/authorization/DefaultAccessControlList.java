@@ -166,8 +166,7 @@ public class DefaultAccessControlList extends AccessControlList {
   }
 
   /**
-   * Returns true if the default ACL is empty.
-   * @return true if empty
+   * @return whether this access-control list is empty
    */
   public boolean isEmpty() {
     return mEmpty;
