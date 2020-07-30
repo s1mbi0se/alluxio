@@ -410,8 +410,8 @@ public final class FileInfo implements Serializable {
    * Sets the UFS path for this file information.
    *
    * @param ufsPath the new file UFS path to use for this file information
-   * @return this {@link FileInfo} updated with the provided {@code ufsPath} as the new
-   *         {@link #mUfsPath}
+   * @return this file information updated with the provided {@code ufsPath}
+   *         as the new {@link #mUfsPath}
    */
   public FileInfo setUfsPath(String ufsPath) {
     Preconditions.checkNotNull(ufsPath, "ufsPath");
