@@ -316,7 +316,7 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @return the ACL object for this file
+   * @return the access-control list (ACL) for this file information
    */
   public AccessControlList getAcl() {
     return mAcl;
