@@ -14,8 +14,7 @@ import org.aspectj.lang.annotation.Aspect;
 public final class FsMountFlowLoggingAspect extends FsFlowLoggingAspect {
 
     private static final String FLOW_NAME = "FsMountFlow";
-    private static final String START_METHOD = "execution(* alluxio.cli.fs.command.MountCommand.run(..)) || "
-            + "execution(* alluxio.client.file.mount(..))";
+    private static final String START_METHOD = "execution(* alluxio.cli.fs.command.MountCommand.run(..))";
 
     @Around(START_METHOD)
     @Override
