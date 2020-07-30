@@ -174,7 +174,8 @@ public class DefaultAccessControlList extends AccessControlList {
   }
 
   /**
-   * @param empty set the DefaultAccessControlList to empty or not
+   * @param empty whether this access control list (ACL) should
+   *        be set to empty ({@code true}) or not ({@code false})
    */
   public void setEmpty(boolean empty) {
     mEmpty = empty;

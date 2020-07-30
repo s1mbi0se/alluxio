@@ -221,14 +221,16 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @return the file time-to-live (in seconds)
+   * @return the file TTL (time-to-live) in seconds
    */
   public long getTtl() {
     return mTtl;
   }
 
   /**
-   * @return the {@link TtlAction}
+   * @return the TTL (time-to-live) action, or what Alluxio
+   *         should do with the file once its hop limit
+   *         exceeds - either delete it or free it
    */
   public TtlAction getTtlAction() {
     return mTtlAction;
@@ -256,7 +258,7 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @return the file persistence state
+   * @return the file {@link #mPersistenceState}
    */
   public String getPersistenceState() {
     return mPersistenceState;
@@ -320,7 +322,7 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @return the default ACL object for this file
+   * @return the default access control list (ACL) for this file
    */
   public DefaultAccessControlList getDefaultAcl() {
     return mDefaultAcl;
@@ -410,8 +412,8 @@ public final class FileInfo implements Serializable {
    * Sets the UFS path for this file information.
    *
    * @param ufsPath the new file UFS path to use for this file information
-   * @return this {@link FileInfo} updated with the provided {@code ufsPath} as the new
-   *         {@link #mUfsPath}
+   * @return this file information updated with the provided {@code ufsPath}
+   *         as the new {@link #mUfsPath}
    */
   public FileInfo setUfsPath(String ufsPath) {
     Preconditions.checkNotNull(ufsPath, "ufsPath");
@@ -420,8 +422,11 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param length the file length to use
-   * @return the file information
+   * Sets the length of the file.
+   *
+   * @param length the new file length to use for
+   *        this file information
+   * @return this file information with an updated length
    */
   public FileInfo setLength(long length) {
     mLength = length;
@@ -429,8 +434,11 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param blockSizeBytes the file block size (in bytes) to use
-   * @return the file information
+   * Sets the file block size in bytes.
+   *
+   * @param blockSizeBytes the file block size (in bytes) to use for this file
+   *        information
+   * @return this file information with updated block size
    */
   public FileInfo setBlockSizeBytes(long blockSizeBytes) {
     mBlockSizeBytes = blockSizeBytes;
@@ -438,8 +446,11 @@ public final class FileInfo implements Serializable {
   }
 
   /**
+   * Sets the creation time for the file.
+   *
    * @param creationTimeMs the file creation time (in milliseconds) to use
-   * @return the file information
+   *        for this file information
+   * @return this file information with updated creation time
    */
   public FileInfo setCreationTimeMs(long creationTimeMs) {
     mCreationTimeMs = creationTimeMs;
@@ -448,7 +459,9 @@ public final class FileInfo implements Serializable {
 
   /**
    * @param completed the completed flag value to use
-   * @return the file information
+   *        for this file information
+   * @return this file information updated with information
+   *         of whether or not the file is marked as completed
    */
   public FileInfo setCompleted(boolean completed) {
     mCompleted = completed;
@@ -456,8 +469,12 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param folder the folder flag value to use
-   * @return the file information
+   * @param folder the folder flag value to use,
+   *        indicating whether the file is
+   *        a folder ({@code true}) or not ({@code false})
+   * @return this file information updated with
+   *         information of whether or not the
+   *         file is a folder
    */
   public FileInfo setFolder(boolean folder) {
     mFolder = folder;
@@ -465,8 +482,12 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param pinned the pinned flag value to use
-   * @return the file information
+   * @param pinned the pinned flag value to use,
+   *        indicating whether the file is pinned
+   *        ({@code true}) or not ({@code false})
+   * @return this file information updated with
+   *         information of whether or not the
+   *         file is pinned
    */
   public FileInfo setPinned(boolean pinned) {
     mPinned = pinned;
@@ -474,8 +495,12 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param cacheable the cacheable flag value to use
-   * @return the file information
+   * @param cacheable the cacheable flag value to use,
+   *        which indicates whether the file
+   *        is cacheable ({@code true}) or not
+   *        ({@code false})
+   * @return this file information updated with information of
+   *         whether or not the file is cacheable
    */
   public FileInfo setCacheable(boolean cacheable) {
     mCacheable = cacheable;
@@ -483,8 +508,12 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param persisted the persisted flag value to use
-   * @return the file information
+   * @param persisted the persisted flag value to use,
+   *        which indicates whether the file
+   *        should be persisted ({@code true}) or not
+   *        ({@code false})
+   * @return this file information updated with information
+   *         about whether or not the file should be persisted
    */
   public FileInfo setPersisted(boolean persisted) {
     mPersisted = persisted;
@@ -520,8 +549,10 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param lastModificationTimeMs the last modification time (in milliseconds) to use
-   * @return the file information
+   * @param lastModificationTimeMs the last modification
+   *        time in milliseconds to use for the file
+   * @return this file information with last modification
+   *         time updated
    */
   public FileInfo setLastModificationTimeMs(long lastModificationTimeMs) {
     mLastModificationTimeMs = lastModificationTimeMs;
@@ -530,7 +561,8 @@ public final class FileInfo implements Serializable {
 
   /**
    * @param lastAccessTimeMs the last access time (in milliseconds) to use
-   * @return the file information
+   *        for the file
+   * @return this file information with last access time updated
    */
   public FileInfo setLastAccessTimeMs(long lastAccessTimeMs) {
     mLastAccessTimeMs = lastAccessTimeMs;
@@ -539,7 +571,7 @@ public final class FileInfo implements Serializable {
 
   /**
    * @param ttl the file time-to-live (in seconds) to use
-   * @return the file information
+   * @return this file information with an updated TTL
    */
   public FileInfo setTtl(long ttl) {
     mTtl = ttl;
@@ -547,8 +579,10 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param ttlAction the {@link TtlAction} to use
-   * @return the updated options object
+   * @param ttlAction the TTL (time-to-live) action to use
+   *        for the file, or what should be done to the file once its TTL
+   *        expires - either delete it or free it
+   * @return this file information with an updated TTL action
    */
   public FileInfo setTtlAction(TtlAction ttlAction) {
     mTtlAction = ttlAction;
@@ -556,8 +590,9 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param owner the file owner
-   * @return the file information
+   * @param owner the new file owner to use
+   * @return this file information updated
+   *         with a new owner
    */
   public FileInfo setOwner(String owner) {
     Preconditions.checkNotNull(owner, "owner");
@@ -566,8 +601,8 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param group the file group
-   * @return the file information
+   * @param group the file group to use
+   * @return this file information with its group updated
    */
   public FileInfo setGroup(String group) {
     Preconditions.checkNotNull(group, "group");
@@ -576,8 +611,9 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param mode the file mode bits
-   * @return the file information
+   * @param mode the file mode bits to use
+   * @return this file information updated with
+   *         the provided mode bits
    */
   public FileInfo setMode(int mode) {
     mMode = mode;
@@ -586,7 +622,10 @@ public final class FileInfo implements Serializable {
 
   /**
    * @param persistenceState the file persistence state to use
-   * @return the file information
+   * @return this file information updated with the provided
+   *         {@code persistenceState}, which should be one of the
+   *         following: NOT_PERSISTED, TO_BE_PERSISTED, PERSISTED,
+   *         or LOST.
    */
   public FileInfo setPersistenceState(String persistenceState) {
     Preconditions.checkNotNull(persistenceState, "persistenceState");
@@ -595,8 +634,11 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param mountPoint the mount point flag value to use
-   * @return the file information
+   * @param mountPoint the mount point flag value to use,
+   *        which indicates whether the file is a mount point
+   *        ({@code true}) or not ({@code false})
+   * @return this file information updated with information of
+   *         whether or not the file is a mount point
    */
   public FileInfo setMountPoint(boolean mountPoint) {
     mMountPoint = mountPoint;
@@ -605,7 +647,7 @@ public final class FileInfo implements Serializable {
 
   /**
    * @param fileBlockInfos the file block descriptors to use
-   * @return the file information
+   * @return this file information with new file block information
    */
   public FileInfo setFileBlockInfos(List<FileBlockInfo> fileBlockInfos) {
     mFileBlockInfoList = new ArrayList<>(fileBlockInfos);
@@ -634,8 +676,8 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param mountId the id of mount
-   * @return the file information
+   * @param mountId the ID of mount to use
+   * @return this file information with an updated mount ID
    */
   public FileInfo setMountId(long mountId) {
     mMountId = mountId;
@@ -652,8 +694,9 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param acl the ACL entries to use
-   * @return the file information
+   * @param acl the access-control list (ACL) entries to use
+   * @return this file information with an updated access-control
+   *         list
    */
   public FileInfo setAcl(AccessControlList acl) {
     mAcl = acl;
@@ -661,8 +704,8 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @param defaultAcl the ACL entries to use
-   * @return the file information
+   * @param defaultAcl the new default access-control list (ACL) entries to use
+   * @return this file information with the updated default ACL
    */
   public FileInfo setDefaultAcl(DefaultAccessControlList defaultAcl) {
     mDefaultAcl = defaultAcl;
@@ -680,7 +723,8 @@ public final class FileInfo implements Serializable {
 
   /**
    * @param xAttr the extended attributes to use
-   * @return the updated {@link FileInfo}
+   * @return this file information with the updated
+   *         extended attributes
    */
   public FileInfo setXAttr(Map<String, byte[]> xAttr) {
     mXAttr = xAttr;
