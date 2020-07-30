@@ -156,19 +156,23 @@ public final class LsCommand extends AbstractFileSystemCommand {
   /**
    * Formats the ls result string.
    *
-   * @param hSize print human-readable format sizes
-   * @param acl whether security is enabled
-   * @param isFolder whether this path is a file or a folder
+   * @param hSize whether to print human-readable format sizes
+   *        ({@code true}) or not ({@code false})
+   * @param acl whether security is enabled ({@code true}) or
+   *        not ({@code false})
+   * @param isFolder whether this path is a file ({@code true})
+   *        or a folder ({@code false})
    * @param permission permission string
    * @param userName user name
    * @param groupName group name
    * @param size size of the file in bytes
-   * @param timestamp the epoch time in ms
+   * @param timestamp the epoch time in milliseconds
    * @param inAlluxioPercentage whether the file is in Alluxio
+   *        ({@code true}) or not ({@code false})
    * @param persistenceState the persistence state of the file
    * @param path path of the file or folder
    * @param dateFormatPattern the format to follow when printing dates
-   * @return the formatted string according to acl and isFolder
+   * @return the formatted string according to {@code acl} and {@code isFolder}
    */
   public static String formatLsString(boolean hSize, boolean acl, boolean isFolder, String
       permission,
