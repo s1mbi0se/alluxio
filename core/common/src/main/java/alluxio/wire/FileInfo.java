@@ -150,7 +150,8 @@ public final class FileInfo implements Serializable {
   }
 
   /**
-   * @return whether the file is a folder
+   * @return whether the file is a folder ({@code true})
+   *         or not ({@code false})
    */
   public boolean isFolder() {
     return mFolder;
