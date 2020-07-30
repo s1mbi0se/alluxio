@@ -14,8 +14,7 @@ import org.aspectj.lang.annotation.Aspect;
 public final class FsMkdirFlowLoggingAspect extends FsFlowLoggingAspect {
 
     private static final String FLOW_NAME = "FsMkdirFlow";
-    private static final String START_METHOD = "execution(* alluxio.cli.fs.command.MkdirCommand.run(..)) || "
-            + "execution(* alluxio.client.file.createDirectory(..))";
+    private static final String START_METHOD = "execution(* alluxio.cli.fs.command.MkdirCommand.run(..))";
 
     @Around(START_METHOD)
     @Override
