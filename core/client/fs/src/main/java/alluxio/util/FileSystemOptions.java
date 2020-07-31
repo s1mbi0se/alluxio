@@ -214,6 +214,8 @@ public class FileSystemOptions {
   }
 
   /**
+   * Gets the default open file options for the provided configuration.
+   *
    * @param conf Alluxio configuration
    * @return options based on the configuration
    */
