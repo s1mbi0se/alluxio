@@ -101,13 +101,14 @@ public final class RetryUtils {
   }
 
   /**
-   *
-   * Gives a ClientRetry based on the given parameters.
+   * Gets an exponential time-bounded retry policy based on the provided parameters.
    *
    * @param maxRetryDuration the maximum total duration to retry for
    * @param baseSleepMs initial sleep time in milliseconds
    * @param maxSleepMs max sleep time in milliseconds
-   * @return the default block-read retry
+   * @return the default block-read retry policy with the provided
+   *         {@code maxRetryDuration}, {@code baseSleepMs}, and
+   *         {@code maxSleepMs}
    */
   public static RetryPolicy defaultBlockReadRetry(Duration maxRetryDuration, Duration baseSleepMs,
       Duration maxSleepMs) {
