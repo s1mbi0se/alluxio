@@ -14,8 +14,7 @@ import org.aspectj.lang.annotation.Aspect;
 public final class FsUnmountFlowLoggingAspect extends FsFlowLoggingAspect {
 
     private static final String FLOW_NAME = "FsUnmountFlow";
-    private static final String START_METHOD = "execution(* alluxio.cli.fs.command.UnmountCommand.run(..)) || "
-            + "execution(* alluxio.client.file.unmount(..))";
+    private static final String START_METHOD = "execution(* alluxio.cli.fs.command.UnmountCommand.run(..))";
 
     @Around(START_METHOD)
     @Override
