@@ -109,9 +109,9 @@ public final class NettyUtils {
   }
 
   /**
-   * @param workerNetAddress the worker address
+   * @param workerNetAddress the worker network address
    * @param conf Alluxio configuration
-   * @return true if the domain socket is enabled on this client
+   * @return whether the domain socket is enabled on this client
    */
   public static boolean isDomainSocketAccessible(WorkerNetAddress workerNetAddress,
       AlluxioConfiguration conf) {
@@ -126,8 +126,9 @@ public final class NettyUtils {
   }
 
   /**
-   * @param workerNetAddress the worker address
-   * @return true if the domain socket is supported by the worker
+   * @param workerNetAddress the worker network address
+   * @return whether the domain socket is supported by the worker
+   *         with the provided network address
    */
   public static boolean isDomainSocketSupported(WorkerNetAddress workerNetAddress) {
     return !workerNetAddress.getDomainSocketPath().isEmpty();
