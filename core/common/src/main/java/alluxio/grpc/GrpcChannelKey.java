@@ -102,7 +102,7 @@ public class GrpcChannelKey {
 
   /**
    * @param group the networking group membership
-   * @return the modified {@link GrpcChannelKey}
+   * @return this gRPC channel key updated under a new group
    */
   public GrpcChannelKey setNetworkGroup(GrpcNetworkGroup group) {
     mNetworkGroup = group;
