@@ -55,8 +55,8 @@ public final class TieredIdentity implements Serializable {
   }
 
   /**
-   * @param i a tier index
-   * @return the ith locality tier
+   * @param i the tier index
+   * @return the i-th locality tier
    */
   public LocalityTier getTier(int i) {
     return mTiers.get(i);
