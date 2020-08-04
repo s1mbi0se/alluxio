@@ -444,13 +444,10 @@ public class FileSystemContext implements Closeable {
   }
 
   /**
-   * Returns whether or not URI validation is enabled.
-   * <p>
-   * Gets {@link #mUriValidationEnabled}. If true, URI
-   * validation is enabled. Returns false otherwise.
+   * This should be synchronized in order to avoid different threads accessing this
+   * information at the same time, thus avoiding outdated or inconsistent information.
    *
-   * @return  a boolean value representing whether URI
-   *          validation is enabled for this {@link FileSystemContext}
+   * @return whether URI validation is enabled for this file system context
    */
   public synchronized boolean getUriValidationEnabled() {
     return mUriValidationEnabled;
