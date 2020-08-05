@@ -444,13 +444,10 @@ public class FileSystemContext implements Closeable {
   }
 
   /**
-   * Returns whether or not URI validation is enabled.
-   * <p>
-   * Gets {@link #mUriValidationEnabled}. If true, URI
-   * validation is enabled. Returns false otherwise.
+   * This should be synchronized in order to avoid different threads accessing this
+   * information at the same time, thus avoiding outdated or inconsistent information.
    *
-   * @return  a boolean value representing whether URI
-   *          validation is enabled for this {@link FileSystemContext}
+   * @return whether URI validation is enabled for this file system context
    */
   public synchronized boolean getUriValidationEnabled() {
     return mUriValidationEnabled;
@@ -603,7 +600,7 @@ public class FileSystemContext implements Closeable {
   }
 
   /**
-   * @return if there is a local worker running the same machine
+   * @return whether there is a local worker running in this JVM
    */
   public synchronized boolean hasLocalWorker() throws IOException {
     if (!mLocalWorkerInitialized) {
@@ -653,6 +650,9 @@ public class FileSystemContext implements Closeable {
     }
   }
 
+  /**
+   * Initializes the local worker.
+   */
   private void initializeLocalWorker() throws IOException {
     List<WorkerNetAddress> addresses = getWorkerAddresses();
     if (!addresses.isEmpty()) {
